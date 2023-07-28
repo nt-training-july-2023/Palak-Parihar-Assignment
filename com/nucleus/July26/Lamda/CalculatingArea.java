@@ -6,10 +6,11 @@ package com.nucleus.July26.Lamda;
 /**
  * 
  */
+
 public class CalculatingArea {
 
 	class Rectangle implements Shape {
-		double length;
+		 double length;
 		double breadth;
 
 		public Rectangle(double length, double breadth) {

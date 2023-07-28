@@ -4,7 +4,6 @@
 package com.nucleus.July26.Lamda;
 
 import java.util.Scanner;
-import java.util.StringTokenizer;
 
 /**
  * 
@@ -37,6 +36,11 @@ public class FunctInterfaceMain {
 			string = string.replace('i', '#');
 			string = string.replace('o', '#');
 			string = string.replace('u', '#');
+			string = string.replace('A', '#');
+			string = string.replace('E', '#');
+			string = string.replace('I', '#');
+			string = string.replace('O', '#');
+			string = string.replace('U', '#');
 			System.out.println("Original String : "+ original +" Replaced String : "+ string);
 			
 		};
