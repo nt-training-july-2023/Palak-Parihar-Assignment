@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+body {
+    background: linear-gradient(120deg, #71b7e6, #9b59b6);
+    font-family: 'Poppins', sans-serif;
+}
+
+@media only screen and (max-width: 600px) {
+    body {
+        background-color: lightblue;
+    }
+}
+
+.main_body {
+    width: 60%;
+    margin: auto;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.heading {
+    width: 100%;
+    margin-left: 5%;
+    align-items: start;
+    float: left;
+}
+
+
+.container {
+    width: 100%;
+    padding-left: 50px;
+}
+
+.flex-container {
+    display: flex;
+}
+
+.flex-container>div {
+    width: 50%;
+    padding: 2px;
+    font-size: 20px;
+}
+
+
+
+@media only screen and (max-width: 600px) {
+    .main_body {
+        width: 80% !important;
+        margin: auto;
+        margin-top: 50px;
+        /* display: flex; */
+        /* flex-direction: column; */
+        justify-content: center;
+        align-items: center;
+        border-radius: 8px;
+        background: #fff;
+    }
+
+    /* .flex-container {
+        display: none;
+    }
+
+    .flex-container>div {
+        width: 50%;
+        padding: 2px;
+        font-size: 20px;
+    } */
+}
+
+input[type=text] {
+    border: rgb(209, 206, 206) solid 1px;
+    margin-bottom: 25px;
+    height: 30px;
+    border-radius: 8px;
+    width: 80%;
+}
+
+input {
+    cursor: pointer;
+}
+
+input[type=button] {
+    font-family: 'Poppins', sans-serif;
+    color: #fff;
+    margin: 30px;
+    width: 80%;
+    height: 50px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(120deg, #71b7e6, #9b59b6);
+    cursor: pointer;
+    display: inline-block;
+    font-size: 20px;
+}
+
+input[type=radio] {
+    color: rgb(158, 153, 153);
+}
+
+
+::-webkit-input-placeholder {
+    color: rgba(66, 65, 65, 0.342);
+    margin-left: 100px;
+}
+
+::placeholder {
+    margin-left: 10px;
+}
