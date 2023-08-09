@@ -22,7 +22,7 @@ PayLoad :
         "dateOfJoining": "2023-05-27" //java.sql.Date
 }
 
-2. Listing All the existing all entries of database
+2. Listing All the existing entries of the database
 GET : localhost:8080/listAllEmployees
 
 3. Deleting an existing Entry(Employee)
@@ -48,13 +48,13 @@ GET : localhost:8080/findEmployeeById/{id}
 6. Listing Employees By Date Of Joining
 GET : http://localhost:8080/listEmployeesByDateOfJoining/{dateOfJoining}
 
-7.Listing Employees By Department
+7. Listing Employees By Department
 GET : http://localhost:8080/listEmployeesByDepartment/{department}
-eg : http://localhost:8080/listEmployeesByDepartment/LEGALL
+eg: http://localhost:8080/listEmployeesByDepartment/LEGALL
 Department is enum
 
-8.Updating an existing Entry
-PUT : http://localhost:8080/updateEmployee
+8. Updating an existing Entry
+PUT: http://localhost:8080/updateEmployee
 Payload:
 {
         "firstName": "Core ",
