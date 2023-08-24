@@ -1,0 +1,12 @@
+package com.grievance.repository;
+
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+import com.grievance.entity.Employee;
+import java.util.List;
+
+@Repository
+public interface UserRepository extends CrudRepository<Employee, Integer> {
+	Employee findByName(String name);
+}

@@ -1,0 +1,8 @@
+package com.grievance.service;
+
+import com.grievance.entity.User;
+
+public interface UserService {
+	
+	public User login(User user);
+}

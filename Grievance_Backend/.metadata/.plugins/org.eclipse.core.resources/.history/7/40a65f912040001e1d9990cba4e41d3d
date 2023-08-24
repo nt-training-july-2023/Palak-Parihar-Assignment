@@ -1,0 +1,41 @@
+package com.grievance.service;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.grievance.UserRepository;
+import com.grievance.entity.Employee;
+
+@Service
+public class UserServiceImpl implements UserService {
+
+	@Autowired
+	UserRepository repository;
+
+	@Override
+	public Optional<Employee> login(Employee user) {
+		// TODO Auto-generated method stub
+		Optional<Employee> user2 = repository.findById(user.getId());
+		return null;
+	}
+
+	@Override
+	public Optional<Employee> saveUser(Employee user) {
+		// TODO Auto-generated method stub
+		return Optional.ofNullable(repository.save(user));
+	}
+	
+	@Override
+	public Optional<List<Employee>> listUser() {
+		// TODO Auto-generated method stub
+//		Iterable<Employee> iterator = repository.findAll();
+		List<Employee> employees = new ArrayList<Employee>();
+		repository.findAll().forEach(employees::add);
+		return Optional.ofNullable(employees);
+	}
+}

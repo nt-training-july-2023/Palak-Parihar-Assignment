@@ -1,0 +1,12 @@
+package com.grievance.service;
+
+import java.util.Optional;
+
+import com.grievance.entity.Employee;
+
+public interface UserService {
+	
+	public Optional<Employee> login(Employee employee);
+	
+	public Optional<Employee> saveUser(Employee employee);
+}

@@ -1,0 +1,21 @@
+package com.grievance.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.grievance.UserRepository;
+import com.grievance.entity.User;
+
+@Service
+public class UserServiceImpl implements UserService {
+	
+	@Autowired
+	UserRepository repository;
+
+	@Override
+	public User login(User user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

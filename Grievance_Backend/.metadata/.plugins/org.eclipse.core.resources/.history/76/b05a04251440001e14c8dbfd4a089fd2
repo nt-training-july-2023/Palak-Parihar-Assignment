@@ -1,0 +1,30 @@
+package com.grievance.service;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.grievance.UserRepository;
+import com.grievance.entity.User;
+
+@Service
+public class UserServiceImpl implements UserService {
+	
+	@Autowired
+	UserRepository repository;
+
+	@Override
+	public Optional<User> login(User user) {
+		// TODO Auto-generated method stub
+		Optional<User> user2 = repository.findById(user.getId());
+		return null;
+	}
+	
+	@Override
+	public Optional<User> saveUser(User user) {
+		// TODO Auto-generated method stub
+		return Optional.ofNullable(repository.save(user));
+	}
+
+}
