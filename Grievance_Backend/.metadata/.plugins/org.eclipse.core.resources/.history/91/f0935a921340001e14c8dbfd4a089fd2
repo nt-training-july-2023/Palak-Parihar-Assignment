@@ -1,5 +1,0 @@
-package com.grievance.service;
-
-public interface UserService {
-	
-}
