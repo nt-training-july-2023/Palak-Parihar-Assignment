@@ -1,0 +1,23 @@
+package com.grievance;
+
+import org.apache.catalina.User;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import com.grievance.entity.Employee;
+
+@SpringBootTest
+class GrievanceApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+	@Test
+	void saveUser() {
+		Employee employee = new Employee();
+		employee.setName("Hello");
+		employee.setPassword("hello");
+		
+	}
+}

@@ -1,0 +1,5 @@
+1692616317191	Rename type 'UserEntity'
+1692617875690	Rename type 'User'
+1692681759693	Move compilation unit
+1692682570474	Rename field 'name'
+1692682646132	Rename method 'findByName'
