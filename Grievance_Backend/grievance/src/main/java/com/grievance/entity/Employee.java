@@ -6,19 +6,22 @@ package com.grievance.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.ToString;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  *
  */
 
 @Entity
-@ToString
 public class Employee {
   @Id
   @Column(unique = true)
+  @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}")
+  @NotBlank
   private String email;
 
+  @NotBlank
   private String password;
 
   /**
@@ -47,5 +50,10 @@ public class Employee {
    */
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  @Override
+  public String toString() {
+    return "Employee [email=" + email + ", password=" + password + "]";
   }
 }

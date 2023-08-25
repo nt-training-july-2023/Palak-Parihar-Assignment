@@ -6,10 +6,15 @@ package com.grievance.controller;
 
 import com.grievance.entity.Employee;
 import com.grievance.service.UserService;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+
 import java.util.Optional; 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,13 +28,14 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @CrossOrigin
+@Validated
 public class UserController {
 
   @Autowired
   UserService service;
   
   @PostMapping("/save")
-  public ResponseEntity<?> saveUser(@RequestBody Employee user) {
+  public ResponseEntity<?> saveUser(@Valid @RequestBody Employee user) {
     return ResponseEntity.ok(service.saveUser(user));
   }
 
@@ -45,7 +51,7 @@ public class UserController {
    * *@return 
    */
   @PostMapping("/login")
-  public ResponseEntity<?> loginUser(@RequestBody Employee employee) {
+  public ResponseEntity<?> loginUser(@Valid @RequestBody Employee employee) {
     Optional<Boolean> answer = service.login(employee);
     
     if (answer.get()) {

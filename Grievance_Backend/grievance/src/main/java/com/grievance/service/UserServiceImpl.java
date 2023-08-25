@@ -17,7 +17,9 @@ public class UserServiceImpl implements UserService {
   @Override
   public Optional<Boolean> login(Employee user) {
     // TODO Auto-generated method stub
+	  System.out.println(user);
     Employee user2 = repository.findByEmail(user.getEmail());
+    System.out.println(user2);
     if (user2 != null) {
       if (user2.getPassword().equals(user.getPassword())) {
         return Optional.of(true);
