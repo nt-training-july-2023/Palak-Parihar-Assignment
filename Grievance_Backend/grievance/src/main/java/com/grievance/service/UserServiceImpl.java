@@ -1,6 +1,6 @@
 package com.grievance.service;
 
-import com.grievance.entity.Employee;
+import com.grievance.dto.EmployeeDto;
 import com.grievance.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +23,8 @@ public class UserServiceImpl implements UserService {
    * overriding login method from userservice.
    */
   @Override
-  public Optional<Boolean> login(final Employee user) {
-    Employee user2 = repository.findByEmail(user.getEmail());
+  public Optional<Boolean> login(final EmployeeDto user) {
+    EmployeeDto user2 = repository.findByEmail(user.getEmail());
     if (user2 != null) {
       if (user2.getPassword().equals(user.getPassword())) {
         return Optional.of(true);
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
    * overriding saveUser method from userservice.
    */
   @Override
-  public Optional<Employee> saveUser(final Employee user) {
+  public Optional<EmployeeDto> saveUser(final EmployeeDto user) {
     // TODO Auto-generated method stub
     return Optional.ofNullable(repository.save(user));
   }
@@ -46,9 +46,9 @@ public class UserServiceImpl implements UserService {
    * overriding listUser method from userservice.
    */
   @Override
-  public Optional<List<Employee>> listUser() {
+  public Optional<List<EmployeeDto>> listUser() {
     // TODO Auto-generated method stub
-    List<Employee> employees = new ArrayList<Employee>();
+    List<EmployeeDto> employees = new ArrayList<EmployeeDto>();
     repository.findAll().forEach(employees::add);
     return Optional.ofNullable(employees);
   }

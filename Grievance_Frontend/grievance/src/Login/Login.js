@@ -186,7 +186,7 @@ export default function Login() {
                 {modal}
             </div>
             <div className="container">
-                <h1 className="heading"><p>Grievance Management System</p></h1>
+                <h1 className="login-heading"><p>Grievance Management System</p></h1>
                 <div className="main_body">
                     {/* <h3 className="heading">Login!</h3> */}
                     <form onSubmit={e => submithandler(e)}>

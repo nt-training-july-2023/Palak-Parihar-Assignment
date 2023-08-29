@@ -1,77 +1,111 @@
 /**
- *Employee Entity.
+ * Employee entity class.
+ *
  */
 
 package com.grievance.entity;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 /**
- *Employee Entity.
+ * Employee entity class.
  */
-
-@Entity
 public class Employee {
+
   /**
-   * email instance.
+   * The id of employee.
    */
   @Id
   @Column(unique = true)
   @Email
   @NotBlank
   private String email;
-
   /**
-   * password instance.
+   * Full Name of employee.
    */
-  @NotBlank
+  private String fullName;
+  /**
+   * Password of employee .
+   */
   private String password;
+  /**
+   * Usertype of employee.
+   */
+  private UserType userType;
+  /**
+   * getter method for instance fullName.
+   *
+   * @return the fullName
+   *
+   */
+
+  public String getFullName() {
+    return fullName;
+  }
 
   /**
-   * This is getter method for email.
+   * setter method for instance fullName.
    *
-   * @return the name.
+   * @param fullNameField the fullName to set
+   */
+  public void setFullName(final String fullNameField) {
+    this.fullName = fullNameField;
+  }
+
+  /**
+   * getter method to get instance email.
+   *
+   * @return the email
    */
   public String getEmail() {
     return email;
   }
 
   /**
-   * This is getter method for Password.
+   * setter method for instance email.
    *
-   * @return the password.
-   */
-  public String getPassword() {
-    return password;
-  }
-
-  /**
-   * This is setter method for password.
-   *
-   * @param pass of type String.
-   */
-  public void setPassword(final String pass) {
-    this.password = pass;
-  }
-
-  /**
-   * This is a setter method for email.
-   *
-   * @param emailField the email to set.
+   * @param emailField the email to set
    */
   public void setEmail(final String emailField) {
     this.email = emailField;
   }
 
   /**
-   * toString method.
+   * getter method for instance password.
+   *
+   * @return the password
    */
-  @Override
-  public String toString() {
-    return "Employee [email=" + email + ", password=" + password + "]";
+  public String getPassword() {
+    return password;
+  }
+
+  /**
+   * setter method for instance password.
+   *
+   * @param passwordField the password to set
+   */
+  public void setPassword(final String passwordField) {
+    this.password = passwordField;
+  }
+
+  /**
+   * getter method for instance userType.
+   *
+   * @return the userType
+   */
+  public UserType getUserType() {
+    return userType;
+  }
+
+  /**
+   * setter method for instance userType.
+   *
+   * @param userTypeField the userType to set
+   */
+  public void setUserType(final UserType userTypeField) {
+    this.userType = userTypeField;
   }
 }
