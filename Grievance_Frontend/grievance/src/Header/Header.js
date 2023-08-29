@@ -3,9 +3,9 @@ import './Header.css';
 export default function Header(){
     return(
         <>
-        {/* <div className="header">
+        <div className="header">
             Grievance Management System
-        </div> */}
+        </div>
         </>
     )
 }

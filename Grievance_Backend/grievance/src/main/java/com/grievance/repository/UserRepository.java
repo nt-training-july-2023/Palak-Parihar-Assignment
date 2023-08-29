@@ -2,9 +2,18 @@ package com.grievance.repository;
 
 import com.grievance.entity.Employee;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public interface UserRepository extends CrudRepository<Employee, Integer> {
-  Employee findByEmail(String name);
+
+
+/**
+ * Crud repository for Employee.
+ */
+public interface UserRepository extends CrudRepository<Employee, String> {
+  /**
+   * findByEmail method.
+   *
+   * @param email of type String.
+   * @return Employee.
+   */
+  Employee findByEmail(String email);
 }

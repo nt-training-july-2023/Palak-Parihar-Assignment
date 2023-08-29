@@ -5,7 +5,8 @@ import '../Dashboard/Dashboard'
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'
 import InputElement from "../InputElement/InputElement";
-import Header from "../Header/Header";
+import Modal from "../Modal/Modal";
+import Button from "../Button/Button";
 
 export default function Login() {
     let cont = {
@@ -44,8 +45,8 @@ export default function Login() {
     }
 
     const [controls, setControls] = useState(cont.controls);
-    const [message, setMessage] = useState("")
-    const [showMessage, setShowMessage] = useState(false)
+    const [message, setMessage] = useState();
+    const [modal, setModal] = useState();
 
     const formElementsArray = [];
     for (let key in controls) {
@@ -152,7 +153,15 @@ export default function Login() {
             navigate("/dashboard")
         }).catch(e => {
             console.log(e.response.data)
+            var err = e.response.data;
+            // alert(err)
+            setModal(() => <Modal message={err} onClick = {closeModal}/>)
         })
+    }
+
+    const closeModal = (e) => {
+        console.log('hello')
+        setModal(() => <></>)
     }
 
     const navigate = useNavigate();
@@ -173,6 +182,9 @@ export default function Login() {
 
     return (
         <>
+            <div className="modal-container">
+                {modal}
+            </div>
             <div className="container">
                 <h1 className="heading"><p>Grievance Management System</p></h1>
                 <div className="main_body">
@@ -182,7 +194,7 @@ export default function Login() {
                         <p className="message">
                             {message}
                         </p>
-                        <input type="submit" value="Submit" />
+                        <Button type="submit" value="submit" />
                     </form>
                 </div>
             </div>

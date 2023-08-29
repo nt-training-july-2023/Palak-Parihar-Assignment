@@ -3,23 +3,28 @@ package com.grievance.service;
 import com.grievance.entity.Employee;
 import com.grievance.repository.UserRepository;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class for employee.
+ */
 @Service
 public class UserServiceImpl implements UserService {
+  /**
+   * Autowiring user repository.
+   */
   @Autowired
-  UserRepository repository;
+  private UserRepository repository;
 
+  /**
+   * overriding login method from userservice.
+   */
   @Override
-  public Optional<Boolean> login(Employee user) {
-    // TODO Auto-generated method stub
-	  System.out.println(user);
+  public Optional<Boolean> login(final Employee user) {
     Employee user2 = repository.findByEmail(user.getEmail());
-    System.out.println(user2);
     if (user2 != null) {
       if (user2.getPassword().equals(user.getPassword())) {
         return Optional.of(true);
@@ -28,12 +33,18 @@ public class UserServiceImpl implements UserService {
     return Optional.of(false);
   }
 
+  /**
+   * overriding saveUser method from userservice.
+   */
   @Override
-  public Optional<Employee> saveUser(Employee user) {
+  public Optional<Employee> saveUser(final Employee user) {
     // TODO Auto-generated method stub
     return Optional.ofNullable(repository.save(user));
   }
 
+  /**
+   * overriding listUser method from userservice.
+   */
   @Override
   public Optional<List<Employee>> listUser() {
     // TODO Auto-generated method stub

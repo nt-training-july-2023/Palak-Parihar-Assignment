@@ -6,11 +6,8 @@ package com.grievance.controller;
 
 import com.grievance.entity.Employee;
 import com.grievance.service.UserService;
-
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
-
-import java.util.Optional; 
+import java.util.Optional;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,42 +18,60 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
 /**
- * Rest COntroller.
+ * Rest Controller.
  */
 @RestController
-@CrossOrigin
+@CrossOrigin("*")
 @Validated
 public class UserController {
-
+  /**
+   *Autowiring Service.
+   */
   @Autowired
-  UserService service;
-  
-  @PostMapping("/save")
-  public ResponseEntity<?> saveUser(@Valid @RequestBody Employee user) {
-    return ResponseEntity.ok(service.saveUser(user));
-  }
-
-  
-  @GetMapping("/list")
-  public ResponseEntity<?> listUser() {
-    return ResponseEntity.ok(service.listUser());
-  }
+  private UserService service;
 
   /**
-   * Method for login a user.
-   * *@param employee
-   * *@return 
+   * Controller method for login employee.
+   *
+   * @param employee
+   *
+   * @return Employee
+   *
    */
   @PostMapping("/login")
-  public ResponseEntity<?> loginUser(@Valid @RequestBody Employee employee) {
+  public
+      ResponseEntity<?> loginUser(@Valid @RequestBody final Employee employee) {
     Optional<Boolean> answer = service.login(employee);
-    
+
     if (answer.get()) {
       return new ResponseEntity<>("Login Successfully", HttpStatus.ACCEPTED);
     }
     return new ResponseEntity<>("Invalid Credentials", HttpStatus.UNAUTHORIZED);
-  }	
+  }
+
+  /**
+   * Controller method to save employee.
+   *
+   * @param employee
+   *
+   * @return Employee
+   *
+   */
+  @PostMapping("/save")
+  public
+      ResponseEntity<?> saveUser(@Valid @RequestBody final Employee employee) {
+    return ResponseEntity.ok(service.saveUser(employee));
+  }
+
+  /**
+   * Controller method to list employee.
+   *
+   * @return List Employee.
+   *
+   */
+  @GetMapping("/list")
+  public ResponseEntity<?> listUser() {
+    return ResponseEntity.ok(service.listUser());
+  }
 }

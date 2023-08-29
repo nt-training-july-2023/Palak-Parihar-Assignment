@@ -1,6 +1,6 @@
 import './Input.css';
 
-function InputElement(props){
+function InputElement(props) {
     let inputElement = null;
     const inputClasses = ['InputElement'];
 
@@ -8,16 +8,16 @@ function InputElement(props){
         inputClasses.push('Invalid');
     }
 
-    console.log(props)
+    console.log(props.shouldValidate)
     switch (props.elementType) {
         case ('input'):
             inputElement = <input
                 className={inputClasses.join(' ')}
-                type = {props.elementConfig.type}
+                type={props.elementConfig.type}
                 {...props.elementConfig}
                 value={props.value}
-                onChange={props.changed} 
-                required/>;
+                onChange={props.changed}
+                required />;
             break;
 
         case ('textarea'):
@@ -25,17 +25,39 @@ function InputElement(props){
                 className={inputClasses.join(' ')}
                 {...props.elementConfig}
                 value={props.value}
-                onChange={props.changed} 
-                required/>;
+                onChange={props.changed}
+                required />;
+            break;
+
+        case ('select'):
+            inputElement = (<>
+                <select className='InputElement'>
+                    {props.value.map(option => (
+                        <option className='InputElement' key={option} value={option}>
+                            {option}
+                        </option>
+                    ))}
+                    {/* {console.log(props)} */}
+                </select>
+            </>)
+            break;
+        case ('disabled'):
+            inputElement = <input
+                className={inputClasses.join(' ')}
+                type={props.elementConfig.type}
+                {...props.elementConfig}
+                value={props.value}
+                onChange={props.changed}
+                required  disabled/>;
             break;
     }
 
-    return(
+    return (
         <>
-        <div className="Input">
-            <label className="classes.Label">{props.label}</label>
-            {inputElement}
-        </div>
+            <div className="Input">
+                <p className='label-container'>{props.label}</p>
+                {inputElement}
+            </div>
         </>
     )
 

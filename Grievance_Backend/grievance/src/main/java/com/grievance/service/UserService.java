@@ -4,10 +4,32 @@ import com.grievance.entity.Employee;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * User Service Interface.
+ */
 public interface UserService {
-  public Optional<Boolean> login(Employee employee);
+  /**
+   * login method.
+   *
+   * @param employee of type Employee.
+   *
+   * @return Boolean
+   */
+  Optional<Boolean> login(Employee employee);
 
-  public Optional<Employee> saveUser(Employee employee);
+  /**
+   * save user in database.
+   *
+   * @param employee of type Employee.
+   *
+   * @return Employee
+   */
+  Optional<Employee> saveUser(Employee employee);
 
-  public Optional<List<Employee>> listUser();
+  /**
+   * listing user.
+   *
+   * @return List of Employee.
+   */
+  Optional<List<Employee>> listUser();
 }
