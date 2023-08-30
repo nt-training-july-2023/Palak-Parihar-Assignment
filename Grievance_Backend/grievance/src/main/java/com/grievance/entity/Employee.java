@@ -5,16 +5,26 @@
 
 package com.grievance.entity;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 /**
  * Employee entity class.
  */
+@Entity
 public class Employee {
-
   /**
    * The id of employee.
    */
@@ -23,25 +33,43 @@ public class Employee {
   @Email
   @NotBlank
   private String email;
+
   /**
    * Full Name of employee.
    */
+  @NotEmpty
   private String fullName;
+
   /**
    * Password of employee .
    */
+  @NotEmpty
   private String password;
+
   /**
    * Usertype of employee.
    */
+  @NotEmpty
   private UserType userType;
+
+  /**
+   * Department of employee.
+   */
+  @NotEmpty
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "departmentId")
+  private Department department;
+
+  @NotEmpty
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.ALL)
+  private List<Ticket> tickets;
+
   /**
    * getter method for instance fullName.
    *
    * @return the fullName
    *
    */
-
   public String getFullName() {
     return fullName;
   }
@@ -108,4 +136,38 @@ public class Employee {
   public void setUserType(final UserType userTypeField) {
     this.userType = userTypeField;
   }
+
+  /**
+   * getter method for instance department.
+   *
+   * @return the department
+   */
+  public Department getDepartment() {
+    return department;
+  }
+
+  /**
+   * setter method for instance department.
+   *
+   * @param departmentField the department to set
+   */
+  public void setDepartment(final Department departmentField) {
+    this.department = departmentField;
+  }
+
+  /**
+   * @return the tickets
+   */
+  public List<Ticket> getTickets() {
+    return tickets;
+  }
+
+  /**
+   * @param tickets the tickets to set
+   */
+  public void setTickets(List<Ticket> tickets) {
+    this.tickets = tickets;
+  }
+  
+  
 }

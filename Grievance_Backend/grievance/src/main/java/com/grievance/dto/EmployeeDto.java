@@ -14,7 +14,6 @@ import javax.validation.constraints.NotBlank;
  *Employee Entity.
  */
 
-@Entity
 public class EmployeeDto {
   /**
    * email instance.

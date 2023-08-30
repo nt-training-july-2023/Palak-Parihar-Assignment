@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.grievance.dto.EmployeeDto;
+import com.grievance.entity.Employee;
 
 /**
  * User Service Interface.
@@ -16,7 +17,7 @@ public interface UserService {
    *
    * @return Boolean
    */
-  Optional<Boolean> login(EmployeeDto employee);
+  Optional<Boolean> login(Employee employee);
 
   /**
    * save user in database.
@@ -25,12 +26,12 @@ public interface UserService {
    *
    * @return Employee
    */
-  Optional<EmployeeDto> saveUser(EmployeeDto employee);
+  Optional<Employee> saveUser(Employee employee);
 
   /**
    * listing user.
    *
    * @return List of Employee.
    */
-  Optional<List<EmployeeDto>> listUser();
+  Optional<List<Employee>> listUser();
 }

@@ -5,6 +5,7 @@
 package com.grievance.controller;
 
 import com.grievance.dto.EmployeeDto;
+import com.grievance.entity.Employee;
 import com.grievance.service.UserService;
 import java.util.Optional;
 import javax.validation.Valid;
@@ -42,7 +43,7 @@ public class UserController {
   @PostMapping("/login")
   public
       ResponseEntity<?>
-        loginUser(@Valid @RequestBody final EmployeeDto employee) {
+        loginUser(@Valid @RequestBody final Employee employee) {
     Optional<Boolean> answer = service.login(employee);
 
     if (answer.get()) {
@@ -62,7 +63,7 @@ public class UserController {
   @PostMapping("/save")
   public
       ResponseEntity<?>
-        saveUser(@Valid @RequestBody final EmployeeDto employee) {
+        saveUser(@Valid @RequestBody final Employee employee) {
     return ResponseEntity.ok(service.saveUser(employee));
   }
 
