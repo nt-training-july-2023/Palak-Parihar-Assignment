@@ -11,13 +11,19 @@ package com.grievance.entity;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.grievance.dto.DepartmentDto;
 
 /**
  * Department entity class.
@@ -36,13 +42,15 @@ public class Department {
    * departmentName for department.
    */
   @NotEmpty
-  @Column(unique = true, nullable = false)
+  @Column(nullable = false, unique = true)
   private String departmentName;
-  
-  @OneToMany
+
+  @JsonIgnore
+  @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
   private List<Employee> employees;
-  
-  @OneToMany
+
+  @JsonIgnore
+  @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
   private List<Ticket> tickets;
 
   /**
@@ -81,30 +89,53 @@ public class Department {
     this.departmentName = departmentNameField;
   }
 
-/**
- * @return the employees
- */
-public List<Employee> getEmployees() {
-return employees;}
+  /**
+   * @return the employees
+   */
+  public List<Employee> getEmployees() {
+    return employees;
+  }
 
-/**
- * @param employees the employees to set
- */
-public void setEmployees(List<Employee> employees) {
-this.employees = employees;}
+  /**
+   * @param employees the employees to set
+   */
+  public void setEmployees(List<Employee> employees) {
+    this.employees = employees;
+  }
 
-/**
- * @return the tickets
- */
-public List<Ticket> getTickets() {
-return tickets;}
+  /**
+   * @return the tickets
+   */
+  public List<Ticket> getTickets() {
+    return tickets;
+  }
 
-/**
- * @param tickets the tickets to set
- */
-public void setTickets(List<Ticket> tickets) {
-this.tickets = tickets;}
+  /**
+   * @param tickets the tickets to set
+   */
+  public void setTickets(List<Ticket> tickets) {
+    this.tickets = tickets;
+  }
+
+//  @Override
+//  public String toString() {
+//    return (
+//      "Department [departmentId=" +
+//      departmentId +
+//      ", departmentName=" +
+//      departmentName +
+//      ", employees=" +
+//      employees +
+//      ", tickets=" +
+//      tickets +
+//      "]"
+//    );
+//  }
   
-  
-  
+  public DepartmentDto toDto() {
+	  DepartmentDto departmentDto = new DepartmentDto();
+	  departmentDto.setDepartmentId(departmentId);
+	  departmentDto.setDepartmentName(departmentName);
+	  return departmentDto;
+  }
 }

@@ -10,15 +10,17 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.grievance.dto.EmployeeDto;
 
 /**
  * Employee entity class.
@@ -49,19 +51,21 @@ public class Employee {
   /**
    * Usertype of employee.
    */
-  @NotEmpty
   private UserType userType;
 
   /**
    * Department of employee.
    */
-  @NotEmpty
-  @ManyToOne(fetch = FetchType.LAZY)
+  
+//  @JsonBackReference
+  @ManyToOne
   @JoinColumn(name = "departmentId")
   private Department department;
 
-  @NotEmpty
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.ALL)
+//  @JsonManagedReference
+  @JsonIgnore
+//  @Cascade(CascadeType.ALL)
+  @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
   private List<Ticket> tickets;
 
   /**
@@ -168,6 +172,34 @@ public class Employee {
   public void setTickets(List<Ticket> tickets) {
     this.tickets = tickets;
   }
+
+//  @Override
+//  public String toString() {
+//    return (
+//      "Employee [email=" +
+//      email +
+//      ", fullName=" +
+//      fullName +
+//      ", password=" +
+//      password +
+//      ", userType=" +
+//      userType +
+//      ", department=" +
+//      department +
+//      ", tickets=" +
+//      tickets +
+//      "]"
+//    );
+//  }
   
-  
+  public EmployeeDto toDto() {
+	  EmployeeDto employeeDto = new EmployeeDto();
+	  employeeDto.setDepartment(department.toDto());
+	  employeeDto.setEmail(email);
+//	  employeeDto.setFirstTimeUser();
+	  employeeDto.setFullName(fullName);
+	  employeeDto.setPassword(password);
+	  employeeDto.setUserType(userType);
+	  return employeeDto;
+  }
 }

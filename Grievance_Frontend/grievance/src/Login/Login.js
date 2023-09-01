@@ -95,9 +95,8 @@ export default function Login() {
         }
 
         if (rules.isEmail) {
-            const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+            const pattern = /^[A-Za-z0-9+_.-]+@nucleusteq.com(.+)$/;
             isValid = pattern.test(value) && isValid
-            const str = "@nucleusteq.com"
             if (isValid && value.indexOf("@nucleusteq.com", value.length - "@nucleusteq.com".length) !== -1) {
                 //VALID
                 isValid = true
@@ -107,9 +106,10 @@ export default function Login() {
             setMessage("Invalid email domain")
         }
 
-        if (rules.isNumeric) {
-            const pattern = /^\d+$/;
+        if (rules.isPassword) {
+            const pattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
             isValid = pattern.test(value) && isValid
+            setMessage("Password doesn't match the requirements")
         }
         if (isValid) {
             setMessage('')
@@ -155,7 +155,7 @@ export default function Login() {
             console.log(e.response.data)
             var err = e.response.data;
             // alert(err)
-            setModal(() => <Modal message={err} onClick = {closeModal}/>)
+            setModal(() => <Modal message={err} onClick={closeModal} />)
         })
     }
 

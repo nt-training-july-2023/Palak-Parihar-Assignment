@@ -37,6 +37,7 @@ public class Comment {
   private Date createdOn;
   
   @ManyToOne
+  @JoinColumn(name = "ticketId")
   private Ticket ticket;
   
 

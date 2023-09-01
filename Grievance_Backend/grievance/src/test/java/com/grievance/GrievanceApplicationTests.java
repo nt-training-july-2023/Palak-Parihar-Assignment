@@ -29,21 +29,14 @@ class GrievanceApplicationTests {
   @Test
   void saveEmployee() {
 	  
-	  Department department = new Department();
-	  department.setDepartmentName("HR");
-////	  department.se
+//	  Department department = departmentRepository.findByDepartmentName("HR");
+//	  Employee employee = new Employee();
+//	  employee.setDepartment(department);
+//	  employee.setEmail("example@nucleusteq.com");
+//	  employee.setFirstTimeUser(true);
+//	  employee.setFullName("Example");
+//	  employee.setPassword("Example#123");
+//	  System.out.println(employeeRepository.save(employee));
 //	  
-//	  departmentRepository.save(department);
-	  
-	  Employee employee = new Employee();
-	  employee.setDepartment(department);
-	  employee.setEmail("example@nucleusteq.com");
-	  employee.setFullName("Example Nucleusteq");
-	  employee.setPassword("1234");
-	  employee.setUserType(UserType.MEMBER);
-//	  employee.s
-	  
-	  employeeRepository.save(employee);
-	  
   }
 }

@@ -17,5 +17,4 @@ public interface UserRepository extends CrudRepository<Employee, String> {
    * @param email of type String.
    * @return Employee.
    */
-  EmployeeDto findByEmail(String email);
 }

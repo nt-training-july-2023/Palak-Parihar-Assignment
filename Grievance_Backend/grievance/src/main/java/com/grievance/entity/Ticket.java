@@ -5,6 +5,8 @@ package com.grievance.entity;
 
 import java.util.Date;
 import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -56,7 +58,7 @@ public class Ticket {
   @Temporal(TemporalType.TIMESTAMP)
   private Date lastUpdated;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "ticket")
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "ticket", cascade = CascadeType.ALL)
   private List<Comment> comments;
 
   @ManyToOne
