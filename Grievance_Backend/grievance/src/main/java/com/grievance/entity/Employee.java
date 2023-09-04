@@ -1,12 +1,7 @@
-/**
- * Employee entity class.
- *
- */
-
 package com.grievance.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,188 +13,222 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.grievance.dto.EmployeeDto;
-
 /**
  * Employee entity class.
+ * This class represents the Employee entity used in the application.
+ * It contains information about employees,
+ * such as email, full name, password, user type,
+ * department, and associated tickets.
  */
 @Entity
 public class Employee {
-  /**
-   * The id of employee.
-   */
-  @Id
-  @Column(unique = true)
-  @Email
-  @NotBlank
-  private String email;
+    /**
+     * The email of the employee (unique identifier).
+     */
+    @Id
+    @Column(unique = true)
+    @Email
+    @NotBlank
+    private String email;
 
-  /**
-   * Full Name of employee.
-   */
-  @NotEmpty
-  private String fullName;
+    /**
+     * The full name of the employee.
+     */
+    @NotEmpty
+    private String fullName;
 
-  /**
-   * Password of employee .
-   */
-  @NotEmpty
-  private String password;
+    /**
+     * The password of the employee.
+     */
+    @NotEmpty
+    private String password;
 
-  /**
-   * Usertype of employee.
-   */
-  private UserType userType;
+    /**
+     * The user type of the employee.
+     */
+    private UserType userType;
 
-  /**
-   * Department of employee.
-   */
-  
-//  @JsonBackReference
-  @ManyToOne
-  @JoinColumn(name = "departmentId")
-  private Department department;
+    /**
+     * Indicates if the employee is a first-time user.
+     */
+    private Boolean firstTimeUser;
 
-//  @JsonManagedReference
-  @JsonIgnore
-//  @Cascade(CascadeType.ALL)
-  @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
-  private List<Ticket> tickets;
+    /**
+     * The department to which the employee belongs.
+     */
+    @ManyToOne
+    @JoinColumn(name = "departmentId")
+    private Department department;
 
-  /**
-   * getter method for instance fullName.
-   *
-   * @return the fullName
-   *
-   */
-  public String getFullName() {
-    return fullName;
-  }
+    /**
+     * The list of tickets associated with the employee.
+     */
+    @JsonIgnore
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
+    private List<Ticket> tickets;
 
-  /**
-   * setter method for instance fullName.
-   *
-   * @param fullNameField the fullName to set
-   */
-  public void setFullName(final String fullNameField) {
-    this.fullName = fullNameField;
-  }
+    /**
+     * Get the full name of the employee.
+     *
+     * @return the fullName
+     */
+    public String getFullName() {
+        return fullName;
+    }
 
-  /**
-   * getter method to get instance email.
-   *
-   * @return the email
-   */
-  public String getEmail() {
-    return email;
-  }
+    /**
+     * Set the full name of the employee.
+     *
+     * @param fullNameField the fullName to set
+     */
+    public void setFullName(final String fullNameField) {
+        this.fullName = fullNameField;
+    }
 
-  /**
-   * setter method for instance email.
-   *
-   * @param emailField the email to set
-   */
-  public void setEmail(final String emailField) {
-    this.email = emailField;
-  }
+    /**
+     * Get the email of the employee.
+     *
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
+    }
 
-  /**
-   * getter method for instance password.
-   *
-   * @return the password
-   */
-  public String getPassword() {
-    return password;
-  }
+    /**
+     * Set the email of the employee.
+     *
+     * @param emailField the email to set
+     */
+    public void setEmail(final String emailField) {
+        this.email = emailField;
+    }
 
-  /**
-   * setter method for instance password.
-   *
-   * @param passwordField the password to set
-   */
-  public void setPassword(final String passwordField) {
-    this.password = passwordField;
-  }
+    /**
+     * Get the password of the employee.
+     *
+     * @return the password
+     */
+    public String getPassword() {
+        return password;
+    }
 
-  /**
-   * getter method for instance userType.
-   *
-   * @return the userType
-   */
-  public UserType getUserType() {
-    return userType;
-  }
+    /**
+     * Set the password of the employee.
+     *
+     * @param passwordField the password to set
+     */
+    public void setPassword(final String passwordField) {
+        this.password = passwordField;
+    }
 
-  /**
-   * setter method for instance userType.
-   *
-   * @param userTypeField the userType to set
-   */
-  public void setUserType(final UserType userTypeField) {
-    this.userType = userTypeField;
-  }
+    /**
+     * Get the user type of the employee.
+     *
+     * @return the userType
+     */
+    public UserType getUserType() {
+        return userType;
+    }
 
-  /**
-   * getter method for instance department.
-   *
-   * @return the department
-   */
-  public Department getDepartment() {
-    return department;
-  }
+    /**
+     * Set the user type of the employee.
+     *
+     * @param userTypeField the userType to set
+     */
+    public void setUserType(final UserType userTypeField) {
+        this.userType = userTypeField;
+    }
 
-  /**
-   * setter method for instance department.
-   *
-   * @param departmentField the department to set
-   */
-  public void setDepartment(final Department departmentField) {
-    this.department = departmentField;
-  }
+    /**
+     * Get the department of the employee.
+     *
+     * @return the department
+     */
+    public Department getDepartment() {
+        return department;
+    }
 
-  /**
-   * @return the tickets
-   */
-  public List<Ticket> getTickets() {
-    return tickets;
-  }
+    /**
+     * Set the department of the employee.
+     *
+     * @param departmentField the department to set
+     */
+    public void setDepartment(final Department departmentField) {
+        this.department = departmentField;
+    }
 
-  /**
-   * @param tickets the tickets to set
-   */
-  public void setTickets(List<Ticket> tickets) {
-    this.tickets = tickets;
-  }
+    /**
+     * Get the status of whether the employee is a first-time user.
+     *
+     * @return the firstTimeUser
+     */
+    public Boolean getFirstTimeUser() {
+        return firstTimeUser;
+    }
 
-//  @Override
-//  public String toString() {
-//    return (
-//      "Employee [email=" +
-//      email +
-//      ", fullName=" +
-//      fullName +
-//      ", password=" +
-//      password +
-//      ", userType=" +
-//      userType +
-//      ", department=" +
-//      department +
-//      ", tickets=" +
-//      tickets +
-//      "]"
-//    );
-//  }
-  
-  public EmployeeDto toDto() {
-	  EmployeeDto employeeDto = new EmployeeDto();
-	  employeeDto.setDepartment(department.toDto());
-	  employeeDto.setEmail(email);
-//	  employeeDto.setFirstTimeUser();
-	  employeeDto.setFullName(fullName);
-	  employeeDto.setPassword(password);
-	  employeeDto.setUserType(userType);
-	  return employeeDto;
-  }
+    /**
+     * Set the status of whether the employee is a first-time user.
+     *
+     * @param firstTimeUserField the firstTimeUser to set
+     */
+    public void setFirstTimeUser(final Boolean firstTimeUserField) {
+        this.firstTimeUser = firstTimeUserField;
+    }
+
+    /**
+     * Get the list of tickets associated with the employee.
+     *
+     * @return the tickets
+     */
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
+
+    /**
+     * Set the list of tickets associated with the employee.
+     *
+     * @param ticketsField the tickets to set
+     */
+    public void setTickets(final List<Ticket> ticketsField) {
+        this.tickets = ticketsField;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return (
+            "Employee [email="
+        +
+            email
+            +
+            ", fullName="
+            +
+            fullName
+            +
+            ", password="
+            +
+            password
+            +
+            ", userType="
+            +
+            userType
+            +
+            ", department="
+            +
+            department
+            +
+            ", tickets="
+            +
+            tickets
+            +
+            "]"
+        );
+    }
+
+    /**
+     * Default constructor for Employee.
+     */
+    public Employee() { }
 }

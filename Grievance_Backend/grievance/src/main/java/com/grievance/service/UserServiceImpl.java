@@ -52,5 +52,4 @@ public class UserServiceImpl implements UserService {
     repository.findAll().forEach(employees::add);
     return Optional.ofNullable(employees);
   }
-
 }

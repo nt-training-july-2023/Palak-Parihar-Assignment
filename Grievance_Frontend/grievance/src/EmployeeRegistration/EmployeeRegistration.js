@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './EmployeeRegistration.css';
-import InputElement from '../InputElement/InputElement';
-import Button from '../Button/Button';
+import InputElement from '../UI/InputElement/InputElement';
+import Button from '../UI/Button/Button';
 
 
 export default function EmployeeRegistration(props) {

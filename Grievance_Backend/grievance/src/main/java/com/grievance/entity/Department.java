@@ -1,60 +1,63 @@
 /**
  * Department entity class for Employee.
+ * This class represents the Department entity used in the application.
+ * It contains information about
+ * departments and their associated employees and tickets.
  *
- *
- *@author palak.
- *
- *
+ * @author palak
  */
 
 package com.grievance.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.grievance.dto.DepartmentDto;
-
 /**
  * Department entity class.
- *
+ * This class represents the Department entity used in the application.
+ * It contains information about
+ * departments and their associated employees and tickets.
  */
 @Entity
 public class Department {
   /**
-   *departmentId instance for department.
+   * The unique identifier for the department.
    */
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "dept_seq")
   private Integer departmentId;
 
   /**
-   * departmentName for department.
+   * The name of the department.
    */
   @NotEmpty
   @Column(nullable = false, unique = true)
   private String departmentName;
 
+  /**
+   * The list of employees associated with this department.
+   */
   @JsonIgnore
   @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
   private List<Employee> employees;
 
+  /**
+   * The list of tickets associated with this department.
+   */
   @JsonIgnore
   @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
   private List<Ticket> tickets;
 
   /**
-   * getter method to get departmentId for department.
+   * Get the departmentId for this department.
    *
    * @return the departmentId
    */
@@ -63,7 +66,7 @@ public class Department {
   }
 
   /**
-   * setter method to get departmentId for department.
+   * Set the departmentId for this department.
    *
    * @param departmentIdField the departmentId to set
    */
@@ -72,7 +75,7 @@ public class Department {
   }
 
   /**
-   * getter method to get departmentName for department.
+   * Get the departmentName for this department.
    *
    * @return the departmentName
    */
@@ -81,7 +84,7 @@ public class Department {
   }
 
   /**
-   * setter method to get departmentName for department.
+   * Set the departmentName for this department.
    *
    * @param departmentNameField the departmentName to set
    */
@@ -90,6 +93,8 @@ public class Department {
   }
 
   /**
+   * Get the list of employees associated with this department.
+   *
    * @return the employees
    */
   public List<Employee> getEmployees() {
@@ -97,13 +102,17 @@ public class Department {
   }
 
   /**
-   * @param employees the employees to set
+   * Set the list of employees associated with this department.
+   *
+   * @param employeesField the employees to set
    */
-  public void setEmployees(List<Employee> employees) {
-    this.employees = employees;
+  public void setEmployees(final List<Employee> employeesField) {
+    this.employees = employeesField;
   }
 
   /**
+   * Get the list of tickets associated with this department.
+   *
    * @return the tickets
    */
   public List<Ticket> getTickets() {
@@ -111,31 +120,11 @@ public class Department {
   }
 
   /**
-   * @param tickets the tickets to set
+   * Set the list of tickets associated with this department.
+   *
+   * @param ticketsField the tickets to set
    */
-  public void setTickets(List<Ticket> tickets) {
-    this.tickets = tickets;
-  }
-
-//  @Override
-//  public String toString() {
-//    return (
-//      "Department [departmentId=" +
-//      departmentId +
-//      ", departmentName=" +
-//      departmentName +
-//      ", employees=" +
-//      employees +
-//      ", tickets=" +
-//      tickets +
-//      "]"
-//    );
-//  }
-  
-  public DepartmentDto toDto() {
-	  DepartmentDto departmentDto = new DepartmentDto();
-	  departmentDto.setDepartmentId(departmentId);
-	  departmentDto.setDepartmentName(departmentName);
-	  return departmentDto;
+  public void setTickets(final List<Ticket> ticketsField) {
+    this.tickets = ticketsField;
   }
 }

@@ -1,17 +1,27 @@
 /**
+ * The DepartmentDto class is used for
+ * transferring data from the
+ * DAO (Data Access Object) to the service layer.
  *
+ * @author palak
  */
+
 package com.grievance.dto;
 
-import com.grievance.entity.Department;
-
 /**
- *
+ * The DepartmentDto class represents a data transfer
+ * object for department-related information.
  */
 public class DepartmentDto {
+  /**
+   * departmentId of Department DTO.
+   *
+   */
   private Integer departmentId;
 
   /**
+   * Gets the department ID.
+   *
    * @return the departmentId
    */
   public Integer getDepartmentId() {
@@ -19,15 +29,22 @@ public class DepartmentDto {
   }
 
   /**
-   * @param departmentId the departmentId to set
+   * Sets the department ID.
+   *
+   * @param departmentIdField the departmentId to set
    */
-  public void setDepartmentId(Integer departmentId) {
-    this.departmentId = departmentId;
+  public void setDepartmentId(final Integer departmentIdField) {
+    this.departmentId = departmentIdField;
   }
 
+  /**
+   * departmentName of Department Dto.
+   */
   private String departmentName;
 
   /**
+   * Gets the department name.
+   *
    * @return the departmentName
    */
   public String getDepartmentName() {
@@ -35,30 +52,19 @@ public class DepartmentDto {
   }
 
   /**
-   * @param departmentName the departmentName to set
+   * Sets the department name.
+   *
+   * @param departmentNameField the departmentName to set
    */
-  public void setDepartmentName(String departmentName) {
-    this.departmentName = departmentName;
+  public void setDepartmentName(final String departmentNameField) {
+    this.departmentName = departmentNameField;
   }
 
-  public DepartmentDto(Department department) {
-    this.setDepartmentName(department.getDepartmentName());
-  }
-
+  /**
+   * Constructs a new DepartmentDto object.
+   */
   public DepartmentDto() {
     super();
     // TODO Auto-generated constructor stub
-  }
-
-  public DepartmentDto(String departmentName) {
-    super();
-    this.departmentName = departmentName;
-  }
-
-  public Department toEntity() {
-    Department department = new Department();
-    department.setDepartmentId(departmentId);
-    department.setDepartmentName(departmentName);
-    return department;
   }
 }

@@ -1,12 +1,12 @@
 package com.grievance;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.grievance.entity.Department;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.grievance.entity.Employee;
 import com.grievance.entity.UserType;
 import com.grievance.repository.DepartmentRepository;

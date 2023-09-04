@@ -12,14 +12,14 @@ public class GrievanceApplication {
   /**
    * Default Constructor.
    */
-  protected GrievanceApplication() {
-  }
+  protected GrievanceApplication() { }
 
   /**
    * main method of grievance application.
    *
    * @param args type of String.
    */
+
   public static void main(final String[] args) {
     SpringApplication.run(GrievanceApplication.class, args);
   }

@@ -1,107 +1,146 @@
 /**
- *
+ * Entity class representing a comment.
  */
+
 package com.grievance.entity;
 
 import java.util.Date;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
 import org.hibernate.annotations.CreationTimestamp;
 
 /**
- *entity class of comment.
+ * Entity class representing a comment.
  */
 @Entity
 public class Comment {
+  /**
+   * Integer commentId of Comment.
+   */
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer commentId;
 
+  /**
+   * String description of comment.
+   */
   @NotEmpty
   private String description;
 
+  /**
+   * String userName that comment belongs to.
+   */
   @NotEmpty
   private String userName;
 
+  /**
+   * Creation time of comment.
+   */
   @CreationTimestamp
   @Temporal(TemporalType.TIMESTAMP)
   private Date createdOn;
-  
+
+  /**
+   * ticket that belongs to this comment.
+   */
   @ManyToOne
   @JoinColumn(name = "ticketId")
   private Ticket ticket;
-  
 
-/**
- * @return the commentId
- */
-public Integer getCommentId() {
-return commentId;}
+  /**
+   * Get the commentId.
+   *
+   * @return the commentId
+   */
+  public Integer getCommentId() {
+    return commentId;
+  }
 
-/**
- * @param commentId the commentId to set
- */
-public void setCommentId(Integer commentId) {
-this.commentId = commentId;}
+  /**
+   * Set the commentId.
+   *
+   * @param commentIdField the commentId to set
+   */
+  public void setCommentId(final Integer commentIdField) {
+    this.commentId = commentIdField;
+  }
 
-/**
- * @return the description
- */
-public String getDescription() {
-return description;}
+  /**
+   * Get the description.
+   *
+   * @return the description
+   */
+  public String getDescription() {
+    return description;
+  }
 
-/**
- * @param description the description to set
- */
-public void setDescription(String description) {
-this.description = description;}
+  /**
+   * Set the description.
+   *
+   * @param descriptionField the description to set
+   */
+  public void setDescription(final String descriptionField) {
+    this.description = descriptionField;
+  }
 
-/**
- * @return the userName
- */
-public String getUserName() {
-return userName;}
+  /**
+   * Get the userName.
+   *
+   * @return the userName
+   */
+  public String getUserName() {
+    return userName;
+  }
 
-/**
- * @param userName the userName to set
- */
-public void setUserName(String userName) {
-this.userName = userName;}
+  /**
+   * Set the userName.
+   *
+   * @param userNameField the userName to set
+   */
+  public void setUserName(final String userNameField) {
+    this.userName = userNameField;
+  }
 
-/**
- * @return the createdOn
- */
-public Date getCreatedOn() {
-return createdOn;}
+  /**
+   * Get the createdOn date.
+   *
+   * @return the createdOn date
+   */
+  public Date getCreatedOn() {
+    return createdOn;
+  }
 
-/**
- * @param createdOn the createdOn to set
- */
-public void setCreatedOn(Date createdOn) {
-this.createdOn = createdOn;}
+  /**
+   * Set the createdOn date.
+   *
+   * @param createdOnField the createdOn date to set
+   */
+  public void setCreatedOn(final Date createdOnField) {
+    this.createdOn = createdOnField;
+  }
 
-/**
- * @return the ticket
- */
-public Ticket getTicket() {
-return ticket;}
+  /**
+   * Get the associated ticket.
+   *
+   * @return the ticket
+   */
+  public Ticket getTicket() {
+    return ticket;
+  }
 
-/**
- * @param ticket the ticket to set
- */
-public void setTicket(Ticket ticket) {
-this.ticket = ticket;}
-
-
-  
-  
+  /**
+   * Set the associated ticket.
+   *
+   * @param ticketField the ticket to set
+   */
+  public void setTicket(final Ticket ticketField) {
+    this.ticket = ticketField;
+  }
 }

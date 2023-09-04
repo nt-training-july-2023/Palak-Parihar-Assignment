@@ -1,6 +1,6 @@
 import { useState } from "react";
-import InputElement from "../InputElement/InputElement";
-import Button from "../Button/Button";
+import InputElement from "../UI/InputElement/InputElement";
+import Button from "../UI/Button/Button";
 
 export default function NewTicket(props) {
 
@@ -16,10 +16,11 @@ export default function NewTicket(props) {
                     type: 'select',
                     placeholder: ''
                 },
-                value: ticketTypeOptions,
+                options: ticketTypeOptions,
                 validation: {
                     required: true
                 },
+                value:'',
                 valid: false,
                 label: 'Ticket Type'
             },
@@ -29,6 +30,7 @@ export default function NewTicket(props) {
                     type: 'text',
                     placeholder: 'Title'
                 },
+                options:null,
                 value: '',
                 validation: {
                     required: true,
@@ -44,6 +46,7 @@ export default function NewTicket(props) {
                     type: 'email',
                     placeholder: 'Ticket description'
                 },
+                options:null,
                 value: '',
                 validation: {
                     required: true,
@@ -59,10 +62,11 @@ export default function NewTicket(props) {
                     type: 'select',
                     placeholder: ''
                 },
-                value: departmentOptions,
+                value: '',
                 validation: {
                     required: true
                 },
+                options: departmentOptions,
                 valid: false,
                 label: 'Department'
             },
@@ -72,6 +76,7 @@ export default function NewTicket(props) {
                     type: 'disable',
                     placeholder: 'Open'
                 },
+                options:null,
                 value: 'Open',
                 validation: {
                     required: true,
@@ -111,6 +116,7 @@ export default function NewTicket(props) {
                         shouldValidate={formElement.config.validation}
                         touched={formElement.config.touched}
                         changed={(e) => inputChangeHandler(e, formElement.id)}
+                        options={formElement.config.options}
                     />
                 </div>
             </div>

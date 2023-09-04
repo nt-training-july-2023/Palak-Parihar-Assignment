@@ -1,12 +1,11 @@
 import axios from "axios";
 import "./Login.css";
-import '../InputElement/InputElement';
 import '../Dashboard/Dashboard'
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'
-import InputElement from "../InputElement/InputElement";
-import Modal from "../Modal/Modal";
-import Button from "../Button/Button";
+import InputElement from "../UI/InputElement/InputElement";
+import Modal from "../UI/Modal/Modal";
+import Button from "../UI/Button/Button";
 
 export default function Login() {
     let cont = {
@@ -47,6 +46,9 @@ export default function Login() {
     const [controls, setControls] = useState(cont.controls);
     const [message, setMessage] = useState();
     const [modal, setModal] = useState();
+    const navigate = useNavigate();
+
+    let baseUrl = 'http://localhost:8080/';
 
     const formElementsArray = [];
     for (let key in controls) {
@@ -164,9 +166,7 @@ export default function Login() {
         setModal(() => <></>)
     }
 
-    const navigate = useNavigate();
-
-    let baseUrl = 'http://localhost:8080/';
+   
 
     useEffect(() => {
         axios({

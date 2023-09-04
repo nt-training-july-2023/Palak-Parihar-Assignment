@@ -1,11 +1,7 @@
-/**
- *
- */
 package com.grievance.entity;
 
 import java.util.Date;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
@@ -24,179 +19,238 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 /**
- *
+ * Entity class representing a ticket.
  */
 @Entity
 public class Ticket {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer ticketId;
 
-  @NotEmpty
-  @Size(min = 1, max = 50, message = "Title too long(max 50 characters)")
-  private String title;
+    /**
+     *minimumLength final integer.
+     */
+    private final int minimumLength = 1;
+    /**
+     *maximumLengthOfTitle final integer.
+     */
+    private final int maximumLengthOfTitle = 50;
+    /**
+     *maximumLengthOfDescription final integer.
+     */
+    private final int maximumLengthOfDescription = 500;
 
-  @NotEmpty
-  private TicketType ticketType;
+    /**
+     * Integer ticketId of Ticket.
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer ticketId;
 
-  @ManyToOne
-  @JoinColumn(name = "departmentId")
-  private Department department;
+    /**
+     * The title of the ticket.
+     */
+    @NotEmpty
+    @Size(
+        min = minimumLength,
+        max = maximumLengthOfTitle,
+        message = "Title too long (max 50 characters)"
+    )
+    private String title;
 
-  @NotEmpty
-  @Size(min = 1, max = 500, message = "Description too long (max 500 characters)")
-  private String description;
+    /**
+     * The type of the ticket.
+     */
+    @NotEmpty
+    private TicketType ticketType;
 
-  @NotEmpty
-  private Status status;
+    /**
+     * The department associated with the ticket.
+     */
+    @ManyToOne
+    @JoinColumn(name = "departmentId")
+    private Department department;
 
-  @CreatedDate
-  @Temporal(TemporalType.TIMESTAMP)
-  private Date dateOpened;
+    /**
+     * The description of the ticket.
+     */
+    @NotEmpty
+    @Size(
+        min = minimumLength,
+        max = maximumLengthOfDescription,
+        message = "Description too long (max 500 characters)"
+    )
+    private String description;
 
-  @UpdateTimestamp
-  @Temporal(TemporalType.TIMESTAMP)
-  private Date lastUpdated;
+    /**
+     * The status of the ticket.
+     */
+    @NotEmpty
+    private Status status;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "ticket", cascade = CascadeType.ALL)
-  private List<Comment> comments;
+    /**
+     * The date when the ticket was opened.
+     */
+    @CreatedDate
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateOpened;
 
-  @ManyToOne
-  @JoinColumn(name = "employeeId")
-  private Employee employee;
+    /**
+     * The date when the ticket was last updated.
+     */
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastUpdated;
 
-  /**
-   * @return the title
-   */
-  public String getTitle() {
-    return title;
-  }
+    /**
+     * The list of comments associated with the ticket.
+     */
+    @OneToMany(fetch = FetchType.LAZY,
+            mappedBy = "ticket",
+            cascade = CascadeType.ALL)
+    private List<Comment> comments;
 
-  /**
-   * @param title the title to set
-   */
-  public void setTitle(String title) {
-    this.title = title;
-  }
+    /**
+     * The employee who created the ticket.
+     */
+    @ManyToOne
+    @JoinColumn(name = "employeeId")
+    private Employee employee;
 
-  /**
-   * @return the ticketType
-   */
-  public TicketType getTicketType() {
-    return ticketType;
-  }
+    /**
+     * @return the ticketId
+     */
+    public Integer getTicketId() {
+        return ticketId;
+    }
 
-  /**
-   * @param ticketType the ticketType to set
-   */
-  public void setTicketType(TicketType ticketType) {
-    this.ticketType = ticketType;
-  }
+    /**
+     * @param ticketIdField the ticketId to set
+     */
+    public void setTicketId(final Integer ticketIdField) {
+        this.ticketId = ticketIdField;
+    }
 
-  /**
-   * @return the department
-   */
-  public Department getDepartment() {
-    return department;
-  }
+    /**
+     * @return the title
+     */
+    public String getTitle() {
+        return title;
+    }
 
-  /**
-   * @param department the department to set
-   */
-  public void setDepartment(Department department) {
-    this.department = department;
-  }
+    /**
+     * @param titleField the title to set
+     */
+    public void setTitle(final String titleField) {
+        this.title = titleField;
+    }
 
-  /**
-   * @return the description
-   */
-  public String getDescription() {
-    return description;
-  }
+    /**
+     * @return the ticketType
+     */
+    public TicketType getTicketType() {
+        return ticketType;
+    }
 
-  /**
-   * @param description the description to set
-   */
-  public void setDescription(String description) {
-    this.description = description;
-  }
+    /**
+     * @param ticketTypeField the ticketType to set
+     */
+    public void setTicketType(final TicketType ticketTypeField) {
+        this.ticketType = ticketTypeField;
+    }
 
-  /**
-   * @return the status
-   */
-  public Status getStatus() {
-    return status;
-  }
+    /**
+     * @return the department
+     */
+    public Department getDepartment() {
+        return department;
+    }
 
-  /**
-   * @param status the status to set
-   */
-  public void setStatus(Status status) {
-    this.status = status;
-  }
+    /**
+     * @param departmentField the department to set
+     */
+    public void setDepartment(final Department departmentField) {
+        this.department = departmentField;
+    }
 
-  /**
-   * @return the dateOpened
-   */
-  public Date getDateOpened() {
-    return dateOpened;
-  }
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
 
-  /**
-   * @param dateOpened the dateOpened to set
-   */
-  public void setDateOpened(Date dateOpened) {
-    this.dateOpened = dateOpened;
-  }
+    /**
+     * @param descriptionField the description to set
+     */
+    public void setDescription(final String descriptionField) {
+        this.description = descriptionField;
+    }
 
-  /**
-   * @return the lastUpdated
-   */
-  public Date getLastUpdated() {
-    return lastUpdated;
-  }
+    /**
+     * @return the status
+     */
+    public Status getStatus() {
+        return status;
+    }
 
-  /**
-   * @param lastUpdated the lastUpdated to set
-   */
-  public void setLastUpdated(Date lastUpdated) {
-    this.lastUpdated = lastUpdated;
-  }
+    /**
+     * @param statusField the status to set
+     */
+    public void setStatus(final Status statusField) {
+        this.status = statusField;
+    }
 
-  /**
-   * @return the comments
-   */
-  public List<Comment> getComments() {
-    return comments;
-  }
+    /**
+     * @return the dateOpened
+     */
+    public Date getDateOpened() {
+        return dateOpened;
+    }
 
-  /**
-   * @param comments the comments to set
-   */
-  public void setComments(List<Comment> comments) {
-    this.comments = comments;
-  }
+    /**
+     * @param dateOpenedField the dateOpened to set
+     */
+    public void setDateOpened(final Date dateOpenedField) {
+        this.dateOpened = dateOpenedField;
+    }
 
-  /**
-   * @return the employee
-   */
-  public Employee getEmployee() {
-    return employee;
-  }
+    /**
+     * @return the lastUpdated
+     */
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
 
-  /**
-   * @param employee the employee to set
-   */
-  public void setEmployee(Employee employee) {
-    this.employee = employee;
-  }
+    /**
+     * @param lastUpdatedField the lastUpdated to set
+     */
+    public void setLastUpdated(final Date lastUpdatedField) {
+        this.lastUpdated = lastUpdatedField;
+    }
 
-  /**
-   * @return the ticketId
-   */
-  public Integer getTicketId() {
-    return ticketId;
-  }
-  
-  
+    /**
+     * @return the comments
+     */
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    /**
+     * @param commentsField the comments to set
+     */
+    public void setComments(final List<Comment> commentsField) {
+        this.comments = commentsField;
+    }
+
+    /**
+     * @return the employee
+     */
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    /**
+     * @param employeeField the employee to set
+     */
+    public void setEmployee(final Employee employeeField) {
+        this.employee = employeeField;
+    }
 }

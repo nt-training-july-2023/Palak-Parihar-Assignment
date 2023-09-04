@@ -1,10 +1,8 @@
 package com.grievance.service;
 
+import com.grievance.entity.Employee;
 import java.util.List;
 import java.util.Optional;
-
-import com.grievance.dto.EmployeeDto;
-import com.grievance.entity.Employee;
 
 /**
  * User Service Interface.

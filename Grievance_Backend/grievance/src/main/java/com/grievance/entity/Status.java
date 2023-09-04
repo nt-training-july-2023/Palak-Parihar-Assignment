@@ -1,8 +1,20 @@
 package com.grievance.entity;
 
+/**
+ * Enumeration representing the status of a ticket.
+ * Possible values are OPEN, INPROGRESS, and CLOSED.
+ */
 public enum Status {
-	OPEN,
-	INPROGRESS,
-	CLOSED
+  /**
+   * open type of status.
+   */
+  OPEN,
+  /**
+   * In Progress type of status.
+   */
+  INPROGRESS,
+  /**
+   * close type of status.
+   */
+  CLOSED
 }
-

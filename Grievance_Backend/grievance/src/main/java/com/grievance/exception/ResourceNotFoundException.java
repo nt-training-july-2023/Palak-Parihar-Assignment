@@ -1,19 +1,24 @@
-/**
- *
- */
 package com.grievance.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
- *
+ * Custom exception class for handling resource not found errors.
+ * This exception is thrown when an attempt
+ * to retrieve an employee by email fails.
  */
-@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Employee Not Found") //404
+@ResponseStatus(value = HttpStatus.NOT_FOUND,
+    reason = "Employee Not Found") // HTTP 404
 public class ResourceNotFoundException extends Exception {
   private static final long serialVersionUID = -3332292346834265371L;
 
-  public ResourceNotFoundException(String  email) {
-    super("EmployeeNotFoundException with id=" + email);
+  /**
+   * Constructs a new ResourceNotFoundException with a specific email address.
+   *
+   * @param email The email address for which the employee was not found.
+   */
+  public ResourceNotFoundException(final String email) {
+    super("EmployeeNotFoundException with email=" + email);
   }
 }

@@ -4,13 +4,11 @@
 
 package com.grievance.controller;
 
-import com.grievance.dto.EmployeeDto;
+import com.grievance.dto.EmployeeInDto;
 import com.grievance.dto.EmployeeLoginDto;
-import com.grievance.entity.Employee;
-import com.grievance.exception.ResourceNotFoundException;
+import com.grievance.dto.EmployeeOutDto;
 import com.grievance.service.EmployeeService;
 import java.util.Optional;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,75 +32,46 @@ public class EmployeeController {
   @Autowired
   private EmployeeService employeeService;
 
-
   /**
-   * Controller method for login employee.
+   * Controller method for login in a Employee.
    *
-   * @param employee
-   *
-   * @return Employee
- * @throws ResourceNotFoundException 
-   *
+   * @param employeeLoginDto for EmployeeLoginDto.
+   * @return ResponseEntity.
    */
-//  @PostMapping("/login")
-//  public ResponseEntity<?> loginUser(
-//    @Valid @RequestBody final EmployeeLoginDto employeeLoginDto
-//  ) throws ResourceNotFoundException {
-//    Optional<EmployeeDto> answer = employeeService
-//      .loginEmployee(employeeLoginDto.getEmail(), employeeLoginDto.getPassword());
-//
-//    if (answer.isPresent()) {
-//      return new ResponseEntity<>(answer.get(), HttpStatus.ACCEPTED);
-//    }
-//    throw new ResourceNotFoundException(employeeLoginDto.getEmail());
-//  }
+  @PostMapping("/login")
+  public ResponseEntity<?> loginUser(
+      @RequestBody final EmployeeLoginDto employeeLoginDto
+  ) {
+    Optional<EmployeeOutDto>
+    employeeDtoOptional = employeeService.loginEmployee(employeeLoginDto);
+    if (employeeDtoOptional.isPresent()) {
+      return new ResponseEntity<>(employeeDtoOptional, HttpStatus.ACCEPTED);
+    }
+    return new ResponseEntity<>("Invalid Credentials", HttpStatus.CONFLICT);
+  }
 
   /**
-   * Controller method to save employee.
+   * Controller method to return list of All Employees.
    *
-   * @param employee
-   *
-   * @return Employee
-   *
-   */
-//  @PostMapping("/saveEmployee")
-//  public ResponseEntity<?> saveUser( @RequestBody final EmployeeDto employee) {
-//	  System.out.println(employee);
-////    try {
-//      Optional<EmployeeDto> savedEmployee = employeeService.saveEmployee(employee);
-//      return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
-////    } catch (Exception e) {
-////      return new ResponseEntity<>(null, HttpStatus.CONFLICT);
-////    }
-//  }
-
-  /**
-   * Controller method to list employee.
-   *
-   * @return List Employee.
-   *
+   * @return ResponseEntity with list of All Employees.
    */
   @GetMapping("/list")
-  public ResponseEntity<?> listUser() {
+  public ResponseEntity<?> listOfAllEmployees() {
     return ResponseEntity.ok(employeeService.listAllEmployees());
   }
-  
+
+  /**
+   * Controller method for saving Employee.
+   *
+   * @param employeeInDto of EmployeeInSto.
+   *
+   * @return ResponseEntity with employee
+   *
+   */
   @PostMapping("/save")
-  public ResponseEntity<?> save(@RequestBody final EmployeeDto employeeDto){
-	  System.out.println(employeeDto);
-	  return ResponseEntity.ok(employeeService.saveEmployee(employeeDto));
+  public ResponseEntity<?> save(
+  @RequestBody final EmployeeInDto employeeInDto) {
+    //    System.out.println(employeeInDto);
+    return ResponseEntity.ok(employeeService.saveEmployee(employeeInDto));
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
