@@ -48,6 +48,12 @@ public class EmployeeServiceImpl implements EmployeeService {
   @Override
   public Optional<EmployeeOutDto> saveEmployee(
       final EmployeeInDto employeeInDto) {
+
+      if (employeeRepository.findByEmail(
+employeeInDto.getEmail()) != null
+      ) {
+        return Optional.empty();
+      }
     Employee employee = converToEntity(employeeInDto);
     employee = employeeRepository.save(employee);
     return Optional.of(convertToDto(employee));
@@ -109,7 +115,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   /**
-   * Converts an EmployeeInDto sto object into an
+   * Converts an EmployeeInDto dto object into an
    * Employee entity.
    *
    * @param employeeInDto The Employee entity to be converted.

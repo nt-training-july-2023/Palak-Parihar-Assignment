@@ -1,6 +1,6 @@
 package com.grievance.dto;
 
-import com.grievance.entity.Department;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.grievance.entity.Ticket;
 import com.grievance.entity.UserType;
 import java.util.List;
@@ -46,12 +46,13 @@ public class EmployeeOutDto {
    * The department of the employee.
    */
   @NotEmpty
-  private Department department;
+  private DepartmentDto departmentDto;
 
   /**
    * The list of tickets associated with the employee.
    */
   @NotEmpty
+  @JsonIgnore
   private List<Ticket> tickets;
 
   /**
@@ -131,8 +132,8 @@ public class EmployeeOutDto {
    *
    * @return the departmentDto
    */
-  public Department getDepartment() {
-    return department;
+  public DepartmentDto getDepartment() {
+    return departmentDto;
   }
 
   /**
@@ -140,8 +141,8 @@ public class EmployeeOutDto {
    *
    * @param departmentField the departmentDto to set
    */
-  public void setDepartment(final Department departmentField) {
-    this.department = departmentField;
+  public void setDepartment(final DepartmentDto departmentField) {
+    this.departmentDto = departmentField;
   }
 
   /**

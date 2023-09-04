@@ -15,8 +15,12 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedDate;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
  * Entity class representing a ticket.
@@ -58,7 +62,6 @@ public class Ticket {
     /**
      * The type of the ticket.
      */
-    @NotEmpty
     private TicketType ticketType;
 
     /**
@@ -66,6 +69,7 @@ public class Ticket {
      */
     @ManyToOne
     @JoinColumn(name = "departmentId")
+    @JsonManagedReference
     private Department department;
 
     /**
@@ -82,13 +86,12 @@ public class Ticket {
     /**
      * The status of the ticket.
      */
-    @NotEmpty
     private Status status;
 
     /**
      * The date when the ticket was opened.
      */
-    @CreatedDate
+    @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateOpened;
 
@@ -102,6 +105,7 @@ public class Ticket {
     /**
      * The list of comments associated with the ticket.
      */
+    @JsonBackReference
     @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "ticket",
             cascade = CascadeType.ALL)
@@ -110,6 +114,7 @@ public class Ticket {
     /**
      * The employee who created the ticket.
      */
+    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "employeeId")
     private Employee employee;

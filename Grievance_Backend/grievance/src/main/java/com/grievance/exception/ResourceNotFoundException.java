@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * to retrieve an employee by email fails.
  */
 @ResponseStatus(value = HttpStatus.NOT_FOUND,
-    reason = "Employee Not Found") // HTTP 404
-public class ResourceNotFoundException extends Exception {
+    reason = "Employee with given credentials doesn't exist") // HTTP 404
+public class ResourceNotFoundException extends RuntimeException {
   private static final long serialVersionUID = -3332292346834265371L;
 
   /**

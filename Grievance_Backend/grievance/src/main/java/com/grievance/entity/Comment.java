@@ -16,6 +16,8 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 /**
  * Entity class representing a comment.
  */
@@ -52,6 +54,7 @@ public class Comment {
    */
   @ManyToOne
   @JoinColumn(name = "ticketId")
+  @JsonManagedReference
   private Ticket ticket;
 
   /**

@@ -43,6 +43,7 @@ export default function Login() {
         }
     }
 
+    const [disableButton, setDisableButton] = useState(true);
     const [controls, setControls] = useState(cont.controls);
     const [message, setMessage] = useState();
     const [modal, setModal] = useState();
@@ -115,6 +116,7 @@ export default function Login() {
         }
         if (isValid) {
             setMessage('')
+            setDisableButton(false)
         }
         return isValid;
     }
@@ -194,7 +196,7 @@ export default function Login() {
                         <p className="message">
                             {message}
                         </p>
-                        <Button type="submit" value="submit" />
+                        <Button type="submit" value="submit" disabled={disableButton}/>
                     </form>
                 </div>
             </div>

@@ -7,6 +7,8 @@ package com.grievance.controller;
 import com.grievance.dto.EmployeeInDto;
 import com.grievance.dto.EmployeeLoginDto;
 import com.grievance.dto.EmployeeOutDto;
+import com.grievance.exception.EmployeeAlreadyExistException;
+import com.grievance.exception.ResourceNotFoundException;
 import com.grievance.service.EmployeeService;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,17 +39,18 @@ public class EmployeeController {
    *
    * @param employeeLoginDto for EmployeeLoginDto.
    * @return ResponseEntity.
+ * @throws ResourceNotFoundException
    */
   @PostMapping("/login")
   public ResponseEntity<?> loginUser(
       @RequestBody final EmployeeLoginDto employeeLoginDto
-  ) {
+  ) throws ResourceNotFoundException {
     Optional<EmployeeOutDto>
     employeeDtoOptional = employeeService.loginEmployee(employeeLoginDto);
     if (employeeDtoOptional.isPresent()) {
       return new ResponseEntity<>(employeeDtoOptional, HttpStatus.ACCEPTED);
     }
-    return new ResponseEntity<>("Invalid Credentials", HttpStatus.CONFLICT);
+    throw new ResourceNotFoundException(employeeLoginDto.getEmail());
   }
 
   /**
@@ -71,7 +74,12 @@ public class EmployeeController {
   @PostMapping("/save")
   public ResponseEntity<?> save(
   @RequestBody final EmployeeInDto employeeInDto) {
-    //    System.out.println(employeeInDto);
-    return ResponseEntity.ok(employeeService.saveEmployee(employeeInDto));
+	  System.out.println(employeeInDto);
+      Optional<EmployeeOutDto> optional =
+         employeeService.saveEmployee(employeeInDto);
+      if  (!optional.isPresent()) {
+         throw new EmployeeAlreadyExistException(employeeInDto.getEmail());
+      }
+    return new ResponseEntity<>(optional, HttpStatus.ACCEPTED);
   }
 }

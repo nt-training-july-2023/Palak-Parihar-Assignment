@@ -1,7 +1,6 @@
-package com.grievance;
+package com.grievance.dto;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
@@ -48,7 +47,7 @@ class EmployeeDtoTest {
 		EmployeeInDto employeeInDto = new EmployeeInDto();
 		Department department = new Department();
 		department.setDepartmentName("HR");
-		employeeInDto.setDepartment(department);
+		employeeInDto.setDepartmentDto(department);
 		employeeInDto.setEmail("palak@nucleusteq.com");
 		employeeInDto.setFirstTimeUser(true);
 		employeeInDto.setFullName("Palak");
@@ -59,7 +58,7 @@ class EmployeeDtoTest {
 		Employee employee = modelMapper.map(employeeInDto, Employee.class);
 		
 		assertEquals(employeeInDto.getEmail(), employee.getEmail());
-		assertEquals(employeeInDto.getDepartment(), employee.getDepartment());
+		assertEquals(employeeInDto.getDepartmentDto(), employee.getDepartment());
 		assertEquals(employeeInDto.getFirstTimeUser(), employee.getFirstTimeUser());
 		assertEquals(employeeInDto.getFullName(), employee.getFullName());
 		assertEquals(employeeInDto.getTickets(), employee.getTickets());

@@ -1,9 +1,7 @@
 package com.grievance.dto;
 
-import com.grievance.entity.Department;
-import com.grievance.entity.Ticket;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.grievance.entity.UserType;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
@@ -52,13 +50,8 @@ public class EmployeeInDto {
    * The department of the employee.
    */
   @NotEmpty
-  private Department department;
-
-  /**
-   * The list of tickets associated with the employee.
-   */
-  @NotEmpty
-  private List<Ticket> tickets;
+  @JsonProperty("department")
+  private DepartmentDto departmentDto;
 
   /**
    * Get the email of the employee.
@@ -155,8 +148,8 @@ public class EmployeeInDto {
    *
    * @return the department
    */
-  public Department getDepartment() {
-    return department;
+  public DepartmentDto getDepartmentDto() {
+    return departmentDto;
   }
 
   /**
@@ -164,32 +157,18 @@ public class EmployeeInDto {
    *
    * @param departmentField the department to set
    */
-  public void setDepartment(final Department departmentField) {
-    this.department = departmentField;
+  public void setDepartmentDto(final DepartmentDto departmentField) {
+    this.departmentDto = departmentField;
   }
-
-  /**
-   * Get the list of tickets associated with the employee.
-   *
-   * @return the tickets
-   */
-  public List<Ticket> getTickets() {
-    return tickets;
-  }
-
-  /**
-   * Set the list of tickets associated with the employee.
-   *
-   * @param ticketsField the tickets to set
-   */
-  public void setTickets(final List<Ticket> ticketsField) {
-    this.tickets = ticketsField;
-  }
-
   /**
    * Default constructor for EmployeeInDto.
    */
   public EmployeeInDto() {
     super();
   }
+
+@Override public String toString(){return "EmployeeInDto [email=" + email + ", fullName=" + fullName + ", password=" + password + ", userType=" + userType + ", firstTimeUser=" + firstTimeUser + ", department=" + departmentDto + "]";}
+
+
+  
 }

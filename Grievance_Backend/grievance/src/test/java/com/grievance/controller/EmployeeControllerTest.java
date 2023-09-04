@@ -1,11 +1,10 @@
-package com.grievance;
+package com.grievance.controller;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.grievance.controller.EmployeeController;
-import com.grievance.dto.EmployeeInDto;
 import com.grievance.dto.EmployeeLoginDto;
 import com.grievance.dto.EmployeeOutDto;
 import com.grievance.entity.Employee;
@@ -38,15 +37,12 @@ class EmployeeControllerTest {
   @InjectMocks
   EmployeeController employeeController;
 
-  @Mock
-  ModelMapper modelMapper;
 
   private ObjectMapper objectMapper;
 
   @Autowired
   MockMvc mockMvc;
 
-  private EmployeeInDto employeeInDto;
 
   private EmployeeOutDto employeeOutDto;
   
@@ -101,12 +97,13 @@ class EmployeeControllerTest {
 
     @Test
     void when_login_failed() throws JsonProcessingException, Exception {
+    	employeeLoginDto.setPassword("Example#123");
 	  when(employeeService.loginEmployee(Mockito.any(EmployeeLoginDto.class))).thenReturn(Optional.empty());
 	  
 	  mockMvc.perform(MockMvcRequestBuilders.post("/login")
 			  .contentType(MediaType.APPLICATION_JSON)
 			  .content(objectMapper.writeValueAsString(employeeLoginDto))
-			  ).andExpect(status().isConflict()).andDo(MockMvcResultHandlers.print());
+			  ).andExpect(status().isNotFound()).andDo(MockMvcResultHandlers.print());
   }
 }
 

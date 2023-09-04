@@ -9,7 +9,6 @@
 
 package com.grievance.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,6 +18,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 /**
  * Department entity class.
@@ -45,15 +46,15 @@ public class Department {
   /**
    * The list of employees associated with this department.
    */
-  @JsonIgnore
   @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
+  @JsonBackReference
   private List<Employee> employees;
 
   /**
    * The list of tickets associated with this department.
    */
-  @JsonIgnore
   @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
+  @JsonBackReference
   private List<Ticket> tickets;
 
   /**

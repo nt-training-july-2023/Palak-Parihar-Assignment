@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.grievance;
+package com.grievance.dto;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

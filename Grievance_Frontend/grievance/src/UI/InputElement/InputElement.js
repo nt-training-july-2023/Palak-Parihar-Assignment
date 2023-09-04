@@ -1,11 +1,11 @@
-import './Input.css';
+import classes from './Input.module.css';
 
 function InputElement(props) {
     let inputElement = null;
-    const inputClasses = ['InputElement'];
+    const inputClasses = [classes.InputElement];
 
     if (props.invalid && props.shouldValidate && props.touched) {
-        inputClasses.push('Invalid');
+        inputClasses.push(classes.Invalid);
     }
 
     console.log(props)
@@ -31,10 +31,10 @@ function InputElement(props) {
 
         case ('select'):
             inputElement = (<>
-                <select className='InputElement' onChange={props.changed} {...props.shouldValidate} >
+                <select className={inputClasses} onChange={props.changed} {...props.shouldValidate} >
                     <option value="" selected disabled hidden>Choose here</option>
                     {props.options.map(option => (
-                        <option className='InputElement' key={option} value={option}>
+                        <option className={inputClasses} key={option} value={option}>
                             {option}
                         </option>
                     ))}
@@ -55,7 +55,7 @@ function InputElement(props) {
     return (
         <>
             <div className="Input">
-                <p className='label-container'>{props.label}</p>
+                <p className={classes.Label}>{props.label}</p>
                 {inputElement}
             </div>
         </>

@@ -1,6 +1,8 @@
 package com.grievance.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -58,12 +60,13 @@ public class Employee {
      */
     @ManyToOne
     @JoinColumn(name = "departmentId")
+    @JsonBackReference
     private Department department;
 
     /**
      * The list of tickets associated with the employee.
      */
-    @JsonIgnore
+    @JsonManagedReference
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     private List<Ticket> tickets;
 

@@ -1,4 +1,4 @@
-input[type = 'submit'], input[type='button']{
+.btnContainer{
     width: 100%;
     background-color: #0A2647;
     color: white;
@@ -10,7 +10,11 @@ input[type = 'submit'], input[type='button']{
     opacity: 0.9;
 }
 
-input[type='submit']:hover, input[type='button']:hover {
+.btnContainer:hover{
     background-color: #205295;
     opacity: 0.9;
+}
+
+.disableBtn{
+    background-color: rgb(190, 190, 190);
 }
