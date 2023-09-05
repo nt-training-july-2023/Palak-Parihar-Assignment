@@ -91,7 +91,7 @@ public class TicketOutDto {
    */
   @JsonProperty("employee")
   @JsonIgnore
-  private EmployeeOutDto employeeOutDto;
+  private String employeeOutDto;
 
   /**
    * @return the ticketId
@@ -222,14 +222,14 @@ this.comments = commentsField;
 /**
  * @return the employee
  */
-public EmployeeOutDto getEmployee() {
+public String getEmployee() {
 return employeeOutDto;
 }
 
 /**
  * @param employeeField the employee to set
  */
-public void setEmployee(final EmployeeOutDto employeeField) {
+public void setEmployee(final String employeeField) {
 this.employeeOutDto = employeeField;
 }
 

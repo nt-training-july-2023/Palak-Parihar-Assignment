@@ -4,6 +4,7 @@ import com.grievance.dto.EmployeeInDto;
 import com.grievance.dto.EmployeeLoginDto;
 import com.grievance.dto.EmployeeOutDto;
 import com.grievance.entity.Employee;
+import com.grievance.entity.UserType;
 import com.grievance.repository.EmployeeRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
-
   /**
    * The employeeRepository instance provide data access method
    * for interacting with database.
@@ -36,7 +36,6 @@ public class EmployeeServiceImpl implements EmployeeService {
   @Autowired
   private ModelMapper modelMapper;
 
-
   /**
    * Saves a new employee record.
    *
@@ -47,13 +46,10 @@ public class EmployeeServiceImpl implements EmployeeService {
    */
   @Override
   public Optional<EmployeeOutDto> saveEmployee(
-      final EmployeeInDto employeeInDto) {
-
-      if (employeeRepository.findByEmail(
-employeeInDto.getEmail()) != null
-      ) {
-        return Optional.empty();
-      }
+    final EmployeeInDto employeeInDto) {
+    if (employeeRepository.findByEmail(employeeInDto.getEmail()) != null) {
+      return Optional.empty();
+    }
     Employee employee = converToEntity(employeeInDto);
     employee = employeeRepository.save(employee);
     return Optional.of(convertToDto(employee));
@@ -69,11 +65,12 @@ employeeInDto.getEmail()) != null
   public Optional<List<EmployeeOutDto>> listAllEmployees() {
     List<EmployeeOutDto> employeeOutDtoList = new ArrayList<>();
     employeeRepository
-        .findAll()
-        .forEach(
-          e -> {
-            employeeOutDtoList.add(convertToDto(e));
-          });
+      .findAll()
+      .forEach(
+        e -> {
+          employeeOutDtoList.add(convertToDto(e));
+        }
+      );
     return Optional.of(employeeOutDtoList);
   }
 
@@ -90,15 +87,49 @@ employeeInDto.getEmail()) != null
   @Override
   public Optional<EmployeeOutDto> loginEmployee(
        final EmployeeLoginDto employeeLoginDto) {
-    Employee employee = employeeRepository.findByEmail(
-        employeeLoginDto.getEmail());
+    Employee employee = employeeRepository
+        .findByEmail(employeeLoginDto.getEmail());
     if (
-        employee != null && employee.getPassword()
-        .equals(employeeLoginDto.getPassword())
+      employee != null && employee.getPassword()
+       .equals(employeeLoginDto.getPassword())
     ) {
       return Optional.ofNullable(convertToDto(employee));
     }
     return Optional.empty();
+  }
+
+  /**
+   * checks the given credntials belongs to an admin.
+   * @param email
+   * @param password
+   * @return boolean value
+   */
+  @Override
+  public Boolean checkUserIsAdmin(
+    final String email, final String password) {
+    Employee employee = employeeRepository.findByEmail(email);
+//    System.out.print(employee.getPassword());
+    if (employee != null & employee.getPassword().equals(password)) {
+        if (employee.getUserType().equals(UserType.ADMIN)) {
+           return true;
+        }
+    }
+    return false;
+  }
+
+  /**
+   * checks the given credntials exists.
+   * @param email
+   * @param password
+   * @return boolean value
+   */
+  @Override public Boolean checkUserExists(
+     final String email, final String password) {
+     Employee employee = employeeRepository.findByEmail(email);
+     if (employee.getPassword().equals(password)) {
+        return true;
+     }
+     return false;
   }
 
   /**
@@ -109,8 +140,8 @@ employeeInDto.getEmail()) != null
    * @return An EmployeeOutDto representing the employee's data.
    */
   private EmployeeOutDto convertToDto(final Employee employee) {
-    EmployeeOutDto employeeOutDto = modelMapper.map(
-        employee, EmployeeOutDto.class);
+    EmployeeOutDto employeeOutDto =
+    modelMapper.map(employee, EmployeeOutDto.class);
     return employeeOutDto;
   }
 

@@ -3,6 +3,7 @@ package com.grievance.service;
 import com.grievance.dto.DepartmentInDto;
 import com.grievance.dto.DepartmentOutDto;
 import com.grievance.entity.Department;
+import com.grievance.exception.DepartmentAlreadyExists;
 import com.grievance.repository.DepartmentRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ public class DepartmentServiceImpl implements DepartmentService {
   @Autowired
   private DepartmentRepository departmentRepository;
 
+
   /**
    * The ModelMapper instance used for mapping between
    * different data structures,
@@ -46,6 +48,11 @@ public class DepartmentServiceImpl implements DepartmentService {
   public Optional<DepartmentOutDto>
       saveDepartment(final DepartmentInDto departmentInDto) {
     Department department2 = convertToEntity(departmentInDto);
+    department2 = departmentRepository.findByDepartmentName(
+    departmentInDto.getDepartmentName());
+    if (department2 == null) {
+       throw new DepartmentAlreadyExists(departmentInDto.getDepartmentName());
+    }
     Department savedDepartment = departmentRepository.save(department2);
     return Optional.ofNullable(convertToDto(savedDepartment));
   }
@@ -68,6 +75,17 @@ public class DepartmentServiceImpl implements DepartmentService {
           });
     return Optional.of(list);
   }
+
+  /**
+   * method to check if user is authorised or not.
+   * @param email
+   * @param password
+   * @return boolean
+   */
+  @Override public Boolean checkIfUserExists(
+      final String email, final String password) {
+      return null;
+   }
 
   /**
    * Converts an DepartmentDto sto object into an

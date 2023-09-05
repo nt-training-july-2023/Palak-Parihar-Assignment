@@ -3,7 +3,6 @@ package com.grievance.dto;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
@@ -27,7 +26,7 @@ public class DepartmentOutDto {
   /**
    * The list of tickets associated with this department.
    */
-  @JsonIgnore
+  @JsonManagedReference
   private List<TicketOutDto> tickets;
 
   /**

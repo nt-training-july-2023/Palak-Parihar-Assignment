@@ -28,4 +28,12 @@ public interface DepartmentService {
    *     objects representing all departments.
    */
   Optional<List<DepartmentOutDto>> listAllDepartment();
+
+  /**
+   * method to check if user is authorised or not.
+   * @param email
+   * @param password
+   * @return boolean
+   */
+  Boolean checkIfUserExists(String email, String password);
 }

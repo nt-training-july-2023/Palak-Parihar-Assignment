@@ -24,7 +24,6 @@ import com.grievance.dto.EmployeeOutDto;
 import com.grievance.entity.Employee;
 import com.grievance.entity.UserType;
 import com.grievance.repository.EmployeeRepository;
-import com.grievance.service.EmployeeServiceImpl;
 
 
 @ExtendWith(MockitoExtension.class)

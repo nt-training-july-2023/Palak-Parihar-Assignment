@@ -4,7 +4,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.grievance.controller.EmployeeController;
+import com.grievance.dto.EmployeeInDto;
 import com.grievance.dto.EmployeeLoginDto;
 import com.grievance.dto.EmployeeOutDto;
 import com.grievance.entity.Employee;
@@ -21,7 +21,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -47,6 +46,8 @@ class EmployeeControllerTest {
   private EmployeeOutDto employeeOutDto;
   
   private EmployeeLoginDto employeeLoginDto;
+  
+  private EmployeeInDto employeeInDto;
 
   @Autowired
   private Employee employee;
@@ -68,22 +69,46 @@ class EmployeeControllerTest {
     
     employeeLoginDto = new EmployeeLoginDto();
     employeeLoginDto.setEmail("palak@nucleusteq.com");
-
+    
+    employeeInDto = new EmployeeInDto();
+    employeeInDto.setDepartmentDto(null);
+    employeeInDto.setEmail("ayushi@nucleusteq.com");
+    employeeInDto.setFirstTimeUser(true);
+    employeeInDto.setFullName("Ayushi");
+    employeeInDto.setPassword("Ayushi#123");
+    employeeInDto.setUserType(UserType.MEMBER);
     
     objectMapper = new ObjectMapper();
   }
 
     @Test
-    void fetchAllEmployees() throws Exception {
+    void when_authorised_user_successfully_fetch_employees() throws Exception {
 	  List<EmployeeOutDto> employeeOutDtos = new ArrayList<EmployeeOutDto>();
 	  employeeOutDtos.add(employeeOutDto);
+	  
+	  when(employeeService.checkUserIsAdmin(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
+	  
 	  when(employeeService.listAllEmployees()).thenReturn(Optional.of(employeeOutDtos));
 	  
-	  mockMvc.perform(MockMvcRequestBuilders.get("/list")
+	  
+	  mockMvc.perform(MockMvcRequestBuilders.get("/listAllEmployees")
 			  .contentType(MediaType.APPLICATION_JSON)
-			  ).andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
+			  .param("email", "ayushi@nucleusteq.com")
+  			  .param("password", "Ayushi#123")
+			  ).andExpect(status().isAccepted()).andDo(MockMvcResultHandlers.print());
   }
 
+    @Test
+    void when_unauthorised_user_fails_to_fetch_employees() throws Exception {
+	  
+	  when(employeeService.checkUserIsAdmin(Mockito.anyString(), Mockito.anyString())).thenReturn(false);	  
+	  
+	  mockMvc.perform(MockMvcRequestBuilders.get("/listAllEmployees")
+			  .contentType(MediaType.APPLICATION_JSON)
+			  .param("email", "ayushi@nucleusteq.com")
+  			  .param("password", "Ayushi#123")
+			  ).andExpect(status().isUnauthorized()).andDo(MockMvcResultHandlers.print());
+  }
 
     @Test
     void when_successfully_login_return_employee() throws JsonProcessingException, Exception {
@@ -105,6 +130,48 @@ class EmployeeControllerTest {
 			  .content(objectMapper.writeValueAsString(employeeLoginDto))
 			  ).andExpect(status().isNotFound()).andDo(MockMvcResultHandlers.print());
   }
+    
+    @Test
+    void when_save_employee_by_authorised_user_sucesses_return_saved_employee() throws JsonProcessingException, Exception {
+    	when(employeeService.checkUserIsAdmin(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
+    	
+    	when(employeeService.saveEmployee(Mockito.any(EmployeeInDto.class))).thenReturn(Optional.ofNullable(employeeOutDto));
+    	
+    	mockMvc.perform(MockMvcRequestBuilders.post("/saveEmployee")
+    			.contentType(MediaType.APPLICATION_JSON)
+    			.content(objectMapper.writeValueAsString(employeeInDto))
+    			.param("email", "ayushi@nucleusteq.com")
+    			.param("password", "Ayushi#123")
+    			).andExpect(status().isAccepted()).andDo(MockMvcResultHandlers.print());
+    }
+    
+    @Test
+    void when_save_employee_by_authorised_user_fails_return_user() throws JsonProcessingException, Exception {
+    	when(employeeService.checkUserIsAdmin(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
+    	
+    	when(employeeService.saveEmployee(Mockito.any(EmployeeInDto.class))).thenReturn(Optional.empty());
+    	
+    	mockMvc.perform(MockMvcRequestBuilders.post("/saveEmployee")
+    			.contentType(MediaType.APPLICATION_JSON)
+    			.content(objectMapper.writeValueAsString(employeeInDto))
+    			.param("email", "ayushi@nucleusteq.com")
+    			.param("password", "Ayushi#123")
+    			).andExpect(status().isConflict()).andDo(MockMvcResultHandlers.print());
+    }
+    
+    @Test
+    void when_save_employee__by_unauthorised_user_return_status() throws JsonProcessingException, Exception {
+        when(employeeService.checkUserIsAdmin(Mockito.anyString(), Mockito.anyString())).thenReturn(false);
+    	    	
+    	mockMvc.perform(MockMvcRequestBuilders.post("/saveEmployee")
+    			.contentType(MediaType.APPLICATION_JSON)
+    			.content(objectMapper.writeValueAsString(employeeInDto))
+    			.param("email", "ayushi@nucleusteq.com")
+    			.param("password", "Ayushi#123")
+    			).andExpect(status().isUnauthorized()).andDo(MockMvcResultHandlers.print());
+    }
+    
+    
 }
 
 

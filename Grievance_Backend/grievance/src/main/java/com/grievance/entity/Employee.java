@@ -197,41 +197,14 @@ public class Employee {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return (
-            "Employee [email="
-        +
-            email
-            +
-            ", fullName="
-            +
-            fullName
-            +
-            ", password="
-            +
-            password
-            +
-            ", userType="
-            +
-            userType
-            +
-            ", department="
-            +
-            department
-            +
-            ", tickets="
-            +
-            tickets
-            +
-            "]"
-        );
-    }
-
-    /**
      * Default constructor for Employee.
      */
     public Employee() { }
+
+    /**
+     * toString.
+     */
+    @Override public String toString() {
+      return email;
+    }
 }
