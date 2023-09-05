@@ -51,7 +51,7 @@ public class EmployeeInDto {
    */
   @NotEmpty
   @JsonProperty("department")
-  private DepartmentDto departmentDto;
+  private DepartmentInDto departmentInDto;
 
   /**
    * Get the email of the employee.
@@ -148,8 +148,8 @@ public class EmployeeInDto {
    *
    * @return the department
    */
-  public DepartmentDto getDepartmentDto() {
-    return departmentDto;
+  public DepartmentInDto getDepartmentDto() {
+    return departmentInDto;
   }
 
   /**
@@ -157,8 +157,8 @@ public class EmployeeInDto {
    *
    * @param departmentField the department to set
    */
-  public void setDepartmentDto(final DepartmentDto departmentField) {
-    this.departmentDto = departmentField;
+  public void setDepartmentDto(final DepartmentInDto departmentField) {
+    this.departmentInDto = departmentField;
   }
   /**
    * Default constructor for EmployeeInDto.
@@ -167,8 +167,7 @@ public class EmployeeInDto {
     super();
   }
 
-@Override public String toString(){return "EmployeeInDto [email=" + email + ", fullName=" + fullName + ", password=" + password + ", userType=" + userType + ", firstTimeUser=" + firstTimeUser + ", department=" + departmentDto + "]";}
 
 
-  
+
 }

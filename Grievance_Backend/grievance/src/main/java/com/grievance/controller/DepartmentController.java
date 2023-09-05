@@ -1,6 +1,6 @@
 package com.grievance.controller;
 
-import com.grievance.dto.DepartmentDto;
+import com.grievance.dto.DepartmentInDto;
 import com.grievance.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,15 +27,15 @@ public class DepartmentController {
   /**
    * Department Controller method for saving given Department.
    *
-   * @param departmentDto of DepartmentDto.
+   * @param departmentInDto of DepartmentDto.
    * @return Responseentity of Department DTO.
    *
    */
   @PostMapping("/save")
   public ResponseEntity<?> saveDepartment(
-    @RequestBody final DepartmentDto departmentDto
+    @RequestBody final DepartmentInDto departmentInDto
   ) {
-    return ResponseEntity.ok(departmentService.saveDepartment(departmentDto));
+    return ResponseEntity.ok(departmentService.saveDepartment(departmentInDto));
   }
 
   /**

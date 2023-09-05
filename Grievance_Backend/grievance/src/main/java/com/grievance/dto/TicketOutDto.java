@@ -1,25 +1,14 @@
 package com.grievance.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.grievance.entity.Comment;
-import com.grievance.entity.Department;
-import com.grievance.entity.Employee;
 import com.grievance.entity.Status;
 import com.grievance.entity.TicketType;
 import java.util.Date;
 import java.util.List;
-
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 
 public class TicketOutDto {
   /**
@@ -60,8 +49,9 @@ public class TicketOutDto {
   /**
    * The department associated with the ticket.
    */
+  @JsonIgnore
   @JsonProperty("department")
-  private DepartmentDto departmentDto;
+  private String department;
 
   /**
    * The description of the ticket.
@@ -83,26 +73,24 @@ public class TicketOutDto {
   /**
    * The date when the ticket was opened.
    */
-  @CreatedDate
-  @Temporal(TemporalType.TIMESTAMP)
   private Date dateOpened;
 
   /**
    * The date when the ticket was last updated.
    */
-  @UpdateTimestamp
-  @Temporal(TemporalType.TIMESTAMP)
   private Date lastUpdated;
 
   /**
    * comments that belongs to this ticket.
    */
+  @JsonIgnore
   private List<Comment> comments;
 
   /**
    * The employee who created the ticket.
    */
   @JsonProperty("employee")
+  @JsonIgnore
   private EmployeeOutDto employeeOutDto;
 
   /**
@@ -150,15 +138,15 @@ public class TicketOutDto {
   /**
    * @return the department
    */
-  public DepartmentDto getDepartment() {
-    return departmentDto;
+  public String getDepartment() {
+    return department;
   }
 
   /**
    * @param departmentField the department to set
    */
-  public void setDepartment(final DepartmentDto departmentField) {
-    this.departmentDto = departmentField;
+  public void setDepartment(final String departmentField) {
+    this.department = departmentField;
   }
 
   /**
@@ -244,8 +232,6 @@ return employeeOutDto;
 public void setEmployee(final EmployeeOutDto employeeField) {
 this.employeeOutDto = employeeField;
 }
-
-@Override public String toString(){return "TicketOutDto [ticketId=" + ticketId + ", title=" + title + ", ticketType=" + ticketType + ", department=" + departmentDto + ", description=" + description + ", status=" + status + ", dateOpened=" + dateOpened + ", lastUpdated=" + lastUpdated + ", comments=" + comments + ", employee=" + employeeOutDto + "]";}
 
 
 }

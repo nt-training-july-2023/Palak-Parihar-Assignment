@@ -19,7 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
  * Department entity class.
@@ -47,14 +47,14 @@ public class Department {
    * The list of employees associated with this department.
    */
   @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
-  @JsonBackReference
+  @JsonManagedReference
   private List<Employee> employees;
 
   /**
    * The list of tickets associated with this department.
    */
   @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
-  @JsonBackReference
+  @JsonManagedReference
   private List<Ticket> tickets;
 
   /**
@@ -128,4 +128,5 @@ public class Department {
   public void setTickets(final List<Ticket> ticketsField) {
     this.tickets = ticketsField;
   }
+
 }

@@ -12,7 +12,7 @@ package com.grievance.dto;
  * The DepartmentDto class represents a data transfer
  * object for department-related information.
  */
-public class DepartmentDto {
+public class DepartmentInDto {
   /**
    * departmentId of Department DTO.
    *
@@ -63,7 +63,7 @@ public class DepartmentDto {
   /**
    * Constructs a new DepartmentDto object.
    */
-  public DepartmentDto() {
+  public DepartmentInDto() {
     super();
     // TODO Auto-generated constructor stub
   }

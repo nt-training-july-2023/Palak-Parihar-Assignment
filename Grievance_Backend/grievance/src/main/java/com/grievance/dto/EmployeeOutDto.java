@@ -1,7 +1,6 @@
 package com.grievance.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.grievance.entity.Ticket;
 import com.grievance.entity.UserType;
 import java.util.List;
 import javax.persistence.Column;
@@ -46,14 +45,17 @@ public class EmployeeOutDto {
    * The department of the employee.
    */
   @NotEmpty
-  private DepartmentDto departmentDto;
+//  @JsonBackReference
+//  @JsonIgnore
+  private String departmentOutDto;
 
   /**
    * The list of tickets associated with the employee.
    */
   @NotEmpty
+//  @JsonManagedReference
   @JsonIgnore
-  private List<Ticket> tickets;
+  private List<TicketOutDto> tickets;
 
   /**
    * Get the email of the employee.
@@ -132,8 +134,9 @@ public class EmployeeOutDto {
    *
    * @return the departmentDto
    */
-  public DepartmentDto getDepartment() {
-    return departmentDto;
+
+  public String getDepartment() {
+    return departmentOutDto;
   }
 
   /**
@@ -141,8 +144,8 @@ public class EmployeeOutDto {
    *
    * @param departmentField the departmentDto to set
    */
-  public void setDepartment(final DepartmentDto departmentField) {
-    this.departmentDto = departmentField;
+  public void setDepartment(final String departmentField) {
+    this.departmentOutDto = departmentField;
   }
 
   /**
@@ -150,7 +153,7 @@ public class EmployeeOutDto {
    *
    * @return the tickets
    */
-  public List<Ticket> getTickets() {
+  public List<TicketOutDto> getTickets() {
     return tickets;
   }
 
@@ -159,7 +162,7 @@ public class EmployeeOutDto {
    *
    * @param ticketsField the tickets to set
    */
-  public void setTickets(final List<Ticket> ticketsField) {
+  public void setTickets(final List<TicketOutDto> ticketsField) {
     this.tickets = ticketsField;
   }
 

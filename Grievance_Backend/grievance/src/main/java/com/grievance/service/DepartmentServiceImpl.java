@@ -1,6 +1,7 @@
 package com.grievance.service;
 
-import com.grievance.dto.DepartmentDto;
+import com.grievance.dto.DepartmentInDto;
+import com.grievance.dto.DepartmentOutDto;
 import com.grievance.entity.Department;
 import com.grievance.repository.DepartmentRepository;
 import java.util.ArrayList;
@@ -38,13 +39,13 @@ public class DepartmentServiceImpl implements DepartmentService {
    * Saves a department in the database and converts the
    * returned department value to a Department DTO.
    *
-   * @param departmentDto of Department DTO.
+   * @param departmentInDto of Department DTO.
    * @return An Optional containing a department DTO.
    */
   @Override
-  public Optional<DepartmentDto>
-      saveDepartment(final DepartmentDto departmentDto) {
-    Department department2 = convertToEntity(departmentDto);
+  public Optional<DepartmentOutDto>
+      saveDepartment(final DepartmentInDto departmentInDto) {
+    Department department2 = convertToEntity(departmentInDto);
     Department savedDepartment = departmentRepository.save(department2);
     return Optional.ofNullable(convertToDto(savedDepartment));
   }
@@ -57,8 +58,8 @@ public class DepartmentServiceImpl implements DepartmentService {
    *     objects representing all departments.
    */
   @Override
-  public Optional<List<DepartmentDto>> listAllDepartment() {
-    List<DepartmentDto> list = new ArrayList<DepartmentDto>();
+  public Optional<List<DepartmentOutDto>> listAllDepartment() {
+    List<DepartmentOutDto> list = new ArrayList<DepartmentOutDto>();
     departmentRepository
         .findAll()
         .forEach(
@@ -72,11 +73,11 @@ public class DepartmentServiceImpl implements DepartmentService {
    * Converts an DepartmentDto sto object into an
    * Department entity.
    *
-   * @param departmentDto The Department entity to be converted.
+   * @param departmentInDto The Department entity to be converted.
    * @return An Department representing the department's data.
    */
-  public Department convertToEntity(final DepartmentDto departmentDto) {
-    Department department = modelMapper.map(departmentDto,
+  public Department convertToEntity(final DepartmentInDto departmentInDto) {
+    Department department = modelMapper.map(departmentInDto,
         Department.class);
     return department;
   }
@@ -88,9 +89,9 @@ public class DepartmentServiceImpl implements DepartmentService {
    * @param department The department entity to be converted.
    * @return An DepartmentDto representing the department's data.
    */
-  public DepartmentDto convertToDto(final Department department) {
-    DepartmentDto departmentDto = modelMapper.map(department,
-        DepartmentDto.class);
-    return departmentDto;
+  public DepartmentOutDto convertToDto(final Department department) {
+    DepartmentOutDto departmentOutDto = modelMapper.map(department,
+        DepartmentOutDto.class);
+    return departmentOutDto;
   }
 }

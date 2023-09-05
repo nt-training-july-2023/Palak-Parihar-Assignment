@@ -69,7 +69,7 @@ public class Ticket {
      */
     @ManyToOne
     @JoinColumn(name = "departmentId")
-    @JsonManagedReference
+    @JsonBackReference
     private Department department;
 
     /**
@@ -105,7 +105,7 @@ public class Ticket {
     /**
      * The list of comments associated with the ticket.
      */
-    @JsonBackReference
+    @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "ticket",
             cascade = CascadeType.ALL)
@@ -114,7 +114,7 @@ public class Ticket {
     /**
      * The employee who created the ticket.
      */
-    @JsonManagedReference
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "employeeId")
     private Employee employee;
@@ -258,4 +258,8 @@ public class Ticket {
     public void setEmployee(final Employee employeeField) {
         this.employee = employeeField;
     }
+
+
+
+
 }

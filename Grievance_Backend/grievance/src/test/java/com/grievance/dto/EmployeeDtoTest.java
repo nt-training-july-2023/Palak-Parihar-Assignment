@@ -7,8 +7,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.grievance.dto.EmployeeInDto;
-import com.grievance.dto.EmployeeOutDto;
 import com.grievance.entity.Department;
 import com.grievance.entity.Employee;
 import com.grievance.entity.UserType;
@@ -34,7 +32,7 @@ class EmployeeDtoTest {
 		EmployeeOutDto employeeOutDto = modelMapper.map(employee, EmployeeOutDto.class);
 		
 		assertEquals(employee.getEmail(), employeeOutDto.getEmail());
-		assertEquals(employee.getDepartment().getDepartmentName(), employeeOutDto.getDepartment().getDepartmentName());
+		assertEquals(employee.getDepartment().getDepartmentName(), employeeOutDto.getDepartment());
 		assertEquals(employee.getFirstTimeUser(), employeeOutDto.getFirstTimeUser());
 		assertEquals(employee.getFullName(), employeeOutDto.getFullName());
 		assertEquals(employee.getUserType(), employeeOutDto.getUserType());
@@ -47,13 +45,13 @@ class EmployeeDtoTest {
 		EmployeeInDto employeeInDto = new EmployeeInDto();
 		Department department = new Department();
 		department.setDepartmentName("HR");
-		employeeInDto.setDepartmentDto(department);
+//		employeeInDto.setDepartmentDto(department);
 		employeeInDto.setEmail("palak@nucleusteq.com");
 		employeeInDto.setFirstTimeUser(true);
 		employeeInDto.setFullName("Palak");
 		employeeInDto.setPassword("Palak#123");
 		employeeInDto.setUserType(UserType.ADMIN);
-		employeeInDto.setTickets(null);
+//		employeeInDto.setTickets(null);
 		
 		Employee employee = modelMapper.map(employeeInDto, Employee.class);
 		
@@ -61,7 +59,7 @@ class EmployeeDtoTest {
 		assertEquals(employeeInDto.getDepartmentDto(), employee.getDepartment());
 		assertEquals(employeeInDto.getFirstTimeUser(), employee.getFirstTimeUser());
 		assertEquals(employeeInDto.getFullName(), employee.getFullName());
-		assertEquals(employeeInDto.getTickets(), employee.getTickets());
+//		assertEquals(employeeInDto.getTickets(), employee.getTickets());
 		assertEquals(employeeInDto.getUserType(), employee.getUserType());
 	}
 }

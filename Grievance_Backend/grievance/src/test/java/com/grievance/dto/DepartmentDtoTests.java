@@ -11,7 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.grievance.dto.DepartmentDto;
+import com.grievance.dto.DepartmentInDto;
 import com.grievance.entity.Department;
 
 /**
@@ -30,21 +30,21 @@ class DepartmentDtoTests {
 		department.setEmployees(null);
 		department.setTickets(null);
 		
-		DepartmentDto departmentDto = modelMapper.map(department, DepartmentDto.class);
-		assertEquals(department.getDepartmentId(), departmentDto.getDepartmentId());
-		assertEquals(department.getDepartmentName(), departmentDto.getDepartmentName());		
+		DepartmentInDto departmentInDto = modelMapper.map(department, DepartmentInDto.class);
+		assertEquals(department.getDepartmentId(), departmentInDto.getDepartmentId());
+		assertEquals(department.getDepartmentName(), departmentInDto.getDepartmentName());		
 	}
 
     @Test
     void when_convert_departmentDto_to_department() {
-		DepartmentDto departmentDto = new DepartmentDto();
-		departmentDto.setDepartmentId(102);
-		departmentDto.setDepartmentName("HR");
+		DepartmentInDto departmentInDto = new DepartmentInDto();
+		departmentInDto.setDepartmentId(102);
+		departmentInDto.setDepartmentName("HR");
 		
-		Department department = modelMapper.map(departmentDto, Department.class);
+		Department department = modelMapper.map(departmentInDto, Department.class);
 		
-		assertEquals(department.getDepartmentId(), departmentDto.getDepartmentId());
-		assertEquals(department.getDepartmentName(), departmentDto.getDepartmentName());
+		assertEquals(department.getDepartmentId(), departmentInDto.getDepartmentId());
+		assertEquals(department.getDepartmentName(), departmentInDto.getDepartmentName());
 	}
 }
 

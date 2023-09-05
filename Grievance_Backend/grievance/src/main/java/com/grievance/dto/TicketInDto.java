@@ -3,7 +3,6 @@
  */
 package com.grievance.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.grievance.entity.Status;
 import com.grievance.entity.TicketType;
@@ -57,7 +56,7 @@ public class TicketInDto {
    * The department associated with the ticket.
    */
   @JsonProperty("department")
-  private DepartmentDto departmentDto;
+  private DepartmentInDto departmentInDto;
 
   /**
    * The description of the ticket.
@@ -127,15 +126,15 @@ public class TicketInDto {
   /**
    * @return the department
    */
-  public DepartmentDto getDepartment() {
-    return departmentDto;
+  public DepartmentInDto getDepartment() {
+    return departmentInDto;
   }
 
   /**
    * @param departmentField the department to set
    */
-  public void setDepartment(final DepartmentDto departmentField) {
-    this.departmentDto = departmentField;
+  public void setDepartment(final DepartmentInDto departmentField) {
+    this.departmentInDto = departmentField;
   }
 
   /**
@@ -179,9 +178,6 @@ return employeeInDto;
 public void setEmployeeInDto(final EmployeeInDto employeeInDtoField) {
 this.employeeInDto = employeeInDtoField;
 }
-
-
-
 
 
 }

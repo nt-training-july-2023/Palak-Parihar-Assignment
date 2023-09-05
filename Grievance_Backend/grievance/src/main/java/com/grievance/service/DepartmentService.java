@@ -1,6 +1,8 @@
 package com.grievance.service;
 
-import com.grievance.dto.DepartmentDto;
+import com.grievance.dto.DepartmentInDto;
+import com.grievance.dto.DepartmentOutDto;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -13,10 +15,10 @@ public interface DepartmentService {
    * Saves a department in the database and converts the
    * returned department value to a Department DTO.
    *
-   * @param departmentDto of Department DTO.
+   * @param departmentInDto of Department DTO.
    * @return An Optional containing a department DTO.
    */
-  Optional<DepartmentDto> saveDepartment(DepartmentDto departmentDto);
+  Optional<DepartmentOutDto> saveDepartment(DepartmentInDto departmentInDto);
 
   /**
    * Retrieves a list of all departments from the database and
@@ -25,5 +27,5 @@ public interface DepartmentService {
    * @return An optional containing a list of DepartmentDto
    *     objects representing all departments.
    */
-  Optional<List<DepartmentDto>> listAllDepartment();
+  Optional<List<DepartmentOutDto>> listAllDepartment();
 }

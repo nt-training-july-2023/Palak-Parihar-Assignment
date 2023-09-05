@@ -37,9 +37,8 @@ public class TicketServiceImpl implements TicketService {
    */
   @Override
   public Optional<TicketOutDto> saveTicket(final TicketInDto ticketInDto) {
-	System.out.println(ticketInDto);
     Ticket ticket = convertToEntity(ticketInDto);
-    ticketRepository.save(ticket);
+    ticket = ticketRepository.save(ticket);
     TicketOutDto ticketOutDto = convertToDto(ticket);
     return Optional.ofNullable(ticketOutDto);
   }

@@ -74,7 +74,6 @@ public class EmployeeController {
   @PostMapping("/save")
   public ResponseEntity<?> save(
   @RequestBody final EmployeeInDto employeeInDto) {
-	  System.out.println(employeeInDto);
       Optional<EmployeeOutDto> optional =
          employeeService.saveEmployee(employeeInDto);
       if  (!optional.isPresent()) {
