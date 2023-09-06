@@ -48,13 +48,13 @@ public class DepartmentServiceImpl implements DepartmentService {
   public Optional<DepartmentOutDto>
       saveDepartment(final DepartmentInDto departmentInDto) {
     Department department2 = convertToEntity(departmentInDto);
-    department2 = departmentRepository.findByDepartmentName(
+    Department savedDepartment = departmentRepository.findByDepartmentName(
     departmentInDto.getDepartmentName());
-    if (department2 == null) {
+    if (savedDepartment != null) {
        throw new DepartmentAlreadyExists(departmentInDto.getDepartmentName());
     }
-    Department savedDepartment = departmentRepository.save(department2);
-    return Optional.ofNullable(convertToDto(savedDepartment));
+    Department saved = departmentRepository.save(department2);
+    return Optional.ofNullable(convertToDto(saved));
   }
 
   /**
@@ -76,16 +76,6 @@ public class DepartmentServiceImpl implements DepartmentService {
     return Optional.of(list);
   }
 
-  /**
-   * method to check if user is authorised or not.
-   * @param email
-   * @param password
-   * @return boolean
-   */
-  @Override public Boolean checkIfUserExists(
-      final String email, final String password) {
-      return null;
-   }
 
   /**
    * Converts an DepartmentDto sto object into an

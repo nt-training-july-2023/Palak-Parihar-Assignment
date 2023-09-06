@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -59,6 +61,9 @@ class DepartmentServiceTest {
 	
 	@Test
 	public void when_save_department_successfully_return_department() {
+		
+		when(departmentRepository.findByDepartmentName(Mockito.anyString())).thenReturn(null);
+		
 		when(departmentRepository.save(Mockito.any(Department.class))).thenReturn(department);
 		
 		Optional<DepartmentOutDto> optional = departmentService.saveDepartment(departmentInDto);
@@ -69,12 +74,27 @@ class DepartmentServiceTest {
 	@Test
 	public void when_save_department_fails_return_department() {
 		when(departmentRepository.findByDepartmentName(Mockito.anyString())).thenReturn(department);
-		Optional<DepartmentOutDto> optional = Optional.empty();
+				
 		try {
-			optional = departmentService.saveDepartment(departmentInDto);
+			departmentService.saveDepartment(departmentInDto);
 		}catch (DepartmentAlreadyExists e) {
-			assertThat(!optional.isPresent());
+			assertThat(e.getMessage().equals("Department Already Exist Exception with email=HR"));
         }	
+	}
+	
+	@Test
+	public void fetch_all_departments() {
+		List<DepartmentOutDto> departmentOutDtos = new ArrayList<DepartmentOutDto>();
+		departmentOutDtos.add(departmentOutDto);
+		
+		List<Department> departments = new ArrayList<Department>();
+		departments.add(department);
+		
+		when(departmentRepository.findAll()).thenReturn(departments);
+		
+		Optional<List<DepartmentOutDto>> expectedEepartmentOutDtos = departmentService.listAllDepartment();
+		
+		assertEquals(expectedEepartmentOutDtos.get().get(0).getDepartmentName(), departments.get(0).getDepartmentName());
 	}
 }
 

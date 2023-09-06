@@ -41,19 +41,4 @@ public interface EmployeeService {
    */
   Optional<List<EmployeeOutDto>> listAllEmployees();
 
-  /**
-   * checks the given credntials belongs to an admin.
-   * @param email
-   * @param password
-   * @return boolean value
-   */
-  Boolean checkUserIsAdmin(String email, String password);
-
-  /**
-   * checks the given credntials exists.
-   * @param email
-   * @param password
-   * @return boolean value
-   */
-  Boolean checkUserExists(String email, String password);
 }

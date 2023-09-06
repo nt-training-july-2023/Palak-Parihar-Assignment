@@ -4,7 +4,7 @@
 
 package com.grievance.controller;
 
-import com.grievance.authentication.AuthenticatingUserImpl;
+import com.grievance.authentication.AuthenticatingUser;
 import com.grievance.dto.EmployeeInDto;
 import com.grievance.dto.EmployeeLoginDto;
 import com.grievance.dto.EmployeeOutDto;
@@ -42,8 +42,10 @@ public class EmployeeController {
    * The authenicatingUser instance
    * provides information about user being authorised.
    */
-  private AuthenticatingUserImpl authenticatingUserImpl
-       = new AuthenticatingUserImpl();
+//  private AuthenticatingUserImpl authenticatingUserImpl
+//       = new AuthenticatingUserImpl();
+  @Autowired
+  private AuthenticatingUser authenticatingUser;
 
   /**
    * Controller method for login in a Employee.
@@ -74,7 +76,8 @@ public class EmployeeController {
   @GetMapping("/listAllEmployees")
   public ResponseEntity<?> listAllEmployees(
       @RequestParam final String email, @RequestParam final String password) {
-         Boolean boolean1 = employeeService.checkUserIsAdmin(email, password);
+         Boolean boolean1 =
+            authenticatingUser.checkIfUserIsAdmin(email, password);
          if (boolean1) {
           Optional<List<EmployeeOutDto>> listOfAllEmployees =
                employeeService.listAllEmployees();
@@ -116,10 +119,8 @@ public class EmployeeController {
           @RequestParam final String password,
           @RequestBody final EmployeeInDto employeeInDto) {
 
-//     System.out.print(
-//       authenticatingUserImpl.checkIfUserExists(email, password));
      Boolean boolean1 =
-     employeeService.checkUserIsAdmin(email, password);
+     authenticatingUser.checkIfUserIsAdmin(email, password);
      if (boolean1) {
        Optional<EmployeeOutDto> optional =
              employeeService.saveEmployee(employeeInDto);

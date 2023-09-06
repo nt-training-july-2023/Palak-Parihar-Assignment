@@ -72,6 +72,7 @@ public class Ticket {
     @JsonBackReference
     private Department department;
 
+
     /**
      * The description of the ticket.
      */

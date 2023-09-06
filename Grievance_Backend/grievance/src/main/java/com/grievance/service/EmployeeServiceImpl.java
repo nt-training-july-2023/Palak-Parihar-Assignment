@@ -4,7 +4,6 @@ import com.grievance.dto.EmployeeInDto;
 import com.grievance.dto.EmployeeLoginDto;
 import com.grievance.dto.EmployeeOutDto;
 import com.grievance.entity.Employee;
-import com.grievance.entity.UserType;
 import com.grievance.repository.EmployeeRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -89,47 +88,12 @@ public class EmployeeServiceImpl implements EmployeeService {
        final EmployeeLoginDto employeeLoginDto) {
     Employee employee = employeeRepository
         .findByEmail(employeeLoginDto.getEmail());
-    if (
-      employee != null && employee.getPassword()
-       .equals(employeeLoginDto.getPassword())
-    ) {
+
+    if (employee != null && employee.getPassword()
+       .equals(employeeLoginDto.getPassword())) {
       return Optional.ofNullable(convertToDto(employee));
     }
     return Optional.empty();
-  }
-
-  /**
-   * checks the given credntials belongs to an admin.
-   * @param email
-   * @param password
-   * @return boolean value
-   */
-  @Override
-  public Boolean checkUserIsAdmin(
-    final String email, final String password) {
-    Employee employee = employeeRepository.findByEmail(email);
-//    System.out.print(employee.getPassword());
-    if (employee != null & employee.getPassword().equals(password)) {
-        if (employee.getUserType().equals(UserType.ADMIN)) {
-           return true;
-        }
-    }
-    return false;
-  }
-
-  /**
-   * checks the given credntials exists.
-   * @param email
-   * @param password
-   * @return boolean value
-   */
-  @Override public Boolean checkUserExists(
-     final String email, final String password) {
-     Employee employee = employeeRepository.findByEmail(email);
-     if (employee.getPassword().equals(password)) {
-        return true;
-     }
-     return false;
   }
 
   /**

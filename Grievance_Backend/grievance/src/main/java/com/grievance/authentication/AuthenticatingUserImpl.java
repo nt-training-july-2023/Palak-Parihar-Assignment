@@ -5,14 +5,16 @@ package com.grievance.authentication;
 
 import com.grievance.entity.Employee;
 import com.grievance.entity.UserType;
-import com.grievance.exception.ResourceNotFoundException;
+import com.grievance.exception.UnauthorisedUserException;
 import com.grievance.repository.EmployeeRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 
 /**
  *
  */
+@Configuration
 public class AuthenticatingUserImpl implements AuthenticatingUser {
   /**
    * employeeRepository instance for
@@ -31,7 +33,7 @@ public class AuthenticatingUserImpl implements AuthenticatingUser {
   public Boolean checkIfUserExists(final String email, final String password) {
       Employee employee = employeeRepository.findByEmail(email);
       if (employee == null) {
-         throw new ResourceNotFoundException(email);
+         throw new UnauthorisedUserException(email);
       }
     return employee.getPassword().equals(password);
   }
@@ -47,7 +49,7 @@ public class AuthenticatingUserImpl implements AuthenticatingUser {
         final String email, final String password) {
         Employee employee = employeeRepository.findByEmail(email);
       if (employee == null) {
-         throw new ResourceNotFoundException(email);
+         throw new UnauthorisedUserException(email);
       }
       return employee.getPassword().equals(password)
          && employee.getUserType().equals(UserType.ADMIN);

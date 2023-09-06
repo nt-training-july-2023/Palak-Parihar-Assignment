@@ -40,7 +40,7 @@ public class TicketController {
      @RequestBody final TicketInDto ticketInDto) {
      Optional<TicketOutDto> optionalTicketOutDto =
          ticketService.saveTicket(ticketInDto);
-    return new ResponseEntity<>(optionalTicketOutDto, HttpStatus.ACCEPTED);
+    return new ResponseEntity<>(optionalTicketOutDto, HttpStatus.CREATED);
   }
 
   /**

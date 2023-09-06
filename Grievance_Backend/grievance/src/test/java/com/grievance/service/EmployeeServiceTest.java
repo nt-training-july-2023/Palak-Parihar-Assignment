@@ -1,6 +1,7 @@
 package com.grievance.service;
 
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
@@ -67,6 +68,7 @@ class EmployeeServiceTest {
 		employee.setFullName("Palak Parihar");
 		employee.setTickets(null);
 		employee.setUserType(UserType.MEMBER);
+		employee.setPassword("Ayushi#123");
 		
 		employeeInDto = new EmployeeInDto();
 		employeeInDto.setEmail("palak@nucleusteq.com");
@@ -85,13 +87,25 @@ class EmployeeServiceTest {
     @Test
     void when_save_employee_return_employee() {
 		
-		when(employeeRepository.save(Mockito.any(Employee.class))).thenReturn(employee);
-		
+    	when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(null);
+    	
+    	when(employeeRepository.save(Mockito.any(Employee.class))).thenReturn(employee);
+    			
 		Optional<EmployeeOutDto> dto = employeeService.saveEmployee(employeeInDto);
 		
 		assertEquals(dto.get(), employeeOutDto);
 		
 	}
+    
+    @Test
+    void when_save_employee_fails_return_empty_optional() {
+    	
+    	when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
+		
+		Optional<EmployeeOutDto> dto = employeeService.saveEmployee(employeeInDto);
+		
+		assertThat(!dto.isPresent());
+    }
 
 
     @Test
@@ -114,6 +128,16 @@ class EmployeeServiceTest {
 				
 		assertEquals(dto, Optional.empty());
 	}
+    
+    @Test
+    void when_login_failed_by_false_credentials_return_empty_optional() {
+    	employee.setPassword("Example#123");
+		when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
+		
+		Optional<EmployeeOutDto> dto = employeeService.loginEmployee(employeeLoginDto);
+				
+		assertEquals(dto, Optional.empty());
+    }
 
     @Test
     void listAllEmployees_return_list_of_all_employees() {

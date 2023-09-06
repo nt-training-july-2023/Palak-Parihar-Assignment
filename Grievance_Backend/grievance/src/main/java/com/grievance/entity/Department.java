@@ -129,4 +129,17 @@ public class Department {
     this.tickets = ticketsField;
   }
 
+  /**
+   * parameterised constructor.
+   * @param departmentField
+   */
+  public Department(final String departmentField) {
+     this.departmentName = departmentField;
+  }
+
+  /**
+   * default Constructor.
+   */
+  public Department() {
+  }
 }
