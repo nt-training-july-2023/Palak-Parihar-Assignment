@@ -10,6 +10,7 @@ import com.grievance.dto.EmployeeLoginDto;
 import com.grievance.dto.EmployeeOutDto;
 import com.grievance.exception.EmployeeAlreadyExistException;
 import com.grievance.exception.ResourceNotFoundException;
+import com.grievance.exception.UnauthorisedUserException;
 import com.grievance.service.EmployeeService;
 
 import java.util.List;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -75,16 +76,15 @@ public class EmployeeController {
    */
   @GetMapping("/listAllEmployees")
   public ResponseEntity<?> listAllEmployees(
-      @RequestParam final String email, @RequestParam final String password) {
-         Boolean boolean1 =
-            authenticatingUser.checkIfUserIsAdmin(email, password);
-         if (boolean1) {
+      @RequestHeader final String email, @RequestHeader final String password) {
+         try {
+             authenticatingUser.checkIfUserIsAdmin(email, password);
+         } catch  (UnauthorisedUserException e) {
+           return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+         }
           Optional<List<EmployeeOutDto>> listOfAllEmployees =
                employeeService.listAllEmployees();
           return new ResponseEntity<>(listOfAllEmployees, HttpStatus.ACCEPTED);
-          }
-         return new ResponseEntity<>("Invalid Authorization",
-             HttpStatus.UNAUTHORIZED);
   }
 
 //  /**
@@ -115,22 +115,23 @@ public class EmployeeController {
    */
   @PostMapping("/saveEmployee")
   public ResponseEntity<?> saveEmployee(
-          @RequestParam final String email,
-          @RequestParam final String password,
+          @RequestHeader final String email,
+          @RequestHeader final String password,
           @RequestBody final EmployeeInDto employeeInDto) {
 
-     Boolean boolean1 =
-     authenticatingUser.checkIfUserIsAdmin(email, password);
-     if (boolean1) {
-       Optional<EmployeeOutDto> optional =
-             employeeService.saveEmployee(employeeInDto);
-               if  (!optional.isPresent()) {
-                     throw new EmployeeAlreadyExistException(
-                       employeeInDto.getEmail());
-               }
-               return new ResponseEntity<>(optional, HttpStatus.ACCEPTED);
-            }
-       return new ResponseEntity<>("Invalid Authorization",
-           HttpStatus.UNAUTHORIZED);
+     try {
+          authenticatingUser.checkIfUserIsAdmin(email, password);
+     } catch (UnauthorisedUserException e) {
+          return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+     }
+     Optional<EmployeeOutDto> optional = null;
+       try {
+            optional =
+            employeeService.saveEmployee(employeeInDto);
+       } catch (EmployeeAlreadyExistException e) {
+            return new ResponseEntity<>(
+                  e.getMessage(), HttpStatus.CONFLICT);
+       }
+     return new ResponseEntity<>(optional, HttpStatus.CREATED);
   }
 }

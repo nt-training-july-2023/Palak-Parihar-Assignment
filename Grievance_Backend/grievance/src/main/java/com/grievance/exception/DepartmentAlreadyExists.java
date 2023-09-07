@@ -10,16 +10,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 @ResponseStatus(
   value = HttpStatus.CONFLICT,
-  reason = "Department with this email already exist"
+  reason = "Department with this Title already exists"
 )
 public class DepartmentAlreadyExists extends RuntimeException {
    private static final long serialVersionUID = -3332292346834265691L;
   /**
    * Constructs a new ResourceNotFoundException with a specific email address.
    *
-   * @param email The email address for which the employee was not found.
+   * @param departmentName already present.
+   *
    */
-  public DepartmentAlreadyExists(final String email) {
-    super("Department Already Exist Exception with email=" + email);
+  public DepartmentAlreadyExists(final String departmentName) {
+    super("Department Already Exist with departmentName = " + departmentName);
   }
 }

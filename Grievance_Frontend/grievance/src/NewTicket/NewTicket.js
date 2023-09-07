@@ -71,9 +71,9 @@ export default function NewTicket(props) {
                 label: 'Department'
             },
             status: {
-                elementType: 'disabled',
+                elementType: 'input',
                 elementConfig: {
-                    type: 'disable',
+                    type: 'input',
                     placeholder: 'Open'
                 },
                 options:null,
@@ -85,6 +85,7 @@ export default function NewTicket(props) {
                 },
                 valid: false,
                 touched: false,
+                disabled : true,
                 label: "Status"
             },
             

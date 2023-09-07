@@ -10,6 +10,8 @@ import com.grievance.dto.EmployeeLoginDto;
 import com.grievance.dto.EmployeeOutDto;
 import com.grievance.entity.Employee;
 import com.grievance.entity.UserType;
+import com.grievance.exception.EmployeeAlreadyExistException;
+import com.grievance.exception.UnauthorisedUserException;
 import com.grievance.service.EmployeeService;
 
 import java.util.ArrayList;
@@ -97,20 +99,20 @@ class EmployeeControllerTest {
 	  
 	  mockMvc.perform(MockMvcRequestBuilders.get("/listAllEmployees")
 			  .contentType(MediaType.APPLICATION_JSON)
-			  .param("email", "ayushi@nucleusteq.com")
-  			  .param("password", "Ayushi#123")
+			  .header("email", "ayushi@nucleusteq.com")
+  			  .header("password", "Ayushi#123")
 			  ).andExpect(status().isAccepted()).andDo(MockMvcResultHandlers.print());
   }
 
     @Test
-    void when_unauthorised_user_fails_to_fetch_employees() throws Exception {
+    void when_unauthorised_user_fetch_employees_throw_exception() throws Exception {
 	  
-	  when(authenticatingUser.checkIfUserIsAdmin(Mockito.anyString(), Mockito.anyString())).thenReturn(false);	  
+	  when(authenticatingUser.checkIfUserIsAdmin(Mockito.anyString(), Mockito.anyString())).thenThrow(UnauthorisedUserException.class);	  
 	  
 	  mockMvc.perform(MockMvcRequestBuilders.get("/listAllEmployees")
 			  .contentType(MediaType.APPLICATION_JSON)
-			  .param("email", "ayushi@nucleusteq.com")
-  			  .param("password", "Ayushi#123")
+			  .header("email", "ayushi@nucleusteq.com")
+  			  .header("password", "Ayushi#123")
 			  ).andExpect(status().isUnauthorized()).andDo(MockMvcResultHandlers.print());
   }
 
@@ -144,34 +146,34 @@ class EmployeeControllerTest {
     	mockMvc.perform(MockMvcRequestBuilders.post("/saveEmployee")
     			.contentType(MediaType.APPLICATION_JSON)
     			.content(objectMapper.writeValueAsString(employeeInDto))
-    			.param("email", "ayushi@nucleusteq.com")
-    			.param("password", "Ayushi#123")
-    			).andExpect(status().isAccepted()).andDo(MockMvcResultHandlers.print());
+    			.header("email", "ayushi@nucleusteq.com")
+    			.header("password", "Ayushi#123")
+    			).andExpect(status().isCreated()).andDo(MockMvcResultHandlers.print());
     }
     
     @Test
     void when_save_employee_by_authorised_user_fails_return_user() throws JsonProcessingException, Exception {
     	when(authenticatingUser.checkIfUserIsAdmin(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
     	
-    	when(employeeService.saveEmployee(Mockito.any(EmployeeInDto.class))).thenReturn(Optional.empty());
+    	when(employeeService.saveEmployee(Mockito.any(EmployeeInDto.class))).thenThrow(EmployeeAlreadyExistException.class);
     	
     	mockMvc.perform(MockMvcRequestBuilders.post("/saveEmployee")
     			.contentType(MediaType.APPLICATION_JSON)
     			.content(objectMapper.writeValueAsString(employeeInDto))
-    			.param("email", "ayushi@nucleusteq.com")
-    			.param("password", "Ayushi#123")
+    			.header("email", "ayushi@nucleusteq.com")
+    			.header("password", "Ayushi#123")
     			).andExpect(status().isConflict()).andDo(MockMvcResultHandlers.print());
     }
     
     @Test
-    void when_save_employee__by_unauthorised_user_return_status() throws JsonProcessingException, Exception {
-        when(authenticatingUser.checkIfUserIsAdmin(Mockito.anyString(), Mockito.anyString())).thenReturn(false);
+    void when_save_employee__by_unauthorised_user_throw_exception() throws JsonProcessingException, Exception {
+        when(authenticatingUser.checkIfUserIsAdmin(Mockito.anyString(), Mockito.anyString())).thenThrow(UnauthorisedUserException.class);
     	    	
     	mockMvc.perform(MockMvcRequestBuilders.post("/saveEmployee")
     			.contentType(MediaType.APPLICATION_JSON)
     			.content(objectMapper.writeValueAsString(employeeInDto))
-    			.param("email", "ayushi@nucleusteq.com")
-    			.param("password", "Ayushi#123")
+    			.header("email", "ayushi@nucleusteq.com")
+    			.header("password", "Ayushi#123")
     			).andExpect(status().isUnauthorized()).andDo(MockMvcResultHandlers.print());
     }
     

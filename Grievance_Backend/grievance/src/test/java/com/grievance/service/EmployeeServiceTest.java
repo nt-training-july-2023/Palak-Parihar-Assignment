@@ -24,6 +24,7 @@ import com.grievance.dto.EmployeeLoginDto;
 import com.grievance.dto.EmployeeOutDto;
 import com.grievance.entity.Employee;
 import com.grievance.entity.UserType;
+import com.grievance.exception.EmployeeAlreadyExistException;
 import com.grievance.repository.EmployeeRepository;
 
 
@@ -98,13 +99,15 @@ class EmployeeServiceTest {
 	}
     
     @Test
-    void when_save_employee_fails_return_empty_optional() {
+    void when_save_employee_fails_return_exception() {
     	
     	when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
 		
-		Optional<EmployeeOutDto> dto = employeeService.saveEmployee(employeeInDto);
-		
-		assertThat(!dto.isPresent());
+		try {
+			employeeService.saveEmployee(employeeInDto);
+		}catch(EmployeeAlreadyExistException e) {
+			assertThat(true);
+		}		
     }
 
 

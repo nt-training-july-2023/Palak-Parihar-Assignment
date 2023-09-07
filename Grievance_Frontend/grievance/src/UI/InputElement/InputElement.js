@@ -8,7 +8,7 @@ function InputElement(props) {
         inputClasses.push(classes.Invalid);
     }
 
-    console.log(props)
+    // console.log(props)
     switch (props.elementType) {
         case ('input'):
             inputElement = <input
@@ -17,6 +17,7 @@ function InputElement(props) {
                 {...props.elementConfig}
                 value={props.value}
                 onChange={props.changed}
+                disabled={props.disabled}
                 required />;
             break;
 
@@ -26,12 +27,13 @@ function InputElement(props) {
                 {...props.elementConfig}
                 value={props.value}
                 onChange={props.changed}
+                disabled={props.disabled}
                 required />;
             break;
 
         case ('select'):
             inputElement = (<>
-                <select className={inputClasses} onChange={props.changed} {...props.shouldValidate} >
+                <select className={inputClasses.join(' ')} onChange={props.changed} {...props.shouldValidate} >
                     <option value="" selected disabled hidden>Choose here</option>
                     {props.options.map(option => (
                         <option className={inputClasses} key={option} value={option}>
@@ -41,15 +43,10 @@ function InputElement(props) {
                 </select>
             </>)
             break;
-        case ('disabled'):
-            inputElement = <input
-                className={inputClasses.join(' ')}
-                type={props.elementConfig.type}
-                {...props.elementConfig}
-                value={props.value}
-                onChange={props.changed}
-                required disabled />;
-            break;
+        default:
+            inputElement = (
+                <></>
+            )
     }
 
     return (

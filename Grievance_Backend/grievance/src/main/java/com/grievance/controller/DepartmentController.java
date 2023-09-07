@@ -3,6 +3,7 @@ package com.grievance.controller;
 import com.grievance.authentication.AuthenticatingUser;
 import com.grievance.dto.DepartmentInDto;
 import com.grievance.dto.DepartmentOutDto;
+import com.grievance.exception.DepartmentAlreadyExists;
 import com.grievance.service.DepartmentService;
 
 import java.util.List;
@@ -15,8 +16,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -57,14 +58,18 @@ public class DepartmentController {
 //  }
   @PostMapping("/save")
   public ResponseEntity<?> saveDepartment(
-    @RequestParam final String email,
-    @RequestParam final String password,
+    @RequestHeader final String email,
+    @RequestHeader final String password,
     @RequestBody final DepartmentInDto departmentInDto
   ) {
       Boolean boolean1 = authenticatingUser.checkIfUserIsAdmin(email, password);
+      Optional<DepartmentOutDto> optional = null;
       if (boolean1) {
-          Optional<DepartmentOutDto> optional =
-                 departmentService.saveDepartment(departmentInDto);
+          try {
+             optional = departmentService.saveDepartment(departmentInDto);
+          } catch (DepartmentAlreadyExists e) {
+             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+          }
           return new ResponseEntity<>(optional, HttpStatus.CREATED);
       }
     return new ResponseEntity<>("Invalid Credential", HttpStatus.UNAUTHORIZED);
@@ -81,8 +86,8 @@ public class DepartmentController {
    */
   @GetMapping("/listDepartments")
   public ResponseEntity<?> listDepartments(
-      @RequestParam final String email,
-      @RequestParam final String password
+      @RequestHeader final String email,
+      @RequestHeader final String password
     ) {
     Boolean boolean1 = authenticatingUser.checkIfUserIsAdmin(email, password);
     if (boolean1) {

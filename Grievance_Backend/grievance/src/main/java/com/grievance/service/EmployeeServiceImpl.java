@@ -4,6 +4,7 @@ import com.grievance.dto.EmployeeInDto;
 import com.grievance.dto.EmployeeLoginDto;
 import com.grievance.dto.EmployeeOutDto;
 import com.grievance.entity.Employee;
+import com.grievance.exception.EmployeeAlreadyExistException;
 import com.grievance.repository.EmployeeRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   public Optional<EmployeeOutDto> saveEmployee(
     final EmployeeInDto employeeInDto) {
     if (employeeRepository.findByEmail(employeeInDto.getEmail()) != null) {
-      return Optional.empty();
+      throw new EmployeeAlreadyExistException(employeeInDto.getEmail());
     }
     Employee employee = converToEntity(employeeInDto);
     employee = employeeRepository.save(employee);

@@ -49,10 +49,13 @@ public class DepartmentServiceImpl implements DepartmentService {
       saveDepartment(final DepartmentInDto departmentInDto) {
     Department department2 = convertToEntity(departmentInDto);
     Department savedDepartment = departmentRepository.findByDepartmentName(
-    departmentInDto.getDepartmentName());
+    departmentInDto.getDepartmentName().toUpperCase());
+
     if (savedDepartment != null) {
        throw new DepartmentAlreadyExists(departmentInDto.getDepartmentName());
     }
+    department2.setDepartmentName(
+        department2.getDepartmentName().toUpperCase());
     Department saved = departmentRepository.save(department2);
     return Optional.ofNullable(convertToDto(saved));
   }

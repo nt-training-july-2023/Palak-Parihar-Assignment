@@ -43,7 +43,7 @@ export default function Login() {
         }
     }
 
-    const [disableButton, setDisableButton] = useState(true);
+    const [disableButton, setDisableButton] = useState(cont.isValid);
     const [controls, setControls] = useState(cont.controls);
     const [message, setMessage] = useState();
     const [modal, setModal] = useState();
@@ -98,15 +98,13 @@ export default function Login() {
         }
 
         if (rules.isEmail) {
-            const pattern = /^[A-Za-z0-9+_.-]+@nucleusteq.com(.+)$/;
+            const pattern = /^[A-Za-z0-9+_.-]+@+nucleusteq.com$/;
+            console.log(value.endsWith("@nucleusteq.com") + " " + pattern.test(value))
             isValid = pattern.test(value) && isValid
-            if (isValid && value.indexOf("@nucleusteq.com", value.length - "@nucleusteq.com".length) !== -1) {
-                //VALID
-                isValid = true
-            } else {
-                isValid = false
+            if (isValid) {
+                setMessage("Invalid email domain")
             }
-            setMessage("Invalid email domain")
+
         }
 
         if (rules.isPassword) {
@@ -140,7 +138,8 @@ export default function Login() {
         console.log(controls)
 
         if (!(controls.email.valid && controls.password.valid)) {
-            // setMessage("Credentials doesn't match the requirements")
+            setMessage("Credentials doesn't match the requirements")
+            return
         }
         var values = {
             email: controls.email.value,
@@ -153,11 +152,11 @@ export default function Login() {
             mode: 'CORS',
             data: values
         }).then(res => {
-            console.log("res " + res.data);
+            console.log(res);
             navigate("/dashboard")
         }).catch(e => {
-            console.log(e.response.data)
-            var err = e.response.data;
+            console.log(e.response.data.message)
+            var err = e.response.data.message
             // alert(err)
             setModal(() => <Modal message={err} onClick={closeModal} />)
         })
@@ -168,13 +167,22 @@ export default function Login() {
         setModal(() => <></>)
     }
 
-   
+
 
     useEffect(() => {
+
+        let headersData = {
+            email: "ayushi@nucleusteq.com",
+            password: "Ayushi#124",
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Headers': '*',
+            'Access-Control-Allow-Credentials': true
+        }
         axios({
-            url: (baseUrl + 'list'),
+            url: (baseUrl + 'listAllEmployees'),
             method: 'GET',
-            mode: 'CORS'
+            headers:headersData,
+            // withCredentials:true
         }).then(res => {
             console.log(res.data)
         }).catch(e => {
@@ -196,7 +204,7 @@ export default function Login() {
                         <p className="message">
                             {message}
                         </p>
-                        <Button type="submit" value="submit" disabled={disableButton}/>
+                        <Button type="submit" value="submit" disabled={disableButton} />
                     </form>
                 </div>
             </div>

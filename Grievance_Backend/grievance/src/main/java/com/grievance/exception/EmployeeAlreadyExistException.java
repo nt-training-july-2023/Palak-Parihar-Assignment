@@ -21,6 +21,6 @@ public class EmployeeAlreadyExistException extends RuntimeException {
    * @param email The email address for which the employee was not found.
    */
   public EmployeeAlreadyExistException(final String email) {
-    super("Employee Already Exist Exception with email=" + email);
+    super("Employee Already Exist with email = " + email);
   }
 }

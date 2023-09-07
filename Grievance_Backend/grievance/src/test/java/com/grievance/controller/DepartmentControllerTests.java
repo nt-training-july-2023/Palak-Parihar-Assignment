@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.grievance.authentication.AuthenticatingUser;
 import com.grievance.dto.DepartmentInDto;
 import com.grievance.dto.DepartmentOutDto;
+import com.grievance.exception.DepartmentAlreadyExists;
 import com.grievance.service.DepartmentService;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,10 +71,32 @@ public class DepartmentControllerTests {
           .post("/department/save")
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(departmentInDto))
-          .param("email", "ayushi@gmail.com")
-          .param("password", "Ayushi#123")
+          .header("email", "ayushi@gmail.com")
+          .header("password", "Ayushi#123")
       )
       .andExpect(status().isCreated())
+      .andDo(MockMvcResultHandlers.print());
+  }
+  
+  @Test
+  void when_authorised_user_save_department_fails_return_exception()
+    throws JsonProcessingException, Exception {
+    when(authenticatingUser.checkIfUserIsAdmin(Mockito.anyString(), Mockito.anyString()))
+      .thenReturn(true);
+
+    when(departmentService.saveDepartment(Mockito.any(DepartmentInDto.class)))
+      .thenThrow(DepartmentAlreadyExists.class);
+
+    mockMvc
+      .perform(
+        MockMvcRequestBuilders
+          .post("/department/save")
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(departmentInDto))
+          .header("email", "ayushi@gmail.com")
+          .header("password", "Ayushi#123")
+      )
+      .andExpect(status().isConflict())
       .andDo(MockMvcResultHandlers.print());
   }
 
@@ -89,8 +112,8 @@ public class DepartmentControllerTests {
           .post("/department/save")
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(departmentInDto))
-          .param("email", "ayushi@gmail.com")
-          .param("password", "Ayushi#123")
+          .header("email", "ayushi@gmail.com")
+          .header("password", "Ayushi#123")
       )
       .andExpect(status().isUnauthorized())
       .andDo(MockMvcResultHandlers.print());
@@ -110,8 +133,8 @@ public class DepartmentControllerTests {
         MockMvcRequestBuilders
           .get("/department/listDepartments")
           .contentType(MediaType.APPLICATION_JSON)
-          .param("email", "ayushi@gmail.com")
-          .param("password", "Ayushi#123")
+          .header("email", "ayushi@gmail.com")
+          .header("password", "Ayushi#123")
       )
       .andExpect(status().isAccepted())
       .andDo(MockMvcResultHandlers.print());
@@ -127,8 +150,8 @@ public class DepartmentControllerTests {
         MockMvcRequestBuilders
           .get("/department/listDepartments")
           .contentType(MediaType.APPLICATION_JSON)
-          .param("email", "ayushi@gmail.com")
-          .param("password", "Ayushi#123")
+          .header("email", "ayushi@gmail.com")
+          .header("password", "Ayushi#123")
       )
       .andExpect(status().isUnauthorized())
       .andDo(MockMvcResultHandlers.print());
