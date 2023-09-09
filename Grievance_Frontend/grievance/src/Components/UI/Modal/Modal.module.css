@@ -2,13 +2,13 @@ dialog::backdrop{
     background-color: black;
 }
 
-.outer-div{
+.outerDiv{
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     position: absolute;
-    height: 100vh;
+    height: 90vh;
     width: 100vw;
     z-index: 1;
     background-color: rgba(0, 0, 0, 0.5);
@@ -23,8 +23,8 @@ dialog::backdrop{
     opacity: 1;
     background-color: white;
     height: fit-content;
-    width: 60%;
+    width: 40%;
     padding: 40px;
-    border: 1px solid black;
-    border-radius: 20px;
+    border: 2px solid black;
+    border-radius: 5px;
 }

@@ -1,11 +1,13 @@
-import { useState } from "react";
-import InputElement from "../UI/InputElement/InputElement";
-import Button from "../UI/Button/Button";
+import { useEffect, useState } from "react";
+import InputElement from "../../Components/UI/InputElement/InputElement";
+import Button from "../../Components/UI/Button/Button";
+import { useNavigate } from "react-router";
+import { FETCH_ALL_TICKETS, GENERATE_NEW_TICKET } from "../../Service/TicketServices";
+import { FETCH_ALL_DEPARTMENTS } from "../../Service/DepartmentService";
 
 export default function NewTicket(props) {
 
-    let departmentOptions = ['HR', 'Finance', 'Marketing', 'Engineering']
-    let ticketTypeOptions = ['Grievance', 'Feedback']
+    let ticketTypeOptions = ['GRIEVANCE', 'FEEDBACK']
     let cont = {
         isValid: false,
         submit: false,
@@ -20,7 +22,7 @@ export default function NewTicket(props) {
                 validation: {
                     required: true
                 },
-                value:'',
+                value: '',
                 valid: false,
                 label: 'Ticket Type'
             },
@@ -30,7 +32,7 @@ export default function NewTicket(props) {
                     type: 'text',
                     placeholder: 'Title'
                 },
-                options:null,
+                options: null,
                 value: '',
                 validation: {
                     required: true,
@@ -46,7 +48,7 @@ export default function NewTicket(props) {
                     type: 'email',
                     placeholder: 'Ticket description'
                 },
-                options:null,
+                options: null,
                 value: '',
                 validation: {
                     required: true,
@@ -57,16 +59,16 @@ export default function NewTicket(props) {
                 label: "Description"
             },
             department: {
-                elementType: 'select',
+                elementType: 'department',
                 elementConfig: {
                     type: 'select',
-                    placeholder: ''
+                    placeholder: 'department'
                 },
                 value: '',
                 validation: {
                     required: true
                 },
-                options: departmentOptions,
+                options: [],
                 valid: false,
                 label: 'Department'
             },
@@ -76,23 +78,25 @@ export default function NewTicket(props) {
                     type: 'input',
                     placeholder: 'Open'
                 },
-                options:null,
-                value: 'Open',
+                options: null,
+                value: 'OPEN',
                 validation: {
                     required: true,
                     minLength: 6,
-                    disabled:'disabled'
+                    disabled: 'disabled'
                 },
                 valid: false,
                 touched: false,
-                disabled : true,
+                disabled: true,
                 label: "Status"
             },
-            
+
         }
     }
 
     const [controls, setControls] = useState(cont.controls);
+    const navigate = useNavigate()
+    const [userValues, setUserValues] = useState()
 
     const formElementsArray = [];
     for (let key in controls) {
@@ -104,7 +108,6 @@ export default function NewTicket(props) {
 
     const completeForm = formElementsArray.map(formElement => {
         return (<>
-            {console.log(formElement.label)}
             <div className='form-container'>
                 <p className='input-label'>{formElement.config.label}</p>
                 <div className='input-content'>
@@ -118,6 +121,7 @@ export default function NewTicket(props) {
                         touched={formElement.config.touched}
                         changed={(e) => inputChangeHandler(e, formElement.id)}
                         options={formElement.config.options}
+                        disabled={formElement.config.disabled}
                     />
                 </div>
             </div>
@@ -140,13 +144,68 @@ export default function NewTicket(props) {
 
     const submithandler = (e) => {
         e.preventDefault();
-        console.log(controls)
+        console.log(userValues)
+        let ticketValues = {
+            title: controls.title.value,
+            department: {
+                departmentId: Number(controls.department.value),
+                departmentName: ''
+            },
+            description: controls.description.value,
+            status: controls.status.value.toUpperCase(),
+            ticketType: controls.ticketType.value.toUpperCase(),
+            employee: {
+                email: userValues.email
+            }
+        }
+        console.log(ticketValues)
+
+        GENERATE_NEW_TICKET(ticketValues).then(res => {
+                console.log(res.data)
+                return res.data;
+            }).catch(err => {
+                console.log(err.data)
+                return err.data
+            })
+        console.log(GENERATE_NEW_TICKET)
     }
+
+    useEffect(() => {
+        let user = JSON.parse(localStorage.getItem('userDetails'))
+        if (!user.isAuthenticated) {
+            navigate("/login")
+        }
+        setUserValues(user)
+
+        const response = FETCH_ALL_TICKETS()
+            .then(res => {
+                console.log(res.data)
+                return res.data
+            }).catch(err => {
+                console.log(err.data)
+                return err.data
+            })
+        FETCH_ALL_DEPARTMENTS()
+            .then(response => {
+                let updatedControls = {
+                    ...controls,
+                    department: {
+                        ...controls.department,
+                        options: response.data
+                    }
+                }
+                console.log(response)
+                setControls(updatedControls);
+                return response.data;
+            }).catch(error => {
+                return error.data
+            })
+    }, [])
 
     return (
         <>
             <div className="reg-container">
-            <h3 className='heading'>Generate New Ticket</h3>
+                <h3 className='heading'>Generate New Ticket</h3>
                 <div className="reg-content">
                     <form onSubmit={submithandler}>
                         {completeForm}

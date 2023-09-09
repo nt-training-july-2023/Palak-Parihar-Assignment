@@ -134,7 +134,8 @@ class EmployeeControllerTest {
 	  mockMvc.perform(MockMvcRequestBuilders.post("/login")
 			  .contentType(MediaType.APPLICATION_JSON)
 			  .content(objectMapper.writeValueAsString(employeeLoginDto))
-			  ).andExpect(status().isNotFound()).andDo(MockMvcResultHandlers.print());
+			  ).andExpect(status().isUnauthorized()).andDo(MockMvcResultHandlers.print());
+	  
   }
     
     @Test

@@ -1,0 +1,42 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    top: 0%;
+    height: 64px;
+    width: 100%;
+    background-color: #0A2647;
+    justify-content: center;
+    color: #fff;
+}
+
+.navItems {
+    display: flex;
+    flex-direction: row;
+    color: #fff;
+    position: absolute;
+    right: 0px;
+    justify-content: center;
+}
+
+ul{
+    list-style-type: none;
+}
+li a {
+    display: block;
+    color: white;
+    font-size: 20px;
+    text-align: center;
+    padding: 10px 20px;
+    text-decoration: none;
+}
+
+li a:hover {
+    color: rgb(216, 216, 216);
+    text-decoration: none;
+}
+
+.heading {
+    position: absolute;
+    left: 0px;
+}

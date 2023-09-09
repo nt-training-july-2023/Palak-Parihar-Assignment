@@ -1,13 +1,14 @@
-import axios from "axios";
 import "./Login.css";
-import '../Dashboard/Dashboard'
-import { useEffect, useState } from "react";
+import '../../Dashboard/Dashboard'
+import {useState } from "react";
 import { useNavigate } from 'react-router-dom'
-import InputElement from "../UI/InputElement/InputElement";
-import Modal from "../UI/Modal/Modal";
-import Button from "../UI/Button/Button";
+import InputElement from "../../Components/UI/InputElement/InputElement";
+import Modal from "../../Components/UI/Modal/Modal";
+import Button from "../../Components/UI/Button/Button";
+import { LOGIN_USER } from "../../Service/EmployeeServices";
+import Spinner from "../../Components/UI/Spinner/Spinner";
 
-export default function Login() {
+export default function Login({ callback }) {
     let cont = {
         isValid: false,
         submit: false,
@@ -49,8 +50,6 @@ export default function Login() {
     const [modal, setModal] = useState();
     const navigate = useNavigate();
 
-    let baseUrl = 'http://localhost:8080/';
-
     const formElementsArray = [];
     for (let key in controls) {
         formElementsArray.push({
@@ -61,7 +60,6 @@ export default function Login() {
 
     const completeForm = formElementsArray.map(formElement => (
         <>
-            {console.log(formElement)}
             <InputElement
                 key={formElement.id}
                 elementType={formElement.config.elementType}
@@ -74,7 +72,6 @@ export default function Login() {
             />
         </>
     ))
-
 
     const checkValidity = (value, rules) => {
         console.log("checkvalidity")
@@ -134,71 +131,56 @@ export default function Login() {
 
     const submithandler = (e) => {
         e.preventDefault();
-        console.log("submit : ")
-        console.log(controls)
 
         if (!(controls.email.valid && controls.password.valid)) {
             setMessage("Credentials doesn't match the requirements")
             return
         }
+
         var values = {
             email: controls.email.value,
             password: controls.password.value
         }
 
-        axios({
-            url: (baseUrl + 'login'),
-            method: 'POST',
-            mode: 'CORS',
-            data: values
-        }).then(res => {
-            console.log(res);
-            navigate("/dashboard")
-        }).catch(e => {
-            console.log(e.response.data.message)
-            var err = e.response.data.message
-            // alert(err)
-            setModal(() => <Modal message={err} onClick={closeModal} />)
-        })
+
+        const response = LOGIN_USER(values)
+            .then(res => {
+                setModal(()=> <Modal component={Spinner}/>)
+                let userValues = {
+                    email: values.email,
+                    password: values.password,
+                    fullName: res.data.fullName,
+                    userType: res.data.userType,
+                    firstTimeUser: res.data.firstTimeUser,
+                    department: res.data.department,
+                    isAuthenticated: true
+                }
+                localStorage.setItem('userDetails', JSON.stringify(userValues));
+                setTimeout(() => {
+                    navigate("/dashboard")
+                }, 1000);
+                return res.data;
+            }).catch(err => {
+                console.log(err)
+                setModal(() => <Modal message={err.data.response.data} onClick={closeModal} />)
+                return err.data.response.data;
+            })
+
+
     }
 
     const closeModal = (e) => {
-        console.log('hello')
         setModal(() => <></>)
     }
-
-
-
-    useEffect(() => {
-
-        let headersData = {
-            email: "ayushi@nucleusteq.com",
-            password: "Ayushi#124",
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': '*',
-            'Access-Control-Allow-Credentials': true
-        }
-        axios({
-            url: (baseUrl + 'listAllEmployees'),
-            method: 'GET',
-            headers:headersData,
-            // withCredentials:true
-        }).then(res => {
-            console.log(res.data)
-        }).catch(e => {
-            console.log(e)
-        })
-    })
 
     return (
         <>
             <div className="modal-container">
                 {modal}
             </div>
+            <h1 className="login-heading"><p>Grievance Management System</p></h1>
             <div className="container">
-                <h1 className="login-heading"><p>Grievance Management System</p></h1>
                 <div className="main_body">
-                    {/* <h3 className="heading">Login!</h3> */}
                     <form onSubmit={e => submithandler(e)}>
                         {completeForm}
                         <p className="message">

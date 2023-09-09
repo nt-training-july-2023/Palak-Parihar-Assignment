@@ -8,7 +8,21 @@ function InputElement(props) {
         inputClasses.push(classes.Invalid);
     }
 
-    // console.log(props)
+
+
+    const fetchOptions = (options) => {
+        const selectOptions = [];
+        Object.keys(options).forEach(key => {
+            let id = options[key].departmentId;
+            selectOptions.push(
+                <option className={inputClasses} key={options[key].departmentId} value={id}>
+                    {options[key].departmentName}
+                </option>
+            )
+        })
+        return selectOptions
+    }
+
     switch (props.elementType) {
         case ('input'):
             inputElement = <input
@@ -33,13 +47,22 @@ function InputElement(props) {
 
         case ('select'):
             inputElement = (<>
-                <select className={inputClasses.join(' ')} onChange={props.changed} {...props.shouldValidate} >
+                <select className={classes.InputElement} onChange={props.changed} {...props.shouldValidate} >
                     <option value="" selected disabled hidden>Choose here</option>
                     {props.options.map(option => (
-                        <option className={inputClasses} key={option} value={option}>
+                        <option key={option} value={option}>
                             {option}
                         </option>
                     ))}
+                </select>
+            </>)
+            break;
+
+        case ('department'):
+            inputElement = (<>
+                <select className={inputClasses.join(' ')} onChange={props.changed} {...props.shouldValidate} >
+                    <option className={classes.OptionElement} value="" selected disabled hidden>Choose here</option>
+                    {fetchOptions(props.options)}
                 </select>
             </>)
             break;

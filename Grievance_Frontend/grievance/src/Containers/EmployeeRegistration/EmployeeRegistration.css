@@ -3,8 +3,8 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-color: #f3f3f3;
-    height: 100vh;
+    height: fit-content;
+    margin-top: 20px;
 }
 
 .reg-content{

@@ -1,14 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './EmployeeRegistration.css';
-import InputElement from '../UI/InputElement/InputElement';
-import Button from '../UI/Button/Button';
+import InputElement from '../../Components/UI/InputElement/InputElement';
+import Button from '../../Components/UI/Button/Button';
+import { FETCH_ALL_DEPARTMENTS } from '../../Service/DepartmentService';
+import { SAVE_NEW_EMPLOYEE } from '../../Service/EmployeeServices';
+import Modal from '../../Components/UI/Modal/Modal';
 
 
 export default function EmployeeRegistration(props) {
+    let userTypeOptions = ['ADMIN', 'MEMBER']
 
-    let userTypeOptions = ['Admin', 'Employee'];
-    let departmentOptions = ['HR', 'Finance', 'Marketing', 'Engineering']
     const [message, setMessage] = useState();
+
+    const [modal, setModal] = useState();
 
     let cont = {
         isValid: false,
@@ -56,7 +60,7 @@ export default function EmployeeRegistration(props) {
                 validation: {
                     required: true,
                     minLength: 6,
-                    isPassword:true
+                    isPassword: true
                 },
                 options: null,
                 valid: false,
@@ -67,7 +71,7 @@ export default function EmployeeRegistration(props) {
                 elementType: 'select',
                 elementConfig: {
                     type: 'select',
-                    placeholder: ''
+                    placeholder: 'userType'
                 },
                 value: '',
                 validation: {
@@ -79,16 +83,16 @@ export default function EmployeeRegistration(props) {
                 label: 'User Type'
             },
             department: {
-                elementType: 'select',
+                elementType: 'department',
                 elementConfig: {
                     type: 'select',
-                    placeholder: ''
+                    placeholder: 'department'
                 },
                 value: '',
                 validation: {
                     required: true
                 },
-                options: departmentOptions,
+                options: [],
                 valid: false,
                 label: 'Department'
             }
@@ -105,9 +109,28 @@ export default function EmployeeRegistration(props) {
         })
     }
 
+    useEffect(() => {
+        const departmentNames = async () => FETCH_ALL_DEPARTMENTS()
+            .then(response => {
+                let updatedControls = {
+                    ...controls,
+                    department: {
+                        ...controls.department,
+                        options: response.data
+                    }
+                }
+                setControls(updatedControls);
+                return response.data;
+            }).catch(error => {
+                return error.data
+            })
+
+
+        departmentNames();
+    }, [])
+
     const completeForm = formElementsArray.map(formElement => {
         return (<>
-            {console.log(formElement.label)}
             <div className='form-container'>
                 <p className='input-label'>{formElement.config.label}</p>
                 <div className='input-content'>
@@ -182,24 +205,52 @@ export default function EmployeeRegistration(props) {
             }
         }
         setControls(updatedControls)
-        // console.log(controls)
     }
 
 
     const submithandler = (e) => {
         e.preventDefault();
-        console.log(controls)
+        let data = {
+            email: controls.email.value,
+            fullName: controls.name.value,
+            password: controls.password.value,
+            userType: controls.userType.value,
+            firstTimeUser: true,
+            department: {
+                departmentId: controls.department.value
+            }
+        }
+        console.log(data)
+
+        SAVE_NEW_EMPLOYEE(data).then(res => {
+                console.log(res.data)
+                setModal(() => <Modal message="Employee successfully created" onClick={closeModal} />)
+                return res.data;
+            }).catch(err => {
+                console.log(err.data.response.data)
+                setModal(() => <Modal message={err.data.response.data} onClick={closeModal} />)
+                return err.data;
+            })
+    }
+
+    const closeModal = () => {
+        setModal(() => <></>)
     }
 
     return (
         <>
+            <div className="modal-container">
+                {modal}
+            </div>
             <div className="reg-container">
                 <h3 className='heading'>Employee Registration</h3>
                 <div className="reg-content">
                     <form onSubmit={submithandler}>
                         {completeForm}
+                        <p className="message">
+                            {message}
+                        </p>
                         <Button type='submit' content='submit' />
-                        {message}
                     </form>
                 </div>
             </div>

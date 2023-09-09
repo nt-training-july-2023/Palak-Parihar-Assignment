@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react'
-import Button from '../UI/Button/Button'
+import Button from '../../Components/UI/Button/Button'
 import classes from './NewDepartment.module.css'
-import InputElement from '../UI/InputElement/InputElement';
-import axios from 'axios';
-import { DEPARTMENT_BASE_URL } from '../URL/Url';
+import InputElement from '../../Components/UI/InputElement/InputElement';
+import { FETCH_ALL_DEPARTMENTS, GENERATE_NEW_DEPARTMENT } from '../../Service/DepartmentService';
+import Modal from '../../Components/UI/Modal/Modal';
 
 export default function NewDepartment(props) {
-
-    // const[departmentName, setDepartmentName] = useState();
     const departmentName = {
         elementType: 'input',
         elementConfig: {
@@ -27,25 +25,16 @@ export default function NewDepartment(props) {
 
 
     const [controls, setControls] = useState(departmentName);
+    const [modal, setModal] = useState();
 
     useEffect(() => {
-        let headersData = {
-            email: "ayushi@nucleusteq.com",
-            password: "Ayushi#124",
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': '*',
-            'Access-Control-Allow-Credentials': true
-        }
-        axios({
-            url: (DEPARTMENT_BASE_URL + 'listDepartments'),
-            method: 'GET',
-            headers: headersData,
-            // withCredentials:true
-        }).then(res => {
-            console.log(res.data)
-        }).catch(e => {
-            console.log(e)
-        })
+        const departments = FETCH_ALL_DEPARTMENTS()
+            .then(response => {
+                return response.data;
+            }).catch(error => {
+                return error.data
+            })
+        console.log(departments)
     })
 
     const inputChangeHandler = (e) => {
@@ -56,31 +45,24 @@ export default function NewDepartment(props) {
         setControls(updatedControls)
     }
 
+    const closeModal = (e) => {
+        console.log('hello')
+        setModal(() => <></>)
+    }
+
     const submithandler = (e) => {
         e.preventDefault();
-        // console.log(controls.value)
         let departmentData = {
             departmentName: controls.value
         }
-
-        let headersData = {
-            email: "ayushi@nucleusteq.com",
-            password: "Ayushi#124",
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': '*',
-            'Access-Control-Allow-Credentials': true
-        }
-        axios({
-            url: DEPARTMENT_BASE_URL + "save",
-            method: 'POST',
-            data: departmentData,
-            headers: headersData
-        }).then(res => {
-            console.log(res.data);
-        })
-            .catch(err => {
-                console.log(err.response.data);
-            });
+        const savedDepartment = GENERATE_NEW_DEPARTMENT(departmentData)
+            .then(response => {
+                return response.data;
+            }).catch(error => {
+                setModal(() => <Modal message={error.data.response.data} onClick={closeModal} />)
+                console.log(error.data.response.data)
+            })
+        console.log(savedDepartment)
     }
 
     const formElement = (<InputElement
@@ -95,6 +77,9 @@ export default function NewDepartment(props) {
 
     return (
         <>
+            <div className="modal-container">
+                {modal}
+            </div>
             <div className="reg-container">
                 <h3 className={classes.heading}>Generate New Department</h3>
                 <div className={classes.outerDiv}>

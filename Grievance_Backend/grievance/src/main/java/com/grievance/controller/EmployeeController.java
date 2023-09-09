@@ -13,6 +13,7 @@ import com.grievance.exception.ResourceNotFoundException;
 import com.grievance.exception.UnauthorisedUserException;
 import com.grievance.service.EmployeeService;
 
+//import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,12 +60,17 @@ public class EmployeeController {
   public ResponseEntity<?> loginUser(
       @RequestBody final EmployeeLoginDto employeeLoginDto
   ) throws ResourceNotFoundException {
+
+//    Base64.Decoder decoder = Base64.getDecoder();
+//    byte[] pass = decoder.decode(employeeLoginDto.getPassword());
+//    employeeLoginDto.setPassword(new String(pass));
+
     Optional<EmployeeOutDto>
     employeeDtoOptional = employeeService.loginEmployee(employeeLoginDto);
     if (employeeDtoOptional.isPresent()) {
       return new ResponseEntity<>(employeeDtoOptional, HttpStatus.ACCEPTED);
     }
-    throw new ResourceNotFoundException(employeeLoginDto.getEmail());
+    return new ResponseEntity<>("Invalid Credentials", HttpStatus.UNAUTHORIZED);
   }
 
   /**
