@@ -7,6 +7,7 @@ import NewDepartment from "../Containers/NewDepartment/NewDepartment";
 import Navigation from "../Components/Navigation/Navigation";
 import ListTickets from "../Containers/ListTickets/ListTickets";
 import ListEmployees from "../Containers/ListEmployees/ListEmployees";
+import ChangePassword from "../Containers/ChangePassword/ChangePassword";
 
 export default function Main(props) {
 
@@ -21,6 +22,7 @@ export default function Main(props) {
                 <Route exact path='/navigation' element={<Navigation />} />
                 <Route exact path='/listAllTickets' element={<ListTickets />} />
                 <Route exact path='/listAllEmployees' element={<ListEmployees />} />
+                <Route exact path='/changePassword' element={<ChangePassword />} />
             </Routes>
         </>
     )
