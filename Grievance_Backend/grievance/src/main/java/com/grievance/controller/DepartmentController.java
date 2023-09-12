@@ -62,15 +62,15 @@ public class DepartmentController {
     @RequestHeader final String password,
     @RequestBody final DepartmentInDto departmentInDto
   ) {
-      Boolean boolean1 = authenticatingUser.checkIfUserIsAdmin(email, password);
-      Optional<DepartmentOutDto> optional = null;
-      if (boolean1) {
+      Boolean isAdmin = authenticatingUser.checkIfUserIsAdmin(email, password);
+      if (isAdmin) {
           try {
-             optional = departmentService.saveDepartment(departmentInDto);
+              Optional<DepartmentOutDto> optional =
+                      departmentService.saveDepartment(departmentInDto);
+              return new ResponseEntity<>(optional, HttpStatus.CREATED);
           } catch (DepartmentAlreadyExists e) {
              return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
           }
-          return new ResponseEntity<>(optional, HttpStatus.CREATED);
       }
     return new ResponseEntity<>("Invalid Credential", HttpStatus.UNAUTHORIZED);
   }

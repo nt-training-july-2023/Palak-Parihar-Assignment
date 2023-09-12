@@ -50,7 +50,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     if (employeeRepository.findByEmail(employeeInDto.getEmail()) != null) {
       throw new EmployeeAlreadyExistException(employeeInDto.getEmail());
     }
-    Employee employee = converToEntity(employeeInDto);
+    Employee employee = convertToEntity(employeeInDto);
     employee = employeeRepository.save(employee);
     return Optional.of(convertToDto(employee));
   }
@@ -117,7 +117,7 @@ public class EmployeeServiceImpl implements EmployeeService {
    * @param employeeInDto The Employee entity to be converted.
    * @return An Employee representing the employee's data.
    */
-  private Employee converToEntity(final EmployeeInDto employeeInDto) {
+  private Employee convertToEntity(final EmployeeInDto employeeInDto) {
     Employee employee = modelMapper.map(employeeInDto, Employee.class);
     return employee;
   }
