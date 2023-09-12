@@ -1,0 +1,36 @@
+
+.mainContainer{
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+    overflow : scroll;
+    padding: 2%;
+}
+
+.mainContainer::-webkit-scrollbar {
+    display: none;
+}
+
+.rowContent{
+    display: flex;
+    flex-direction: row;
+}
+
+.emailContent{
+    min-width: 200px;
+}
+
+.action{
+    display: flex;
+    height: 60px;
+    padding: 10px;
+    width: 150px;
+    align-items: start;
+    justify-content: center;
+    border: 1px solid rgb(208, 208, 209);
+}
+
+.icon{
+    padding: 0px 20px;
+}

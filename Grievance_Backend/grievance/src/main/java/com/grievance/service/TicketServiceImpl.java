@@ -5,8 +5,13 @@ package com.grievance.service;
 
 import com.grievance.dto.TicketInDto;
 import com.grievance.dto.TicketOutDto;
+import com.grievance.entity.Department;
 import com.grievance.entity.Ticket;
+import com.grievance.exception.TicketNotFoundException;
+import com.grievance.repository.DepartmentRepository;
 import com.grievance.repository.TicketRepository;
+
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,12 +30,20 @@ public class TicketServiceImpl implements TicketService {
    */
   @Autowired
   private ModelMapper modelMapper;
+
   /**
    * ticket repository instance provide access
    * method for interacting with database.
    */
   @Autowired
   private TicketRepository ticketRepository;
+
+  /**
+   * department repository instance provide access
+   * method for interacting with database.
+   */
+  @Autowired
+  private DepartmentRepository departmentRepository;
 
   /**
    * save a new ticket in ticket table in database.
@@ -58,6 +71,56 @@ public class TicketServiceImpl implements TicketService {
         }
       );
     return Optional.ofNullable(tickets);
+  }
+
+  /**
+   * method to access rickets by their department Name.
+   * @param departmentName
+   * @return list of ticket out DTO
+   */
+  @Override
+  public Optional<List<TicketOutDto>> listOfAllTicketsByDepartmentName(
+    final String departmentName
+  ) {
+    Department department = departmentRepository.findByDepartmentName(
+         departmentName);
+    List<TicketOutDto> ticketOutDtos = new ArrayList<TicketOutDto>();
+    ticketRepository
+      .findByDepartment(department)
+      .forEach(
+        e -> {
+          ticketOutDtos.add(convertToDto(e));
+        }
+      );
+    return Optional.ofNullable(ticketOutDtos);
+  }
+
+  /**
+   * method to update ticket.
+   * @param ticketInDto
+   * @return updated ticket.
+   */
+  @Override
+  public Optional<TicketOutDto> updateTicket(
+          final TicketInDto ticketInDto, final Integer ticketId
+          ) {
+    Optional<Ticket> ticket = ticketRepository.findById(ticketId);
+    if (ticket.isPresent()) {
+        Date date = new Date(System.currentTimeMillis());
+        ticket.get().setLastUpdated(date);
+        ticket.get().setDescription(ticketInDto.getDescription());
+        ticket.get().setStatus(ticketInDto.getStatus());
+        ticket.get().setTicketType(ticketInDto.getTicketType());
+        Department department = new Department();
+        department.setDepartmentId(
+                  ticketInDto.getDepartment().getDepartmentId());
+        ticket.get().setDepartment(department);
+
+        Ticket updatedTicket = ticketRepository.save(ticket.get());
+        TicketOutDto ticketOutDto = convertToDto(updatedTicket);
+        return Optional.ofNullable(ticketOutDto);
+    }
+    throw new TicketNotFoundException(ticketId);
   }
 
   /**

@@ -46,7 +46,6 @@ export default function NewDepartment(props) {
     }
 
     const closeModal = (e) => {
-        console.log('hello')
         setModal(() => <></>)
     }
 

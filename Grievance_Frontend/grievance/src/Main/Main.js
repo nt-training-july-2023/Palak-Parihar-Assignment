@@ -5,6 +5,8 @@ import EmployeeRegistration from "../Containers/EmployeeRegistration/EmployeeReg
 import NewTicket from "../Containers/NewTicket/NewTicket";
 import NewDepartment from "../Containers/NewDepartment/NewDepartment";
 import Navigation from "../Components/Navigation/Navigation";
+import ListTickets from "../Containers/ListTickets/ListTickets";
+import ListEmployees from "../Containers/ListEmployees/ListEmployees";
 
 export default function Main(props) {
 
@@ -17,6 +19,8 @@ export default function Main(props) {
                 <Route exact path='/newticket' element={<NewTicket />} />
                 <Route exact path='/newdepartment' element={<NewDepartment />} />
                 <Route exact path='/navigation' element={<Navigation />} />
+                <Route exact path='/listAllTickets' element={<ListTickets />} />
+                <Route exact path='/listAllEmployees' element={<ListEmployees />} />
             </Routes>
         </>
     )

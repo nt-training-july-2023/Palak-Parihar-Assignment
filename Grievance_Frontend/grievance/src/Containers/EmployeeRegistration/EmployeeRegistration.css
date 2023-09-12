@@ -40,3 +40,33 @@
     border-radius: 5px 5px 0px 0px;
     align-items: center;
 }
+
+
+@media (max-width : 800px){
+    .reg-content{
+        width: 80%;
+        padding: 0px 15px 15px 40px;
+    }
+
+    .heading{
+        width: 80%;
+    }
+}
+
+@media (max-width : 500px) {
+    .reg-content{
+        width: 100%;
+        height: 100vh;
+    }
+    .heading{
+        width: 100%;
+    }
+
+    .input-label{
+        display: none;
+    }
+
+    .input-content{
+        width: 100%;
+    }
+}

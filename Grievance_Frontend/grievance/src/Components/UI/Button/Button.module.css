@@ -18,3 +18,7 @@
 .disableBtn{
     background-color: rgb(190, 190, 190);
 }
+
+.deleteBtn{
+    background-color: #c70000;
+}

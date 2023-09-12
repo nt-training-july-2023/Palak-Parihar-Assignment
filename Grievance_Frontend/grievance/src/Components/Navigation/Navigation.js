@@ -22,7 +22,7 @@ export default function Navigation(props) {
 
     return (
         <>
-           {NavContent}
+           {sessionStorage.getItem('userDetails') && NavContent}
         </>
     )
 }

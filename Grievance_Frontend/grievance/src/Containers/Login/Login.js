@@ -155,7 +155,7 @@ export default function Login({ callback }) {
                     department: res.data.department,
                     isAuthenticated: true
                 }
-                localStorage.setItem('userDetails', JSON.stringify(userValues));
+                sessionStorage.setItem('userDetails', JSON.stringify(userValues));
                 setTimeout(() => {
                     navigate("/dashboard")
                 }, 1000);

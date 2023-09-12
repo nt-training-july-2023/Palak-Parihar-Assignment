@@ -6,6 +6,11 @@ export default function Button(props) {
     if (props.disabled) {
         inputClasses.join(classes.disabledBtn)
     }
+
+    if(props.delete){
+        inputClasses.push(' '+classes.deleteBtn)
+    }
+
     return (
         <>
             <div >

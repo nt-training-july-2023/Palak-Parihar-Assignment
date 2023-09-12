@@ -172,15 +172,15 @@ export default function EmployeeRegistration(props) {
         }
 
         if (rules.isEmail) {
-            const pattern = /^[A-Za-z0-9+_.-]+@nucleusteq.com(.+)$/;
+            const pattern = /^[A-Za-z0-9._%+-]+@nucleusteq\.com$/;
             isValid = pattern.test(value) && isValid
-            if (isValid && value.indexOf("@nucleusteq.com", value.length - "@nucleusteq.com".length) !== -1) {
+            if (isValid) {
                 //VALID
                 isValid = true
             } else {
                 isValid = false
-            }
             setMessage("Invalid email domain")
+            }
         }
 
         if (rules.isPassword) {
@@ -210,6 +210,12 @@ export default function EmployeeRegistration(props) {
 
     const submithandler = (e) => {
         e.preventDefault();
+
+        if (!(controls.email.valid && controls.password.valid)) {
+            setMessage("Credentials doesn't match the requirements")
+            return
+        }
+
         let data = {
             email: controls.email.value,
             fullName: controls.name.value,

@@ -1,0 +1,33 @@
+
+.cellContent{
+    height: 60px;
+    padding: 10px;
+    width: 150px;
+    overflow: auto;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgb(208, 208, 209);
+}
+
+.cellContent::-webkit-scrollbar {
+    display: none;
+}
+
+.headCellContent{
+    height: 70px;
+    padding: 10px;
+    width: 150px;
+    overflow: scroll;
+    align-items: center;
+    justify-content: center;
+    background-color: #0a2647e3;
+    color: #fff;
+}
+
+.headCellContent::-webkit-scrollbar {
+    display: none;
+}
+
+.emailContent{
+    min-width: 200px !important;
+}

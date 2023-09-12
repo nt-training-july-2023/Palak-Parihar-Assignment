@@ -4,6 +4,7 @@ import Button from "../../Components/UI/Button/Button";
 import { useNavigate } from "react-router";
 import { FETCH_ALL_TICKETS, GENERATE_NEW_TICKET } from "../../Service/TicketServices";
 import { FETCH_ALL_DEPARTMENTS } from "../../Service/DepartmentService";
+import Modal from "../../Components/UI/Modal/Modal";
 
 export default function NewTicket(props) {
 
@@ -40,7 +41,7 @@ export default function NewTicket(props) {
                 },
                 valid: false,
                 touched: false,
-                label: "Full Name"
+                label: "Title"
             },
             description: {
                 elementType: 'textarea',
@@ -97,6 +98,7 @@ export default function NewTicket(props) {
     const [controls, setControls] = useState(cont.controls);
     const navigate = useNavigate()
     const [userValues, setUserValues] = useState()
+    const [modal, setModal] = useState();
 
     const formElementsArray = [];
     for (let key in controls) {
@@ -134,7 +136,6 @@ export default function NewTicket(props) {
             [controlName]: {
                 ...controls[controlName],
                 value: e.target.value,
-                // valid: checkValidity(e.target.value, controls[controlName].validation),
                 touched: true
             }
         }
@@ -161,17 +162,33 @@ export default function NewTicket(props) {
         console.log(ticketValues)
 
         GENERATE_NEW_TICKET(ticketValues).then(res => {
-                console.log(res.data)
-                return res.data;
-            }).catch(err => {
-                console.log(err.data)
-                return err.data
-            })
+        //     const updatedControls = {
+        //     ...controls,
+        //     [controlName]: {
+        //         ...controls[controlName],
+        //         value: e.target.value,
+        //         touched: true
+        //     }
+        // }
+        // setControls(updatedControls)
+            setModal(() => <Modal message="Ticket successfully created" onClick={closeModal} />)
+            console.log(res.data)
+            return res.data;
+        }).catch(err => {
+            console.log(err.data)
+            setModal(() => <Modal message={err.data.response.data} onClick={closeModal} />)
+            return err.data
+        })
         console.log(GENERATE_NEW_TICKET)
     }
 
+
+    const closeModal = () => {
+        setModal(() => <></>)
+    }
+
     useEffect(() => {
-        let user = JSON.parse(localStorage.getItem('userDetails'))
+        let user = JSON.parse(sessionStorage.getItem('userDetails'))
         if (!user.isAuthenticated) {
             navigate("/login")
         }
@@ -204,6 +221,9 @@ export default function NewTicket(props) {
 
     return (
         <>
+            <div className="modal-container">
+                {modal}
+            </div>
             <div className="reg-container">
                 <h3 className='heading'>Generate New Ticket</h3>
                 <div className="reg-content">

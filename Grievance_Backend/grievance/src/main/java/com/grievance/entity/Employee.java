@@ -29,7 +29,7 @@ public class Employee {
      */
     @Id
     @Column(unique = true)
-    @Email
+    @Email(regexp =  "^[A-Za-z0-9._%+-]+@nucleusteq\\.com$")
     @NotBlank
     private String email;
 

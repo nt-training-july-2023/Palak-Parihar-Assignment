@@ -27,6 +27,7 @@ import com.grievance.entity.Employee;
 import com.grievance.entity.Status;
 import com.grievance.entity.Ticket;
 import com.grievance.entity.TicketType;
+import com.grievance.repository.DepartmentRepository;
 import com.grievance.repository.TicketRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,6 +35,9 @@ public class TicketServiceTest {
 	
 	@Mock
 	private TicketRepository ticketRepository;
+	
+	@Mock
+	private DepartmentRepository departmentRepository;
 	
 	@InjectMocks
 	private TicketServiceImpl ticketService;
@@ -103,4 +107,27 @@ public class TicketServiceTest {
 		Optional<List<TicketOutDto>> list2 = ticketService.listOfAllTickets();
 		assertEquals(list.get(0).getTitle(), list2.get().get(0).getTitle());
 	}
+	
+	@Test
+	void filter_list_of_tickets_by_department_name() {
+		List<TicketOutDto> ticketOutDtos = new ArrayList<TicketOutDto>();
+		ticketOutDtos.add(ticketOutDto);
+		
+		List<Ticket> list = new ArrayList<Ticket>();
+		list.add(ticket);
+		when(departmentRepository.findByDepartmentName("FINANCE")).thenReturn(new Department("FINANCE"));
+		
+		when(ticketRepository.findByDepartment(Mockito.any(Department.class))).thenReturn(list);
+		
+		Optional<List<TicketOutDto>> optional = ticketService.listOfAllTicketsByDepartmentName("FINANCE");
+		
+		assertEquals("FINANCE", optional.get().get(0).getDepartment());
+	}
+	
+//	@Test
+//	void ticket_updated_successfully() {
+//		when(ticketRepository.save(Mockito.any(Ticket.class))).thenReturn(ticket);
+//		
+//		
+//	}
 }

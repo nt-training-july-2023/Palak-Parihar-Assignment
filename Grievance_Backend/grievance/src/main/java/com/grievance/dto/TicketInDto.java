@@ -4,7 +4,7 @@
 package com.grievance.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.grievance.entity.Status;
+ import com.grievance.entity.Status;
 import com.grievance.entity.TicketType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -178,6 +178,5 @@ return employeeInDto;
 public void setEmployeeInDto(final EmployeeInDto employeeInDtoField) {
 this.employeeInDto = employeeInDtoField;
 }
-
 
 }
