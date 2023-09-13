@@ -1,0 +1,84 @@
+.ticketContent {
+
+    /* position: relative; */
+    height: 80%;
+    padding: 0px 40px;
+    width: 100%;
+    overflow-y: scroll;
+}
+
+.ticketContent::-webkit-scrollbar {
+    display: none;
+  }
+  
+
+.mainContainer {
+    display: flex;
+    flex-direction: row;
+    padding: 10px 20px;
+    width: 100%;
+    overflow: hidden;
+
+}
+
+.ticketContainer{
+    width: 50%;
+}
+
+.commentsContainer {
+    position: relative;
+    width: 50%;
+    height: 80%;
+    justify-content: baseline;
+    align-items: flex-end;
+    overflow-y: scroll;
+    padding-left: 50px;
+    padding-right: 10px;
+    border-left: 1px solid rgb(226, 223, 223);
+}
+
+.commentContent{
+    background-color: rgb(241, 240, 240);
+    border : 1px solid black;
+    border-radius: 10px 10px 0px 10px;
+    padding: 30px 20px 10px 20px;
+    margin: 50px 0px;
+}
+
+.outerDiv {
+    display: flex;
+    flex-direction: column;
+    height: 80%;
+    width: 90%;
+    background-color: #fff;
+    justify-content: space-between;
+    border-radius: 10px;
+}
+
+.heading {
+    display: flex;
+    height: 120px;
+    width: 100%;
+    background-color: #53341d;
+    border-radius: 10px 10px 0px 0px;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+label{
+    font-weight: bolder;
+    margin-right: 30px;
+    min-width: 100px;
+}
+
+.ticketData{
+    display: flex;
+}
+
+.commentBox{
+    position: fixed;
+    bottom: 0;
+    width: 40%;
+    margin-bottom: 10%;
+}

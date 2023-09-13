@@ -3,9 +3,11 @@ import { FETCH_ALL_USERS } from "../../Service/EmployeeServices"
 import classes from '../ListTickets/ListTickets.module.css'
 import HeadCell from "../../Components/Cell/HeadCell"
 import Cell from "../../Components/Cell/Cell"
+import Modal from "../../Components/UI/Modal/Modal"
+import Button from "../../Components/UI/Button/Button"
 
 
-export default function ListEmployees(params) {
+export default function ListEmployees(props) {
 
     const [employees, setEmployees] = useState([]);
     useEffect(() => {
@@ -48,11 +50,12 @@ export default function ListEmployees(params) {
                             {/* <i class="fa fa-pen"></i> */}
                             {/* <i class="fa-duotone fa-pen-to-square"></i> */}
                             <div className={classes.icon}>
-                                <i class='fas fa-edit'></i>
+                                <i class='fas fa-edit' ></i>
                             </div>
                             <div className={classes.icon}>
                                 <i class='fas fa-trash-alt'></i>
                             </div>
+                            
                         </div>
 
                     </div>

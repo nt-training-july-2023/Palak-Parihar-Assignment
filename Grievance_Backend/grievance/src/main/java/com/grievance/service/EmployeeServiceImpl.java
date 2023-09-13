@@ -5,6 +5,8 @@ import com.grievance.dto.EmployeeLoginDto;
 import com.grievance.dto.EmployeeOutDto;
 import com.grievance.entity.Employee;
 import com.grievance.exception.EmployeeAlreadyExistException;
+import com.grievance.exception.PasswordMismatchException;
+import com.grievance.exception.ResourceNotFoundException;
 import com.grievance.repository.EmployeeRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -96,6 +98,25 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
     return Optional.empty();
   }
+
+  /**
+   * changePassword for existing user.
+   *@param oldPassword
+   *@param newPassword
+   * @return boolean if password successfully changed
+   */
+  @Override public Boolean changePassword(
+          final String oldPassword,
+          final String newPassword,
+          final String email) {
+       Employee employee = employeeRepository.findByEmail(email);
+       if (employee.getPassword().equals(oldPassword)) {
+          employee.setPassword(newPassword);
+          employeeRepository.save(employee);
+          return true;
+       }
+     throw new PasswordMismatchException();
+   }
 
   /**
    * Converts an Employee entity object into an

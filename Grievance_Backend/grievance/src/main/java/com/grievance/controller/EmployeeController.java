@@ -5,10 +5,12 @@
 package com.grievance.controller;
 
 import com.grievance.authentication.AuthenticatingUser;
+import com.grievance.dto.ChangePasswordInDto;
 import com.grievance.dto.EmployeeInDto;
 import com.grievance.dto.EmployeeLoginDto;
 import com.grievance.dto.EmployeeOutDto;
 import com.grievance.exception.EmployeeAlreadyExistException;
+import com.grievance.exception.PasswordMismatchException;
 import com.grievance.exception.ResourceNotFoundException;
 import com.grievance.exception.UnauthorisedUserException;
 import com.grievance.service.EmployeeService;
@@ -23,6 +25,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -139,5 +142,40 @@ public class EmployeeController {
                   e.getMessage(), HttpStatus.CONFLICT);
        }
      return new ResponseEntity<>(optional, HttpStatus.CREATED);
+  }
+
+  /**
+   *
+   * @param email
+   * @param password
+   * @param changePasswordInDto
+   * @return ResponseEntity
+   */
+  @PutMapping("/changePassword")
+  public ResponseEntity<?> changePassword(
+          @RequestHeader final String email,
+          @RequestHeader final String password,
+          @RequestBody final ChangePasswordInDto changePasswordInDto
+         ) {
+        try {
+          authenticatingUser.checkIfUserExists(email, password);
+          try {
+              Boolean passwordChanged = employeeService.changePassword(
+                        changePasswordInDto.getOldPassword(),
+                        changePasswordInDto.getNewPassword(), email);
+              if (passwordChanged) {
+                 return new ResponseEntity<>("Password changed successfully",
+                        HttpStatus.NO_CONTENT);
+              }
+           } catch (PasswordMismatchException e) {
+                 return new ResponseEntity<>(e.getMessage(),
+                        HttpStatus.NOT_FOUND);
+          }
+       } catch (UnauthorisedUserException e) {
+           return new ResponseEntity<>(e.getMessage(),
+                   HttpStatus.UNAUTHORIZED);
+       }
+       return new ResponseEntity<>("Something unexpected happened",
+             HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }

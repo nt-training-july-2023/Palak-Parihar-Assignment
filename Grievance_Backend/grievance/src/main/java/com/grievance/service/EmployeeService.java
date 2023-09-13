@@ -41,4 +41,13 @@ public interface EmployeeService {
    */
   Optional<List<EmployeeOutDto>> listAllEmployees();
 
+  /**
+   * changePassword for existing user.
+   *@param oldPassword
+   *@param newPassword
+   *@param email
+   * @return boolean if password successfully changed
+   */
+  Boolean changePassword(String oldPassword, String newPassword, String email);
+
 }
