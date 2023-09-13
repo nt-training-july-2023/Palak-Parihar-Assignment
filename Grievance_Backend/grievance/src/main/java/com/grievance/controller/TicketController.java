@@ -3,6 +3,7 @@ package com.grievance.controller;
 import com.grievance.authentication.AuthenticatingUser;
 import com.grievance.dto.TicketInDto;
 import com.grievance.dto.TicketOutDto;
+import com.grievance.exception.TicketNotFoundException;
 import com.grievance.exception.UnauthorisedUserException;
 import com.grievance.service.TicketService;
 import java.util.List;
@@ -96,9 +97,14 @@ public class TicketController {
   public ResponseEntity<?> updateTickets(
           @RequestParam final Integer ticketId,
           @RequestBody final TicketInDto ticketInDto) {
+      try {
       Optional<TicketOutDto>  optionalTicketOutDto = ticketService.updateTicket(
             ticketInDto, ticketId);
       return new ResponseEntity<>(optionalTicketOutDto, HttpStatus.OK);
+       } catch (TicketNotFoundException e) {
+            return new ResponseEntity<>("Ticket with id not found",
+                                    HttpStatus.NOT_FOUND);
+       }
   }
 
 }

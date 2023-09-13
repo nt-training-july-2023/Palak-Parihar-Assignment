@@ -29,6 +29,7 @@ import com.grievance.dto.TicketOutDto;
 import com.grievance.entity.Status;
 import com.grievance.entity.Ticket;
 import com.grievance.entity.TicketType;
+import com.grievance.exception.TicketNotFoundException;
 import com.grievance.service.TicketService;
 
 @ExtendWith(MockitoExtension.class)
@@ -120,12 +121,20 @@ public class TicketControllerTest {
 		when(ticketService.updateTicket(Mockito.any(TicketInDto.class), Mockito.anyInt())).thenReturn(Optional.of(ticketOutDto));
 		mockMvc.perform(MockMvcRequestBuilders.put("/ticket/update?ticketId=66")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsBytes(ticketInDto))
-//				.requestAttr("ticketId", 66)
+				.content(objectMapper.writeValueAsString(ticketInDto))
 				.param("ticketId", "66")
-//				.header("email", "ayushi@nucleusteq.com")
-//				.header("password", "Ayushi#123")
 				).andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
+	}
+	
+	@Test
+	public void update_ticket_failed() throws Exception {
+		
+		when(ticketService.updateTicket(Mockito.any(TicketInDto.class), Mockito.anyInt())).thenThrow(TicketNotFoundException.class);
+		mockMvc.perform(MockMvcRequestBuilders.put("/ticket/update?ticketId=66")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(ticketInDto))
+				.param("ticketId", "66")
+				).andExpect(status().isNotFound()).andDo(MockMvcResultHandlers.print());
 	}
 }
 

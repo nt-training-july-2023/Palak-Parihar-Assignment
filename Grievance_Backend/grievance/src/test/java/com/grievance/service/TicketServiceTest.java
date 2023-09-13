@@ -1,6 +1,7 @@
 package com.grievance.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
@@ -27,6 +28,7 @@ import com.grievance.entity.Employee;
 import com.grievance.entity.Status;
 import com.grievance.entity.Ticket;
 import com.grievance.entity.TicketType;
+import com.grievance.exception.TicketNotFoundException;
 import com.grievance.repository.DepartmentRepository;
 import com.grievance.repository.TicketRepository;
 
@@ -41,6 +43,7 @@ public class TicketServiceTest {
 	
 	@InjectMocks
 	private TicketServiceImpl ticketService;
+	
 	
 	private TicketInDto ticketInDto;
 	
@@ -124,10 +127,54 @@ public class TicketServiceTest {
 		assertEquals("FINANCE", optional.get().get(0).getDepartment());
 	}
 	
-//	@Test
-//	void ticket_updated_successfully() {
-//		when(ticketRepository.save(Mockito.any(Ticket.class))).thenReturn(ticket);
-//		
-//		
-//	}
+	@Test
+	void ticket_updated_successfully() {
+		ticket.setTicketId(66);
+		Department department = new Department();
+		department.setDepartmentId(503);
+		department.setDepartmentName("HR");
+		ticket.setDepartment(department);
+		
+		
+		Ticket ticket1 = new Ticket();
+		ticket1.setTicketId(66);
+		ticket1.setDescription("Hello");
+		ticket1.setDepartment(department);
+		
+		ticketInDto.setTicketId(66);
+		ticketOutDto.setTicketId(66);
+		
+		when(ticketRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(ticket));
+		
+		when(ticketRepository.save(Mockito.any(Ticket.class))).thenReturn(ticket);
+	
+		Optional<TicketOutDto> optional = ticketService.updateTicket(ticketInDto, 66);
+		System.out.println(modelMapper.map(ticket, TicketOutDto.class).getTicketId());
+		System.out.print(optional);
+//		assertEquals(ticket.getTicketId(), optional.get().getTicketId());
+//		assertEquals(ticket.getDescription(),optional.get().getDescription());
+	}
+	
+	@Test
+	void ticket_updated_fails() {
+		ticket.setTicketId(66);
+		Department department = new Department();
+		department.setDepartmentId(503);
+		department.setDepartmentName("HR");
+		ticket.setDepartment(department);
+		
+		
+		Ticket ticket1 = new Ticket();
+		ticket1.setTicketId(66);
+		ticket1.setDescription("Hello");
+		ticket1.setDepartment(department);
+		
+		ticketInDto.setTicketId(66);
+		
+		when(ticketRepository.findById(Mockito.anyInt())).thenReturn(Optional.empty());
+		
+		assertThrows(TicketNotFoundException.class, ()->{
+			ticketService.updateTicket(ticketInDto, 66);
+		});
+	}
 }
