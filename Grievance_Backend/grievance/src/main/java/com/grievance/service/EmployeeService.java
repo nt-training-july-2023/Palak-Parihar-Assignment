@@ -1,5 +1,6 @@
 package com.grievance.service;
 
+import com.grievance.dto.ChangePasswordInDto;
 import com.grievance.dto.EmployeeInDto;
 import com.grievance.dto.EmployeeLoginDto;
 import com.grievance.dto.EmployeeOutDto;
@@ -40,5 +41,13 @@ public interface EmployeeService {
    *     EmployeeOutDto objects representing all employees.
    */
   Optional<List<EmployeeOutDto>> listAllEmployees();
+
+  /**
+   * changePassword for existing user.
+   *@param changePasswordInDto
+   *@param email
+   * @return boolean if password successfully changed
+   */
+  Boolean changePassword(ChangePasswordInDto changePasswordInDto, String email);
 
 }

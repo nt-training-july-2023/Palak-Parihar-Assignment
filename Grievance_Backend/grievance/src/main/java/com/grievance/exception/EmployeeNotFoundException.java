@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 @ResponseStatus(value = HttpStatus.NOT_FOUND,
     reason = "Employee with given credentials doesn't exist") // HTTP 404
-public class ResourceNotFoundException extends RuntimeException {
+public class EmployeeNotFoundException extends RuntimeException {
   private static final long serialVersionUID = -3332292346834265371L;
 
   /**
@@ -18,7 +18,7 @@ public class ResourceNotFoundException extends RuntimeException {
    *
    * @param email The email address for which the employee was not found.
    */
-  public ResourceNotFoundException(final String email) {
-    super("EmployeeNotFoundException with email=" + email);
+  public EmployeeNotFoundException(final String email) {
+    super("Employee with this credentials doesn't exist");
   }
 }

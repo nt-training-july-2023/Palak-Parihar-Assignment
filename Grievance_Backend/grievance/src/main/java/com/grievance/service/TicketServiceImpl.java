@@ -6,14 +6,19 @@ package com.grievance.service;
 import com.grievance.dto.TicketInDto;
 import com.grievance.dto.TicketOutDto;
 import com.grievance.entity.Department;
+import com.grievance.entity.Employee;
 import com.grievance.entity.Ticket;
+import com.grievance.exception.EmployeeNotFoundException;
 import com.grievance.exception.TicketNotFoundException;
+import com.grievance.exception.UnauthorisedUserException;
 import com.grievance.repository.DepartmentRepository;
+import com.grievance.repository.EmployeeRepository;
 import com.grievance.repository.TicketRepository;
 
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +49,13 @@ public class TicketServiceImpl implements TicketService {
    */
   @Autowired
   private DepartmentRepository departmentRepository;
+
+  /**
+   * employee repository instance provide access
+   * method for interacting with database.
+   */
+  @Autowired
+  private EmployeeRepository employeeRepository;
 
   /**
    * save a new ticket in ticket table in database.
@@ -102,8 +114,18 @@ public class TicketServiceImpl implements TicketService {
    */
   @Override
   public Optional<TicketOutDto> updateTicket(
-          final TicketInDto ticketInDto, final Integer ticketId
+          final TicketInDto ticketInDto, final Integer ticketId,
+          final String email
           ) {
+       Employee employee = employeeRepository.findByEmail(email);
+       if (Objects.isNull(employee)) {
+          throw new EmployeeNotFoundException(email);
+       } else {
+             if (!employee.getDepartment().getDepartmentName().equals(
+                    ticketInDto.getDepartment().getDepartmentName())) {
+                throw new UnauthorisedUserException(email);
+         }
+      }
     Optional<Ticket> ticket = ticketRepository.findById(ticketId);
     if (ticket.isPresent()) {
         Date date = new Date(System.currentTimeMillis());
@@ -119,8 +141,9 @@ public class TicketServiceImpl implements TicketService {
         Ticket updatedTicket = ticketRepository.save(ticket.get());
         TicketOutDto ticketOutDto = convertToDto(updatedTicket);
         return Optional.ofNullable(ticketOutDto);
+    } else {
+        throw new TicketNotFoundException(ticketId);
     }
-    throw new TicketNotFoundException(ticketId);
   }
 
   /**

@@ -1,16 +1,19 @@
 package com.grievance.controller;
+
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.grievance.authentication.AuthenticatingUser;
+import com.grievance.dto.ChangePasswordInDto;
 import com.grievance.dto.EmployeeInDto;
 import com.grievance.dto.EmployeeLoginDto;
 import com.grievance.dto.EmployeeOutDto;
 import com.grievance.entity.Employee;
 import com.grievance.entity.UserType;
 import com.grievance.exception.EmployeeAlreadyExistException;
+import com.grievance.exception.PasswordMismatchException;
 import com.grievance.exception.UnauthorisedUserException;
 import com.grievance.service.EmployeeService;
 
@@ -178,6 +181,77 @@ class EmployeeControllerTest {
     			).andExpect(status().isUnauthorized()).andDo(MockMvcResultHandlers.print());
     }
     
+    @Test
+    void when_change_password_by_authorised_user_success() throws JsonProcessingException, Exception {
+    	when(authenticatingUser.checkIfUserExists(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
+    	
+    	when(employeeService.changePassword(Mockito.any(ChangePasswordInDto.class), Mockito.anyString())).thenReturn(true);
+    	
+    	ChangePasswordInDto changePasswordInDto = new ChangePasswordInDto();
+    	changePasswordInDto.setOldPassword("Ayushi#123");
+    	changePasswordInDto.setNewPassword("Ayushi#125");
+    	
+    	mockMvc.perform(MockMvcRequestBuilders.put("/changePassword")
+    			.contentType(MediaType.APPLICATION_JSON)
+    			.content(objectMapper.writeValueAsString(changePasswordInDto))
+    			.header("email", "ayushi@nucleusteq.com")
+    			.header("password", "Ayushi#123")
+    			).andExpect(status().isNoContent()).andDo(MockMvcResultHandlers.print());
+    }
+    
+    @Test
+    void when_change_password_by_unauthorised_user_fails() throws JsonProcessingException, Exception {
+    	when(authenticatingUser.checkIfUserExists(Mockito.anyString(), Mockito.anyString())).thenThrow(UnauthorisedUserException.class);
+    	    	
+    	ChangePasswordInDto changePasswordInDto = new ChangePasswordInDto();
+    	changePasswordInDto.setOldPassword("Ayushi#123");
+    	changePasswordInDto.setNewPassword("Ayushi#125");
+    	
+    	mockMvc.perform(MockMvcRequestBuilders.put("/changePassword")
+    			.contentType(MediaType.APPLICATION_JSON)
+    			.content(objectMapper.writeValueAsString(changePasswordInDto))
+    			.header("email", "ayushi@nucleusteq.com")
+    			.header("password", "Ayushi#123")
+    			).andExpect(status().isUnauthorized()).andDo(MockMvcResultHandlers.print());
+    }
+    
+    @Test
+    void when_change_password_by_authorised_user_fails_() throws JsonProcessingException, Exception {
+    	when(authenticatingUser.checkIfUserExists(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
+    	
+    	ChangePasswordInDto changePasswordInDto = new ChangePasswordInDto();
+    	changePasswordInDto.setOldPassword("Ayushi#123");
+    	changePasswordInDto.setNewPassword("Ayushi#125");
+    	
+    	when(employeeService.changePassword(Mockito.any(ChangePasswordInDto.class), Mockito.anyString())).thenThrow(PasswordMismatchException.class);
+    	
+    	
+    	mockMvc.perform(MockMvcRequestBuilders.put("/changePassword")
+    			.contentType(MediaType.APPLICATION_JSON)
+    			.content(objectMapper.writeValueAsString(changePasswordInDto))
+    			.header("email", "ayushi@nucleusteq.com")
+    			.header("password", "Ayushi#123")
+    			).andExpect(status().isNotFound()).andDo(MockMvcResultHandlers.print());
+    }
+    
+    @Test
+    void when_change_password_by_authorised_user_fails_throws_exception() throws JsonProcessingException, Exception {
+    	when(authenticatingUser.checkIfUserExists(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
+    	
+    	ChangePasswordInDto changePasswordInDto = new ChangePasswordInDto();
+    	changePasswordInDto.setOldPassword("Ayushi#123");
+    	changePasswordInDto.setNewPassword("Ayushi#125");
+    	
+    	when(employeeService.changePassword(Mockito.any(ChangePasswordInDto.class), Mockito.anyString())).thenReturn(false);
+    	
+    	
+    	mockMvc.perform(MockMvcRequestBuilders.put("/changePassword")
+    			.contentType(MediaType.APPLICATION_JSON)
+    			.content(objectMapper.writeValueAsString(changePasswordInDto))
+    			.header("email", "ayushi@nucleusteq.com")
+    			.header("password", "Ayushi#123")
+    			).andExpect(status().isInternalServerError()).andDo(MockMvcResultHandlers.print());
+    }
     
 }
 

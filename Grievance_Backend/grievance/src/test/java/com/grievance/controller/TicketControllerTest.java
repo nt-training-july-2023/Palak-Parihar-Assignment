@@ -118,10 +118,12 @@ public class TicketControllerTest {
 	@Test
 	public void update_ticket_successfully() throws Exception {
 		
-		when(ticketService.updateTicket(Mockito.any(TicketInDto.class), Mockito.anyInt())).thenReturn(Optional.of(ticketOutDto));
+		when(ticketService.updateTicket(Mockito.any(TicketInDto.class), Mockito.anyInt(), Mockito.anyString())).thenReturn(Optional.of(ticketOutDto));
 		mockMvc.perform(MockMvcRequestBuilders.put("/ticket/update?ticketId=66")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(ticketInDto))
+				.header("email", "ayushi@nucleusteq.com")
+				.header("password", "Ayushi#123")
 				.param("ticketId", "66")
 				).andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
 	}
@@ -129,10 +131,12 @@ public class TicketControllerTest {
 	@Test
 	public void update_ticket_failed() throws Exception {
 		
-		when(ticketService.updateTicket(Mockito.any(TicketInDto.class), Mockito.anyInt())).thenThrow(TicketNotFoundException.class);
+		when(ticketService.updateTicket(Mockito.any(TicketInDto.class), Mockito.anyInt(), Mockito.anyString())).thenThrow(TicketNotFoundException.class);
 		mockMvc.perform(MockMvcRequestBuilders.put("/ticket/update?ticketId=66")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(ticketInDto))
+				.header("email", "ayushi@nucleusteq.com")
+				.header("password", "Ayushi#123")
 				.param("ticketId", "66")
 				).andExpect(status().isNotFound()).andDo(MockMvcResultHandlers.print());
 	}

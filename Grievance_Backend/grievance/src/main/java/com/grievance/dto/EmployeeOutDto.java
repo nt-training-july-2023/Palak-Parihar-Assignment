@@ -1,6 +1,6 @@
 package com.grievance.dto;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.grievance.entity.UserType;
 import java.util.List;
 import javax.persistence.Column;
@@ -52,9 +52,9 @@ public class EmployeeOutDto {
   /**
    * The list of tickets associated with the employee.
    */
-  @NotEmpty
-  @JsonManagedReference
-//  @JsonIgnore
+//  @NotEmpty
+//  @JsonManagedReference
+  @JsonIgnore
   private List<TicketOutDto> tickets;
 
   /**

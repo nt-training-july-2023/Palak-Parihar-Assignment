@@ -1,4 +1,4 @@
-package com.grievance.corsConfig;
+package com.grievance.Configuration;
 
 import java.util.Arrays;
 import org.springframework.context.annotation.Bean;
