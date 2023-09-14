@@ -7,6 +7,7 @@ import com.grievance.exception.TicketNotFoundException;
 import com.grievance.exception.UnauthorisedUserException;
 import com.grievance.service.TicketService;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -69,7 +70,7 @@ public class TicketController {
     @RequestHeader final String password
   ) {
     try {
-      if (departmentName == null) {
+      if (Objects.isNull(departmentName)) {
         authenticatingUser.checkIfUserIsAdmin(email, password);
         Optional<List<TicketOutDto>> optionalListOfTickets =
               ticketService.listOfAllTickets();
@@ -91,15 +92,25 @@ public class TicketController {
    * controller method to return list of all tickets.
    * @param ticketId
    * @param ticketInDto
+   * @param email
+   * @param password
    * @return Responseentity with optional of updated TicketOut DTO.
    */
   @PutMapping("/update")
   public ResponseEntity<?> updateTickets(
+          @RequestHeader final String email,
+          @RequestHeader final String password,
           @RequestParam final Integer ticketId,
           @RequestBody final TicketInDto ticketInDto) {
       try {
+           try {
+              authenticatingUser.checkIfUserExists(email, password);
+           } catch (UnauthorisedUserException e) {
+              return new ResponseEntity<>("Unauthorised User",
+                    HttpStatus.UNAUTHORIZED);
+          }
       Optional<TicketOutDto>  optionalTicketOutDto = ticketService.updateTicket(
-            ticketInDto, ticketId);
+            ticketInDto, ticketId, email);
       return new ResponseEntity<>(optionalTicketOutDto, HttpStatus.OK);
        } catch (TicketNotFoundException e) {
             return new ResponseEntity<>("Ticket with id not found",

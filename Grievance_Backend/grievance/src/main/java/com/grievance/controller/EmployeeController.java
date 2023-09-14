@@ -11,11 +11,11 @@ import com.grievance.dto.EmployeeLoginDto;
 import com.grievance.dto.EmployeeOutDto;
 import com.grievance.exception.EmployeeAlreadyExistException;
 import com.grievance.exception.PasswordMismatchException;
-import com.grievance.exception.ResourceNotFoundException;
+import com.grievance.exception.EmployeeNotFoundException;
 import com.grievance.exception.UnauthorisedUserException;
+import com.grievance.service.Base64DecodeService;
 import com.grievance.service.EmployeeService;
 
-//import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +47,6 @@ public class EmployeeController {
    * The authenicatingUser instance
    * provides information about user being authorised.
    */
-//  private AuthenticatingUserImpl authenticatingUserImpl
-//       = new AuthenticatingUserImpl();
   @Autowired
   private AuthenticatingUser authenticatingUser;
 
@@ -57,23 +55,23 @@ public class EmployeeController {
    *
    * @param employeeLoginDto for EmployeeLoginDto.
    * @return ResponseEntity.
- * @throws ResourceNotFoundException
+ * @throws EmployeeNotFoundException
    */
   @PostMapping("/login")
   public ResponseEntity<?> loginUser(
       @RequestBody final EmployeeLoginDto employeeLoginDto
-  ) throws ResourceNotFoundException {
+  ) throws EmployeeNotFoundException {
 
-//    Base64.Decoder decoder = Base64.getDecoder();
-//    byte[] pass = decoder.decode(employeeLoginDto.getPassword());
-//    employeeLoginDto.setPassword(new String(pass));
-
-    Optional<EmployeeOutDto>
-    employeeDtoOptional = employeeService.loginEmployee(employeeLoginDto);
-    if (employeeDtoOptional.isPresent()) {
-      return new ResponseEntity<>(employeeDtoOptional, HttpStatus.ACCEPTED);
+    String decodePassword = Base64DecodeService.decodeBase64ToString(
+           employeeLoginDto.getPassword());
+    employeeLoginDto.setPassword(decodePassword);
+    try {
+        Optional<EmployeeOutDto>
+        employeeDtoOptional = employeeService.loginEmployee(employeeLoginDto);
+          return new ResponseEntity<>(employeeDtoOptional, HttpStatus.ACCEPTED);
+    } catch (EmployeeNotFoundException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
-    return new ResponseEntity<>("Invalid Credentials", HttpStatus.UNAUTHORIZED);
   }
 
   /**
@@ -161,12 +159,13 @@ public class EmployeeController {
           authenticatingUser.checkIfUserExists(email, password);
           try {
               Boolean passwordChanged = employeeService.changePassword(
-                        changePasswordInDto.getOldPassword(),
-                        changePasswordInDto.getNewPassword(), email);
+                        changePasswordInDto, email);
               if (passwordChanged) {
                  return new ResponseEntity<>("Password changed successfully",
                         HttpStatus.NO_CONTENT);
               }
+              return new ResponseEntity<>("Something unexpected happened",
+                      HttpStatus.INTERNAL_SERVER_ERROR);
            } catch (PasswordMismatchException e) {
                  return new ResponseEntity<>(e.getMessage(),
                         HttpStatus.NOT_FOUND);
@@ -175,7 +174,6 @@ public class EmployeeController {
            return new ResponseEntity<>(e.getMessage(),
                    HttpStatus.UNAUTHORIZED);
        }
-       return new ResponseEntity<>("Something unexpected happened",
-             HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
+

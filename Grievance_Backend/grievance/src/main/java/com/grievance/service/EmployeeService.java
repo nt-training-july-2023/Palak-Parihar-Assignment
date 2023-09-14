@@ -1,5 +1,6 @@
 package com.grievance.service;
 
+import com.grievance.dto.ChangePasswordInDto;
 import com.grievance.dto.EmployeeInDto;
 import com.grievance.dto.EmployeeLoginDto;
 import com.grievance.dto.EmployeeOutDto;
@@ -43,11 +44,10 @@ public interface EmployeeService {
 
   /**
    * changePassword for existing user.
-   *@param oldPassword
-   *@param newPassword
+   *@param changePasswordInDto
    *@param email
    * @return boolean if password successfully changed
    */
-  Boolean changePassword(String oldPassword, String newPassword, String email);
+  Boolean changePassword(ChangePasswordInDto changePasswordInDto, String email);
 
 }

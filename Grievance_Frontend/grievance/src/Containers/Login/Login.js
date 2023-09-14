@@ -139,13 +139,14 @@ export default function Login({ callback }) {
 
         var values = {
             email: controls.email.value,
-            password: controls.password.value
+            password: btoa(controls.password.value)
         }
 
 
         const response = LOGIN_USER(values)
             .then(res => {
                 setModal(()=> <Modal component={Spinner}/>)
+                console.log(values)
                 let userValues = {
                     email: values.email,
                     password: values.password,

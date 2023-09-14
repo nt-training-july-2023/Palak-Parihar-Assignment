@@ -35,9 +35,11 @@ public interface TicketService {
    * method to update ticket.
    * @param ticketInDto
    * @param ticketId
+   * @param email
    * @return updated ticket.
    */
   Optional<TicketOutDto> updateTicket(
-         TicketInDto ticketInDto, Integer ticketId
+         TicketInDto ticketInDto, Integer ticketId,
+         String email
       );
 }

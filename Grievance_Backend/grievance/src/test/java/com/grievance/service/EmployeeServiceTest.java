@@ -3,6 +3,7 @@ package com.grievance.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
@@ -19,12 +20,15 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
+import com.grievance.dto.ChangePasswordInDto;
 import com.grievance.dto.EmployeeInDto;
 import com.grievance.dto.EmployeeLoginDto;
 import com.grievance.dto.EmployeeOutDto;
 import com.grievance.entity.Employee;
 import com.grievance.entity.UserType;
 import com.grievance.exception.EmployeeAlreadyExistException;
+import com.grievance.exception.EmployeeNotFoundException;
+import com.grievance.exception.PasswordMismatchException;
 import com.grievance.repository.EmployeeRepository;
 
 
@@ -101,13 +105,10 @@ class EmployeeServiceTest {
     @Test
     void when_save_employee_fails_return_exception() {
     	
-    	when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
-		
-		try {
+    	when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);	
+		assertThrows(EmployeeAlreadyExistException.class, ()->{
 			employeeService.saveEmployee(employeeInDto);
-		}catch(EmployeeAlreadyExistException e) {
-			assertThat(true);
-		}		
+		});
     }
 
 
@@ -156,5 +157,51 @@ class EmployeeServiceTest {
 		
 		assertEquals(employeeOutDtosReceived.get(), employeeOutDtosExpected);
 	}
+    
+    @Test
+    void password_change_successfully() {
+    	employee.setPassword("Ayushi#124");
+    	when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
+    	
+    	Employee changedEmployee = new Employee();
+    	
+    	when(employeeRepository.save(employee)).thenReturn(changedEmployee);
+    	
+    	ChangePasswordInDto changePasswordInDto = new ChangePasswordInDto();
+    	changePasswordInDto.setOldPassword("Ayushi#124");
+    	changePasswordInDto.setNewPassword("Ayushi#123");
+    	
+    	Boolean changedSuccessfully = employeeService.changePassword(changePasswordInDto, "ayushi@nucleusteq.com");
+    	
+    	assertThat(changedSuccessfully);
+    }
+    
+    @Test
+    void password_change_failed_when_employee_does_not_exist() {
+    	employee.setPassword("Ayushi#124");
+    	when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(null);
+    	
+    	ChangePasswordInDto changePasswordInDto = new ChangePasswordInDto();
+    	changePasswordInDto.setOldPassword("Ayushi#124");
+    	changePasswordInDto.setNewPassword("Ayushi#123");
+    	
+    	assertThrows(EmployeeNotFoundException.class, ()->{
+    		employeeService.changePassword(changePasswordInDto, "ayushi@nucleusteq.com");
+    	});
+    }
+    
+    @Test
+    void changePassword_fails_when_password_mismatch() {
+    	employee.setPassword("Ayushi#124");
+    	when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
+    	
+    	ChangePasswordInDto changePasswordInDto = new ChangePasswordInDto();
+    	changePasswordInDto.setOldPassword("Ayushi#125");
+    	changePasswordInDto.setNewPassword("Ayushi#123");
+    	
+    	assertThrows(PasswordMismatchException.class, ()->{
+    		employeeService.changePassword(changePasswordInDto, "ayushi@nucleusteq.com");
+    	});
+    }
 }
 
