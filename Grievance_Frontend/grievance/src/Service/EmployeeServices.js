@@ -1,11 +1,6 @@
 import axios from "axios"
 import { FETCH_ALL_USERS_URL, LOGIN_USER_URL, SAVE_NEW_EMPLOYEE_URL } from "../URL/Url"
 
-const headersData = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': '*',
-    'Access-Control-Allow-Credentials': true,
-};
 
 const userDetails = () => {
     return JSON.parse(sessionStorage.getItem('userDetails'))
@@ -16,8 +11,9 @@ export const LOGIN_USER = (userData) => {
         axios({
             url: LOGIN_USER_URL,
             method: 'POST',
-            headers: headersData,
-            data: userData
+            // headers: headersData,
+            data: userData,
+            // withCredentials:true
         })
             .then((res) => {
                 console.log(res.data);
@@ -34,7 +30,6 @@ export const LOGIN_USER = (userData) => {
 export const FETCH_ALL_USERS = () => {
     let userValues = userDetails()
     let headersRequired = {
-        ...headersData,
         email: userValues.email,
         password: userValues.password
     }
@@ -42,10 +37,11 @@ export const FETCH_ALL_USERS = () => {
         axios({
             url: FETCH_ALL_USERS_URL,
             method: 'GET',
-            headers: headersRequired
+            headers: headersRequired,
         }).then((res) => {
+            // const response = JSON.parse(res.data)
             console.log(res.data);
-            resolve({ data: res.data });
+            resolve({ data: res.data});
         })
             .catch((e) => {
                 console.error(e)
@@ -58,7 +54,6 @@ export const FETCH_ALL_USERS = () => {
 export const SAVE_NEW_EMPLOYEE = (employeeData) => {
     let userValues = userDetails()
     let headersRequired = {
-        ...headersData,
         email: userValues.email,
         password: userValues.password
     }

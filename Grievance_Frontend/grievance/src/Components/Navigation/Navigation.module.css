@@ -1,13 +1,14 @@
 .container {
+    position: fixed;
+    top: 0%;
     display: flex;
     flex-direction: row;
-    position: absolute;
-    top: 0%;
-    height: 64px;
+    height: 57px;
     width: 100%;
-    background-color: #0A2647;
+    background-color: #3c8dbc;
     justify-content: center;
     color: #fff;
+    box-shadow: 10px 10px 5px rgba(128, 128, 128, 0.644);
 }
 
 .navItems {
@@ -22,17 +23,20 @@
 ul{
     list-style-type: none;
 }
+
 li a {
     display: block;
     color: white;
     font-size: 20px;
-    text-align: center;
-    padding: 10px 20px;
+    text-align: left;
+    margin: 10px 20px;
+    padding: 5px;
+    padding-left: 5px;
     text-decoration: none;
 }
 
 li a:hover {
-    color: rgb(216, 216, 216);
+    color: #3c8dbc;
     text-decoration: none;
 }
 
@@ -40,3 +44,42 @@ li a:hover {
     position: absolute;
     left: 0px;
 }
+
+
+.dropdownContent {
+    display: none;
+    position: absolute;
+    min-width: 160px;
+    z-index: 1;
+    text-align: left;
+    padding-left: 0px;
+}
+
+.dropdownContent a{
+    color: #000;
+}
+
+ul li ul a:hover{
+    color: #3c8dbc;
+}
+
+ul li:hover ul{
+    border: 1px solid black;
+    border-top: none;
+    border-radius: 0px 0px 5px 5px;
+}
+
+.dropdown:hover .dropdownContent, li:hover a {
+    display:block;
+    background-color: #fff;
+    color: #000;
+    border-radius: 10px;
+}
+
+
+
+
+
+
+
+

@@ -1,5 +1,6 @@
 package com.grievance.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.grievance.entity.Comment;
@@ -73,11 +74,13 @@ public class TicketOutDto {
   /**
    * The date when the ticket was opened.
    */
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private Date dateOpened;
 
   /**
    * The date when the ticket was last updated.
    */
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private Date lastUpdated;
 
   /**

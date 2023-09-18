@@ -1,0 +1,43 @@
+.list_main_container{
+    display: flex;
+    justify-content: center;
+    margin-top: 2%;
+    min-height: 100vh;
+    height: 100%;
+    overflow-x: hidden;
+}
+
+table{
+    min-width: 80%;
+    box-shadow: 10px 10px 5px #aaaaaa;
+}
+
+#list_content td, #list_content th{
+    border: 1px solid #ddd;
+    padding: 6px;
+}
+
+#list_content th{
+    padding: 12px 2px 12px 2px;
+    text-align: center;
+    background-color: #737374
+    ;
+    color: #fff;
+}
+
+#list_content tr:nth-child(even){
+    background-color: #fff;
+}
+
+#list_content tr:nth-child(odd){
+    background-color: #e2dddd;
+}
+
+#list_content tr:hover{
+    background-color: #c5c0c0;
+}
+
+#icon{
+    padding: 0px 10px 0px 10px;
+}
+

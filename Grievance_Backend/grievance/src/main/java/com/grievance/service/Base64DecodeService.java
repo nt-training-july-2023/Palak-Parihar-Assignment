@@ -5,7 +5,7 @@ import java.util.Base64;
 /**
  * A service class for decoding base64-encoded data.
  */
-public class Base64DecodeService {
+public final class Base64DecodeService {
 
   /**
    * Decodes a base64-encoded string and returns it as a UTF-8 encoded string.
@@ -22,5 +22,11 @@ public class Base64DecodeService {
     } catch (IllegalArgumentException e) {
       throw new IllegalArgumentException("Invalid base64-encoded input", e);
     }
+  }
+
+  /**
+   * private default constructor.
+   */
+  private Base64DecodeService() {
   }
 }

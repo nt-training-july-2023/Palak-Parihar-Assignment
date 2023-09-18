@@ -13,7 +13,6 @@ import com.grievance.exception.EmployeeAlreadyExistException;
 import com.grievance.exception.PasswordMismatchException;
 import com.grievance.exception.EmployeeNotFoundException;
 import com.grievance.exception.UnauthorisedUserException;
-import com.grievance.service.Base64DecodeService;
 import com.grievance.service.EmployeeService;
 
 import java.util.List;
@@ -21,7 +20,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,13 +33,14 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @CrossOrigin("*")
-@Validated
+//@Validated
 public class EmployeeController {
   /**
    *Autowiring Service.
    */
   @Autowired
   private EmployeeService employeeService;
+
 
   /**
    * The authenicatingUser instance
@@ -61,10 +60,6 @@ public class EmployeeController {
   public ResponseEntity<?> loginUser(
       @RequestBody final EmployeeLoginDto employeeLoginDto
   ) throws EmployeeNotFoundException {
-
-    String decodePassword = Base64DecodeService.decodeBase64ToString(
-           employeeLoginDto.getPassword());
-    employeeLoginDto.setPassword(decodePassword);
     try {
         Optional<EmployeeOutDto>
         employeeDtoOptional = employeeService.loginEmployee(employeeLoginDto);
@@ -81,7 +76,7 @@ public class EmployeeController {
    * @param password
    * @return ResponseEntity with list of All Employees.
    */
-  @GetMapping("/listAllEmployees")
+  @GetMapping(value = "/listAllEmployees", produces = "application/json")
   public ResponseEntity<?> listAllEmployees(
       @RequestHeader final String email, @RequestHeader final String password) {
          try {
@@ -93,25 +88,6 @@ public class EmployeeController {
                employeeService.listAllEmployees();
           return new ResponseEntity<>(listOfAllEmployees, HttpStatus.ACCEPTED);
   }
-
-//  /**
-//   * Controller method for saving Employee.
-//   *
-//   * @param employeeInDto of EmployeeInSto.
-//   *
-//   * @return ResponseEntity with employee
-//   *
-//   */
-//  @PostMapping("/save")
-//  public ResponseEntity<?> save(
-//  @RequestBody final EmployeeInDto employeeInDto) {
-//      Optional<EmployeeOutDto> optional =
-//         employeeService.saveEmployee(employeeInDto);
-//      if  (!optional.isPresent()) {
-//         throw new EmployeeAlreadyExistException(employeeInDto.getEmail());
-//      }
-//    return new ResponseEntity<>(optional, HttpStatus.ACCEPTED);
-//  }
 
   /**
    *

@@ -1,17 +1,26 @@
 package com.grievance;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 
 import com.grievance.Configuration.UserFilter;
+import com.grievance.authentication.AuthenticatingUser;
 
 /**
  * Entry point of Grievance Management Application.
  */
 @SpringBootApplication
 public class GrievanceApplication {
+
+  /**
+   *employeeRepository.
+   */
+  @Autowired
+  private AuthenticatingUser authenticatingUser;
+
 
   /**
    * Default Constructor.
@@ -41,11 +50,12 @@ public class GrievanceApplication {
       FilterRegistrationBean<UserFilter> registrationBean =
              new FilterRegistrationBean<>();
 
-      registrationBean.setFilter(new UserFilter());
+      registrationBean.setFilter(new UserFilter(authenticatingUser));
 
       registrationBean.addUrlPatterns("/*");
 
       return registrationBean;
-  }
+
+   }
 
 }

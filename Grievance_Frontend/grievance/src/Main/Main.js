@@ -15,7 +15,6 @@ export default function Main(props) {
     return (
         <>
             <Routes>
-                <Route exact path="/" element={<Login />} />
                 <Route exact path='/dashboard' element={<Dashboard />} />
                 <Route exact path='/registration' element={<EmployeeRegistration />} />
                 <Route exact path='/newticket' element={<NewTicket />} />
@@ -25,6 +24,7 @@ export default function Main(props) {
                 <Route exact path='/listAllEmployees' element={<ListEmployees />} />
                 <Route exact path='/changePassword' element={<ChangePassword />} />
                 <Route exact path='/viewTicket' element={<ViewTicket />} />
+                <Route path="*" element={<Login />} />
             </Routes>
         </>
     )

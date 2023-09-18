@@ -130,13 +130,7 @@ public class TicketServiceImpl implements TicketService {
     if (ticket.isPresent()) {
         Date date = new Date(System.currentTimeMillis());
         ticket.get().setLastUpdated(date);
-        ticket.get().setDescription(ticketInDto.getDescription());
         ticket.get().setStatus(ticketInDto.getStatus());
-        ticket.get().setTicketType(ticketInDto.getTicketType());
-        Department department = new Department();
-        department.setDepartmentId(
-                  ticketInDto.getDepartment().getDepartmentId());
-        ticket.get().setDepartment(department);
 
         Ticket updatedTicket = ticketRepository.save(ticket.get());
         TicketOutDto ticketOutDto = convertToDto(updatedTicket);

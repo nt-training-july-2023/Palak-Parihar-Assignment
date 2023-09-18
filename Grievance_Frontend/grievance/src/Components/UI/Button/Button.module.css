@@ -1,6 +1,6 @@
 .btnContainer{
     width: 100%;
-    background-color: #0A2647;
+    background-color: #0e415e;
     color: white;
     padding: 14px 20px;
     margin: 8px 0;
@@ -11,7 +11,7 @@
 }
 
 .btnContainer:hover{
-    background-color: #205295;
+    background-color: #3c8dbc;
     opacity: 0.9;
 }
 

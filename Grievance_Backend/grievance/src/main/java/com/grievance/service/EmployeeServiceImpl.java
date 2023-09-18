@@ -91,6 +91,10 @@ public class EmployeeServiceImpl implements EmployeeService {
   @Override
   public Optional<EmployeeOutDto> loginEmployee(
        final EmployeeLoginDto employeeLoginDto) {
+
+       String decodePassword = Base64DecodeService.decodeBase64ToString(
+            employeeLoginDto.getPassword());
+            employeeLoginDto.setPassword(decodePassword);
     Employee employee = employeeRepository
         .findByEmail(employeeLoginDto.getEmail());
 

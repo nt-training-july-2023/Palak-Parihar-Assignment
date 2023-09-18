@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react"
 import { FETCH_ALL_USERS } from "../../Service/EmployeeServices"
-import classes from '../ListTickets/ListTickets.module.css'
-import HeadCell from "../../Components/Cell/HeadCell"
-import Cell from "../../Components/Cell/Cell"
-import Modal from "../../Components/UI/Modal/Modal"
-import Button from "../../Components/UI/Button/Button"
+import './ListEmployees.css';
 
 
 export default function ListEmployees(props) {
@@ -23,45 +19,38 @@ export default function ListEmployees(props) {
 
     return (
         <>
-            <div className={classes.mainContainer}>
+        
+            <div className="list_main_container">
+                <table id="list_content">
+                    <tr>
+                        <th>FullName</th>
+                        <th>email</th>
+                        <th>department</th>
+                        <th>userType</th>
+                        <th>Actions</th>
+                    </tr>
+                    {
+                        employees.map(e => {
+                            return (
+                                <>
+                                    <tr>
+                                        <td>{e.fullName}</td>
+                                        <td>{e.email}</td>
+                                        <td>{e.department}</td>
+                                        <td>{e.userType}</td>
+                                        <td>
+                                            <i id="icon" class='fas fa-edit' />
+                                            <i id="icon" class='fas fa-trash-alt'></i>
+                                        </td>
+                                    </tr>
 
-                <div className={classes.rowContent}>
-                    <HeadCell value="Email" />
-                    <HeadCell value="Full Name" />
-                    <HeadCell value="Department" />
-                    <HeadCell value="Role" />
-                    <HeadCell value="Action" />
-                </div>
+                                </>)
+                        })
+                    }
 
-                {employees.map(e => (
+                </table>
 
-                    <div className={classes.rowContent}>
-                        <Cell email="emailContent" value={e.email} />
-                        <Cell value={e.fullName} />
-                        {console.log(e)}
-                        <Cell value={e.department} />
-                        <Cell value={e.userType} />
-                        <div className={classes.action}>
-                            {/* <i class="fa-duotone fa-pen-to-square fa-lg"></i> */}
-                            {/* <i class="fa fa-angle-down"></i> */}
-                            {/* <i class="fa fa-car fa-lg"></i> */}
-                            {/* <i class="fa fa-caret-up"></i> */}
-                            {/* <i class="fa fa-caret-down"></i> */}
-                            {/* <i class="fa fa-pen"></i> */}
-                            {/* <i class="fa-duotone fa-pen-to-square"></i> */}
-                            <div className={classes.icon}>
-                                <i class='fas fa-edit' ></i>
-                            </div>
-                            <div className={classes.icon}>
-                                <i class='fas fa-trash-alt'></i>
-                            </div>
-                            
-                        </div>
-
-                    </div>
-
-                ))}
-            </div >
+            </div>
         </>
     )
 }

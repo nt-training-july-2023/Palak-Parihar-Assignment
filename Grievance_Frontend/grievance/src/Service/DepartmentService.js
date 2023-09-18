@@ -1,11 +1,6 @@
 import axios from "axios";
 import { FETCH_ALL_DEPARTMENTS_URL, GENERATE_NEW_DEPARTMENTS_URL } from "../URL/Url";
 
-const headersData = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': '*',
-    'Access-Control-Allow-Credentials': true,
-};
 
 const userDetails = () => {
     return JSON.parse(sessionStorage.getItem('userDetails'))
@@ -14,7 +9,6 @@ const userDetails = () => {
 export const FETCH_ALL_DEPARTMENTS = () => {
     let userValues = userDetails()
     let headersRequired = {
-        ...headersData,
         email: userValues.email,
         password: userValues.password
     }
@@ -36,7 +30,6 @@ export const FETCH_ALL_DEPARTMENTS = () => {
 export const GENERATE_NEW_DEPARTMENT = (departmentName) => {
     let userValues = userDetails()
     let headersRequired = {
-        ...headersData,
         email: userValues.email,
         password: userValues.password
     }

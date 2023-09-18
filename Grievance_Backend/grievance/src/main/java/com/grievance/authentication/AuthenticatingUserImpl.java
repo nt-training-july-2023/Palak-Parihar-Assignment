@@ -5,8 +5,10 @@ package com.grievance.authentication;
 
 import com.grievance.entity.Employee;
 import com.grievance.entity.UserType;
-import com.grievance.exception.UnauthorisedUserException;
 import com.grievance.repository.EmployeeRepository;
+import com.grievance.service.Base64DecodeService;
+
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -31,11 +33,11 @@ public class AuthenticatingUserImpl implements AuthenticatingUser {
    */
   @Override
   public Boolean checkIfUserExists(final String email, final String password) {
-      Employee employee = employeeRepository.findByEmail(email);
-      if (employee == null) {
-         throw new UnauthorisedUserException(email);
-      }
-    return employee.getPassword().equals(password);
+      String decodePassword = Base64DecodeService.decodeBase64ToString(
+             password);
+      Employee employee = employeeRepository.findByEmailAndPassword(
+              email, decodePassword);
+    return !Objects.isNull(employee);
   }
 
   /**
@@ -47,11 +49,11 @@ public class AuthenticatingUserImpl implements AuthenticatingUser {
   @Override
   public Boolean checkIfUserIsAdmin(
         final String email, final String password) {
-        Employee employee = employeeRepository.findByEmail(email);
-      if (employee == null) {
-         throw new UnauthorisedUserException(email);
-      }
-      return employee.getPassword().equals(password)
-         && employee.getUserType().equals(UserType.ADMIN);
+       String decodePassword = Base64DecodeService.decodeBase64ToString(
+              password);
+       Employee employee = employeeRepository
+                .findByEmailAndPasswordAndUserType(
+                     email, decodePassword, UserType.ADMIN);
+        return !Objects.isNull(employee);
   }
 }

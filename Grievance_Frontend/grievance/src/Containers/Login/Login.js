@@ -1,6 +1,6 @@
 import "./Login.css";
 import '../../Dashboard/Dashboard'
-import {useState } from "react";
+import { useState } from "react";
 import { useNavigate } from 'react-router-dom'
 import InputElement from "../../Components/UI/InputElement/InputElement";
 import Modal from "../../Components/UI/Modal/Modal";
@@ -145,7 +145,7 @@ export default function Login({ callback }) {
 
         const response = LOGIN_USER(values)
             .then(res => {
-                setModal(()=> <Modal component={Spinner}/>)
+                setModal(() => <Modal component={Spinner} />)
                 console.log(values)
                 let userValues = {
                     email: values.email,
@@ -158,7 +158,7 @@ export default function Login({ callback }) {
                 }
                 sessionStorage.setItem('userDetails', JSON.stringify(userValues));
                 setTimeout(() => {
-                    navigate("/dashboard")
+                    navigate("/listAllTickets")
                 }, 1000);
                 return res.data;
             }).catch(err => {
@@ -191,7 +191,6 @@ export default function Login({ callback }) {
                     </form>
                 </div>
             </div>
-
         </>
     )
 }

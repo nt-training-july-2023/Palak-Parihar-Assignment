@@ -77,8 +77,6 @@ public class DepartmentController {
 
   /**
    *
-   * @param email
-   * @param password
    * Department Controller method to return the list of all Departments.
    *
    * @return ResponseEntity with list of All Departments.
@@ -86,15 +84,11 @@ public class DepartmentController {
    */
   @GetMapping("/listDepartments")
   public ResponseEntity<?> listDepartments(
-      @RequestHeader final String email,
-      @RequestHeader final String password
+//      @RequestHeader final String email,
+//      @RequestHeader final String password
     ) {
-    Boolean boolean1 = authenticatingUser.checkIfUserIsAdmin(email, password);
-    if (boolean1) {
         Optional<List<DepartmentOutDto>> departmentOutDtos =
                departmentService.listAllDepartment();
         return new ResponseEntity<>(departmentOutDtos, HttpStatus.ACCEPTED);
-    }
-    return new ResponseEntity<>("Invalid user", HttpStatus.UNAUTHORIZED);
   }
 }
