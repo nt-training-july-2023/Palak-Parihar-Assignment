@@ -6,7 +6,6 @@ package com.grievance.authentication;
 import com.grievance.entity.Employee;
 import com.grievance.entity.UserType;
 import com.grievance.repository.EmployeeRepository;
-import com.grievance.service.Base64DecodeService;
 
 import java.util.Objects;
 
@@ -33,10 +32,8 @@ public class AuthenticatingUserImpl implements AuthenticatingUser {
    */
   @Override
   public Boolean checkIfUserExists(final String email, final String password) {
-      String decodePassword = Base64DecodeService.decodeBase64ToString(
-             password);
       Employee employee = employeeRepository.findByEmailAndPassword(
-              email, decodePassword);
+              email, password);
     return !Objects.isNull(employee);
   }
 
@@ -49,11 +46,9 @@ public class AuthenticatingUserImpl implements AuthenticatingUser {
   @Override
   public Boolean checkIfUserIsAdmin(
         final String email, final String password) {
-       String decodePassword = Base64DecodeService.decodeBase64ToString(
-              password);
        Employee employee = employeeRepository
                 .findByEmailAndPasswordAndUserType(
-                     email, decodePassword, UserType.ADMIN);
+                     email, password, UserType.ADMIN);
         return !Objects.isNull(employee);
   }
 }

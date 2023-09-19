@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import { FETCH_ALL_TICKETS } from "../../Service/TicketServices"
-import '../ListEmployees/ListEmployees';
 import Modal from "../../Components/UI/Modal/Modal";
 import ViewTicket from "../ViewTicket/ViewTicket";
 
@@ -20,10 +19,12 @@ export default function ListTickets(props) {
             })
     }, [])
 
-    const viewSelectedTicket = (e) => {
-        console.log(e)
-        // const view = <ViewTicket ticket={e}/>
-        setModal(() => <Modal component={ViewTicket(e)} />)
+    const viewSelectedTicket = (ticket) => {
+        setModal(() => <Modal component={ViewTicket({ticket, closeModal})} />)
+    }
+    
+    const closeModal = () =>{
+        setModal(() => <></>)
     }
 
     return (
@@ -56,7 +57,6 @@ export default function ListTickets(props) {
                                         <td>{t.status}</td>
                                         <td>
                                             <i id="icon" class='fas fa-edit' onClick={() => viewSelectedTicket(t)}/>
-                                            <i id="icon" class='fas fa-trash-alt'></i>
                                         </td>
                                     </tr>
                                 </>

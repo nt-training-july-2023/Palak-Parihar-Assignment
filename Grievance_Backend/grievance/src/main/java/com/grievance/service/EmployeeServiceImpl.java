@@ -7,7 +7,7 @@ import com.grievance.dto.EmployeeOutDto;
 import com.grievance.entity.Employee;
 import com.grievance.exception.EmployeeAlreadyExistException;
 import com.grievance.exception.EmployeeNotFoundException;
-import com.grievance.exception.PasswordMismatchException;
+import com.grievance.exception.PasswordMatchException;
 import com.grievance.repository.EmployeeRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,12 +51,16 @@ public class EmployeeServiceImpl implements EmployeeService {
   @Override
   public Optional<EmployeeOutDto> saveEmployee(
     final EmployeeInDto employeeInDto) {
-    if (employeeRepository.findByEmail(employeeInDto.getEmail()) != null) {
-      throw new EmployeeAlreadyExistException(employeeInDto.getEmail());
+
+     Employee employee = employeeRepository
+           .findByEmail(employeeInDto.getEmail());
+     if (Objects.isNull(employee)) {
+        employee = convertToEntity(employeeInDto);
+        employee = employeeRepository.save(employee);
+        EmployeeOutDto employeeOutDto = convertToDto(employee);
+        return Optional.of(employeeOutDto);
     }
-    Employee employee = convertToEntity(employeeInDto);
-    employee = employeeRepository.save(employee);
-    return Optional.of(convertToDto(employee));
+    throw new EmployeeAlreadyExistException(employeeInDto.getEmail());
   }
 
   /**
@@ -92,14 +96,11 @@ public class EmployeeServiceImpl implements EmployeeService {
   public Optional<EmployeeOutDto> loginEmployee(
        final EmployeeLoginDto employeeLoginDto) {
 
-       String decodePassword = Base64DecodeService.decodeBase64ToString(
-            employeeLoginDto.getPassword());
-            employeeLoginDto.setPassword(decodePassword);
     Employee employee = employeeRepository
-        .findByEmail(employeeLoginDto.getEmail());
+        .findByEmailAndPassword(employeeLoginDto.getEmail(),
+                employeeLoginDto.getPassword());
 
-    if (!Objects.isNull(employee) && employee.getPassword()
-       .equals(employeeLoginDto.getPassword())) {
+    if (!Objects.isNull(employee)) {
       return Optional.ofNullable(convertToDto(employee));
     }
     throw new EmployeeNotFoundException(employeeLoginDto.getEmail());
@@ -108,22 +109,25 @@ public class EmployeeServiceImpl implements EmployeeService {
   /**
    * changePassword for existing user.
    *@param changePasswordInDto
-   * @return boolean if password successfully changed
+   *
    */
-  @Override public Boolean changePassword(
+  @Override public void changePassword(
           final ChangePasswordInDto changePasswordInDto,
           final String email) {
-       Employee employee = employeeRepository.findByEmail(email);
+       Employee employee = employeeRepository.findByEmailAndPassword(
+                                   email,
+                                   changePasswordInDto.getOldPassword());
        if (Objects.isNull(employee)) {
            throw new EmployeeNotFoundException(email);
        }
-       if (employee.getPassword().equals(
-           changePasswordInDto.getOldPassword())) {
-          employee.setPassword(changePasswordInDto.getNewPassword());
-          employeeRepository.save(employee);
-          return true;
+       if (!changePasswordInDto.getOldPassword()
+               .equals(changePasswordInDto.getNewPassword())) {
+           employee.setPassword(changePasswordInDto.getNewPassword());
+           employee.setFirstTimeUser(false);
+           employeeRepository.save(employee);
+           return;
        }
-     throw new PasswordMismatchException();
+     throw new PasswordMatchException();
    }
 
   /**

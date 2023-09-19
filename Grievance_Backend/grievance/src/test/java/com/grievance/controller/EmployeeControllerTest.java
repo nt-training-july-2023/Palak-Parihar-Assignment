@@ -13,7 +13,7 @@ import com.grievance.dto.EmployeeOutDto;
 import com.grievance.entity.Employee;
 import com.grievance.entity.UserType;
 import com.grievance.exception.EmployeeAlreadyExistException;
-import com.grievance.exception.PasswordMismatchException;
+import com.grievance.exception.PasswordMatchException;
 import com.grievance.exception.UnauthorisedUserException;
 import com.grievance.service.EmployeeService;
 
@@ -223,7 +223,7 @@ class EmployeeControllerTest {
     	changePasswordInDto.setOldPassword("Ayushi#123");
     	changePasswordInDto.setNewPassword("Ayushi#125");
     	
-    	when(employeeService.changePassword(Mockito.any(ChangePasswordInDto.class), Mockito.anyString())).thenThrow(PasswordMismatchException.class);
+    	when(employeeService.changePassword(Mockito.any(ChangePasswordInDto.class), Mockito.anyString())).thenThrow(PasswordMatchException.class);
     	
     	
     	mockMvc.perform(MockMvcRequestBuilders.put("/changePassword")

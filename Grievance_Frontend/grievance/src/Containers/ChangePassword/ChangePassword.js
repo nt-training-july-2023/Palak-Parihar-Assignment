@@ -1,6 +1,8 @@
 import { useState } from "react"
 import Button from "../../Components/UI/Button/Button";
 import InputElement from "../../Components/UI/InputElement/InputElement";
+import { CHANGE_USER_PASSWORD } from "../../Service/EmployeeServices";
+import Modal from "../../Components/UI/Modal/Modal";
 
 
 export default function ChangePassword(props) {
@@ -21,16 +23,15 @@ export default function ChangePassword(props) {
                     minLength: 6,
                     isPassword: true
                 },
-                options: null,
                 valid: false,
                 touched: false,
                 label: "Old Password"
             },
-            changePassword: {
+            newPassword: {
                 elementType: 'input',
                 elementConfig: {
                     type: 'password',
-                    placeholder: 'Change Password'
+                    placeholder: 'New Password'
                 },
                 value: '',
                 validation: {
@@ -38,10 +39,9 @@ export default function ChangePassword(props) {
                     minLength: 6,
                     isPassword: true
                 },
-                options: null,
                 valid: false,
                 touched: false,
-                label: "Change Password"
+                label: "New Password"
             },
             confirmPassword: {
                 elementType: 'input',
@@ -55,7 +55,6 @@ export default function ChangePassword(props) {
                     minLength: 6,
                     isPassword: true
                 },
-                options: null,
                 valid: false,
                 touched: false,
                 label: "Confirm Password"
@@ -64,6 +63,7 @@ export default function ChangePassword(props) {
     }
     const [controls, setControls] = useState(cont.controls);
     const [message, setMessage] = useState();
+    const [modal, setModal] = useState();
 
     const formElementsArray = [];
     for (let key in controls) {
@@ -138,9 +138,38 @@ export default function ChangePassword(props) {
         setControls(updatedControls)
     }
 
-    const submithandler = (e) =>{
+    const submithandler = (e) => {
         e.preventDefault();
-        console.log(controls);
+
+        let values = {
+            oldPassword: controls.oldPassword.value,
+            newPassword: controls.newPassword.value
+        }
+
+        if (!controls.oldPassword.valid || !controls.newPassword.valid || !controls.confirmPassword.valid) {
+            setMessage('Password must match requirements')
+            return;
+        }
+
+        if (controls.confirmPassword.value !== controls.newPassword.value) {
+            setMessage('New Password and Confirm Password values are mismatched')
+            return;
+        }
+
+        console.log(values)
+        const response = CHANGE_USER_PASSWORD(values)
+            .then(res => {
+                return res.data
+            })
+            .catch(err => {
+                setModal(() => <Modal message={err.data.response.data} onClick={closeModal} />)
+                return err.data
+            })
+        console.log(response)
+    }
+
+    const closeModal = () => {
+        setModal(() => <></>)
     }
 
     return (

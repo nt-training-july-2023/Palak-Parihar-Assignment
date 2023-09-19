@@ -10,13 +10,15 @@ import com.grievance.dto.EmployeeInDto;
 import com.grievance.dto.EmployeeLoginDto;
 import com.grievance.dto.EmployeeOutDto;
 import com.grievance.exception.EmployeeAlreadyExistException;
-import com.grievance.exception.PasswordMismatchException;
 import com.grievance.exception.EmployeeNotFoundException;
 import com.grievance.exception.UnauthorisedUserException;
 import com.grievance.service.EmployeeService;
 
 import java.util.List;
 import java.util.Optional;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +35,6 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @CrossOrigin("*")
-//@Validated
 public class EmployeeController {
   /**
    *Autowiring Service.
@@ -58,7 +59,7 @@ public class EmployeeController {
    */
   @PostMapping("/login")
   public ResponseEntity<?> loginUser(
-      @RequestBody final EmployeeLoginDto employeeLoginDto
+      @Valid @RequestBody final EmployeeLoginDto employeeLoginDto
   ) throws EmployeeNotFoundException {
     try {
         Optional<EmployeeOutDto>
@@ -78,7 +79,8 @@ public class EmployeeController {
    */
   @GetMapping(value = "/listAllEmployees", produces = "application/json")
   public ResponseEntity<?> listAllEmployees(
-      @RequestHeader final String email, @RequestHeader final String password) {
+      @RequestHeader final String email,
+      @RequestHeader final String password) {
          try {
              authenticatingUser.checkIfUserIsAdmin(email, password);
          } catch  (UnauthorisedUserException e) {
@@ -121,34 +123,20 @@ public class EmployeeController {
   /**
    *
    * @param email
-   * @param password
    * @param changePasswordInDto
    * @return ResponseEntity
    */
   @PutMapping("/changePassword")
   public ResponseEntity<?> changePassword(
           @RequestHeader final String email,
-          @RequestHeader final String password,
           @RequestBody final ChangePasswordInDto changePasswordInDto
          ) {
-        try {
-          authenticatingUser.checkIfUserExists(email, password);
-          try {
-              Boolean passwordChanged = employeeService.changePassword(
-                        changePasswordInDto, email);
-              if (passwordChanged) {
-                 return new ResponseEntity<>("Password changed successfully",
-                        HttpStatus.NO_CONTENT);
-              }
-              return new ResponseEntity<>("Something unexpected happened",
-                      HttpStatus.INTERNAL_SERVER_ERROR);
-           } catch (PasswordMismatchException e) {
-                 return new ResponseEntity<>(e.getMessage(),
-                        HttpStatus.NOT_FOUND);
-          }
-       } catch (UnauthorisedUserException e) {
-           return new ResponseEntity<>(e.getMessage(),
-                   HttpStatus.UNAUTHORIZED);
+       try {
+          employeeService.changePassword(changePasswordInDto, email);
+          return new ResponseEntity<>("Password changes successfully",
+                HttpStatus.OK);
+       } catch (Exception e) {
+          return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
        }
   }
 }

@@ -74,13 +74,13 @@ public class TicketOutDto {
   /**
    * The date when the ticket was opened.
    */
-  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Kolkata")
   private Date dateOpened;
 
   /**
    * The date when the ticket was last updated.
    */
-  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Kolkata")
   private Date lastUpdated;
 
   /**

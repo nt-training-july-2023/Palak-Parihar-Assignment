@@ -46,8 +46,8 @@ public interface EmployeeService {
    * changePassword for existing user.
    *@param changePasswordInDto
    *@param email
-   * @return boolean if password successfully changed
+   *
    */
-  Boolean changePassword(ChangePasswordInDto changePasswordInDto, String email);
+  void changePassword(ChangePasswordInDto changePasswordInDto, String email);
 
 }

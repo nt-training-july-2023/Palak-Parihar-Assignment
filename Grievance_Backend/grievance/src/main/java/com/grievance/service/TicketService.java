@@ -17,10 +17,10 @@ public interface TicketService {
   Optional<TicketOutDto> saveTicket(TicketInDto ticketInDto);
 
   /**
-   *
+   * @param page
    * @return optional of list of all tickets.
    */
-  Optional<List<TicketOutDto>> listOfAllTickets();
+  Optional<List<TicketOutDto>> listOfAllTickets(Integer page);
 
   /**
    * method to access rickets by their department Name.

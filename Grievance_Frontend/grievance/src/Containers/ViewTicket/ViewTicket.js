@@ -1,9 +1,12 @@
+import { useNavigate } from "react-router";
 import Button from "../../Components/UI/Button/Button";
 import InputElement from "../../Components/UI/InputElement/InputElement";
 import classes from './ViewTicket.module.css';
 
 
 export default function ViewTicket(props) {
+
+    // const navigate = useNavigate
 
     const dummy = [
         {
@@ -26,43 +29,44 @@ export default function ViewTicket(props) {
     ]
 
     console.log(props)
-    const { ticket } = props;
-    console.log(ticket)
     return (
         <>
             <div className={classes.outerDiv}>
-                <div className={classes.heading}>Hello</div>
+                <div className={classes.heading}>
+                    Close
+                    <i id={classes.icon_close} class="fa fa-window-close" onClick={props.closeModal}></i>
+                </div>
                 <div className={classes.mainContainer}>
                     <div className={classes.ticketContainer}>
-                        <Button status="" content={props.status} />
+                        <Button status="" content={props.ticket.status} />
                         <div className={classes.ticketContent}>
                             <div className={classes.ticketData}>
                                 <label>Ticket Title : </label>
-                                <p>{props.title}</p>
+                                <p>{props.ticket.title}</p>
                             </div>
                             <div className={classes.ticketData}>
                                 <label>TicketId : </label>
-                                <p>{props.ticketId}</p>
+                                <p>{props.ticket.ticketId}</p>
                             </div>
                             <div className={classes.ticketData}>
                                 <label>Created By : </label>
-                                <p>{props.employee}</p>
+                                <p>{props.ticket.employee}</p>
                             </div>
                             <div className={classes.ticketData}>
                                 <label>Assigned to : </label>
-                                <p>{props.department}</p>
+                                <p>{props.ticket.department}</p>
                             </div>
                             <div className={classes.ticketData}>
                                 <label>Description : </label>
-                                <p>{props.description}</p>
+                                <p>{props.ticket.description}</p>
                             </div>
                             <div className={classes.ticketData}>
                                 <label>Status : </label>
-                                <p>{props.status}</p>
+                                <p>{props.ticket.status}</p>
                             </div>
                             <div className={classes.ticketData}>
                                 <label>TicketType : </label>
-                                <p>{props.ticketType}</p>
+                                <p>{props.ticket.ticketType}</p>
                             </div>
 
                         </div>

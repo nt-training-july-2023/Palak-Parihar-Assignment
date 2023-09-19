@@ -1,6 +1,5 @@
 package com.grievance.controller;
 
-import com.grievance.authentication.AuthenticatingUser;
 import com.grievance.dto.DepartmentInDto;
 import com.grievance.dto.DepartmentOutDto;
 import com.grievance.exception.DepartmentAlreadyExists;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,18 +32,9 @@ public class DepartmentController {
   private DepartmentService departmentService;
 
   /**
-   * authenticatinguser instance
-   * to check if the user is valid.
-   */
-  @Autowired
-  private AuthenticatingUser authenticatingUser;
-
-  /**
    *
    * Department Controller method for saving given Department.
    *
-   * @param email
-   * @param password
    * @param departmentInDto
    * @return department saved.
    */
@@ -58,12 +47,8 @@ public class DepartmentController {
 //  }
   @PostMapping("/save")
   public ResponseEntity<?> saveDepartment(
-    @RequestHeader final String email,
-    @RequestHeader final String password,
     @RequestBody final DepartmentInDto departmentInDto
   ) {
-      Boolean isAdmin = authenticatingUser.checkIfUserIsAdmin(email, password);
-      if (isAdmin) {
           try {
               Optional<DepartmentOutDto> optional =
                       departmentService.saveDepartment(departmentInDto);
@@ -71,8 +56,6 @@ public class DepartmentController {
           } catch (DepartmentAlreadyExists e) {
              return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
           }
-      }
-    return new ResponseEntity<>("Invalid Credential", HttpStatus.UNAUTHORIZED);
   }
 
   /**
@@ -84,8 +67,6 @@ public class DepartmentController {
    */
   @GetMapping("/listDepartments")
   public ResponseEntity<?> listDepartments(
-//      @RequestHeader final String email,
-//      @RequestHeader final String password
     ) {
         Optional<List<DepartmentOutDto>> departmentOutDtos =
                departmentService.listAllDepartment();

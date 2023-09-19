@@ -61,22 +61,25 @@ public class TicketController {
    * @param departmentName
    * @param email
    * @param password
+   * @param page
    * @return ResponseEntity with optional of list of all tickets.
    */
   @GetMapping("/listAllTickets")
   public ResponseEntity<?> listAllTickets(
     @RequestParam(required = false) final String departmentName,
     @RequestHeader final String email,
-    @RequestHeader final String password
+    @RequestHeader final String password,
+    @RequestParam final Integer page
   ) {
     try {
       if (Objects.isNull(departmentName)) {
-        authenticatingUser.checkIfUserIsAdmin(email, password);
+        if (!authenticatingUser.checkIfUserIsAdmin(email, password)) {
+           throw new UnauthorisedUserException(email);
+        }
         Optional<List<TicketOutDto>> optionalListOfTickets =
-              ticketService.listOfAllTickets();
+              ticketService.listOfAllTickets(page);
         return new ResponseEntity<>(optionalListOfTickets, HttpStatus.ACCEPTED);
       } else {
-        authenticatingUser.checkIfUserExists(email, password);
         Optional<List<TicketOutDto>> optionalListOfTickets =
               ticketService.listOfAllTicketsByDepartmentName(
           departmentName

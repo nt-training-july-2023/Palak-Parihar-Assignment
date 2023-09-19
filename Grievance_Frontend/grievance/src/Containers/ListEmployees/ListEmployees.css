@@ -2,7 +2,7 @@
     display: flex;
     justify-content: center;
     margin-top: 2%;
-    min-height: 100vh;
+    /* min-height: 100vh; */
     height: 100%;
     overflow-x: hidden;
 }
@@ -15,10 +15,11 @@ table{
 #list_content td, #list_content th{
     border: 1px solid #ddd;
     padding: 6px;
+    padding-top: 12px;
 }
 
 #list_content th{
-    padding: 12px 2px 12px 2px;
+    padding: 14px 2px 12px 2px;
     text-align: center;
     background-color: #737374
     ;
@@ -39,5 +40,6 @@ table{
 
 #icon{
     padding: 0px 10px 0px 10px;
+    cursor: pointer;
 }
 

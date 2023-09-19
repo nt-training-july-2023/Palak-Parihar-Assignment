@@ -36,7 +36,8 @@ export default function Login({ callback }) {
                 value: '',
                 validation: {
                     required: true,
-                    minLength: 6
+                    minLength: 6,
+                    isPassword:true
                 },
                 valid: false,
                 touched: false
@@ -98,16 +99,18 @@ export default function Login({ callback }) {
             const pattern = /^[A-Za-z0-9+_.-]+@+nucleusteq.com$/;
             console.log(value.endsWith("@nucleusteq.com") + " " + pattern.test(value))
             isValid = pattern.test(value) && isValid
-            if (isValid) {
+            if (!isValid) {
                 setMessage("Invalid email domain")
             }
 
         }
 
         if (rules.isPassword) {
-            const pattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
+            const pattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,20}$/;
             isValid = pattern.test(value) && isValid
-            setMessage("Password doesn't match the requirements")
+            if(!isValid){
+                setMessage("Password doesn't match the requirements")
+            }
         }
         if (isValid) {
             setMessage('')
@@ -157,6 +160,12 @@ export default function Login({ callback }) {
                     isAuthenticated: true
                 }
                 sessionStorage.setItem('userDetails', JSON.stringify(userValues));
+                if(userValues.firstTimeUser){
+                    setTimeout(() => {
+                        navigate("/changePassword")
+                    }, 1000);
+                    return res.data;
+                }
                 setTimeout(() => {
                     navigate("/listAllTickets")
                 }, 1000);

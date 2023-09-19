@@ -28,7 +28,7 @@ import com.grievance.entity.Employee;
 import com.grievance.entity.UserType;
 import com.grievance.exception.EmployeeAlreadyExistException;
 import com.grievance.exception.EmployeeNotFoundException;
-import com.grievance.exception.PasswordMismatchException;
+import com.grievance.exception.PasswordMatchException;
 import com.grievance.repository.EmployeeRepository;
 
 
@@ -114,7 +114,7 @@ class EmployeeServiceTest {
 
     @Test
     void when_successfully_login_employee_return_employee() {
-		employee.setPassword("Palak#123");
+		employee.setPassword("QXl1c2hpIzEyNA==");
 		when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
 		
 		Optional<EmployeeOutDto> dto = employeeService.loginEmployee(employeeLoginDto);
@@ -125,7 +125,7 @@ class EmployeeServiceTest {
 
     @Test
     void when_login_failed_return_empty_optional() {
-		employee.setPassword("Palak#123");
+		employee.setPassword("QXl1c2hpIzEyNA==");
 		when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(null);
 		
 		Optional<EmployeeOutDto> dto = employeeService.loginEmployee(employeeLoginDto);
@@ -135,7 +135,7 @@ class EmployeeServiceTest {
     
     @Test
     void when_login_failed_by_false_credentials_return_empty_optional() {
-    	employee.setPassword("Example#123");
+    	employee.setPassword("QXl1c2hpIzEyNA==");
 		when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
 		
 		Optional<EmployeeOutDto> dto = employeeService.loginEmployee(employeeLoginDto);
@@ -160,7 +160,7 @@ class EmployeeServiceTest {
     
     @Test
     void password_change_successfully() {
-    	employee.setPassword("Ayushi#124");
+    	employee.setPassword("QXl1c2hpIzEyNA==");
     	when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
     	
     	Employee changedEmployee = new Employee();
@@ -168,8 +168,8 @@ class EmployeeServiceTest {
     	when(employeeRepository.save(employee)).thenReturn(changedEmployee);
     	
     	ChangePasswordInDto changePasswordInDto = new ChangePasswordInDto();
-    	changePasswordInDto.setOldPassword("Ayushi#124");
-    	changePasswordInDto.setNewPassword("Ayushi#123");
+    	changePasswordInDto.setOldPassword("QXl1c2hpIzEyNA==");
+    	changePasswordInDto.setNewPassword("QXl2c2hpIzEyNA==");
     	
     	Boolean changedSuccessfully = employeeService.changePassword(changePasswordInDto, "ayushi@nucleusteq.com");
     	
@@ -182,8 +182,8 @@ class EmployeeServiceTest {
     	when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(null);
     	
     	ChangePasswordInDto changePasswordInDto = new ChangePasswordInDto();
-    	changePasswordInDto.setOldPassword("Ayushi#124");
-    	changePasswordInDto.setNewPassword("Ayushi#123");
+    	changePasswordInDto.setOldPassword("QXl1c2hpIzEyNA==");
+    	changePasswordInDto.setNewPassword("QX21c2hpIzEyNA==");
     	
     	assertThrows(EmployeeNotFoundException.class, ()->{
     		employeeService.changePassword(changePasswordInDto, "ayushi@nucleusteq.com");
@@ -192,14 +192,14 @@ class EmployeeServiceTest {
     
     @Test
     void changePassword_fails_when_password_mismatch() {
-    	employee.setPassword("Ayushi#124");
+    	employee.setPassword("QXl1c2hpIzEyNA==");
     	when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
     	
     	ChangePasswordInDto changePasswordInDto = new ChangePasswordInDto();
-    	changePasswordInDto.setOldPassword("Ayushi#125");
-    	changePasswordInDto.setNewPassword("Ayushi#123");
+    	changePasswordInDto.setOldPassword("QXl1c2hpIzEyNA==");
+    	changePasswordInDto.setNewPassword("QXl2c2hpIzEyNA==");
     	
-    	assertThrows(PasswordMismatchException.class, ()->{
+    	assertThrows(PasswordMatchException.class, ()->{
     		employeeService.changePassword(changePasswordInDto, "ayushi@nucleusteq.com");
     	});
     }

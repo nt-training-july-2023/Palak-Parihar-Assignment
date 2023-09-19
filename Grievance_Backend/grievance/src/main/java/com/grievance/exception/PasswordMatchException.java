@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 @ResponseStatus(
   value = HttpStatus.NOT_FOUND,
-  reason = "Password mismatch"
+  reason = "New Password must not be equal to old Password"
 )
-public class PasswordMismatchException extends RuntimeException {
+public class PasswordMatchException extends RuntimeException {
   // HTTP 404
   private static final long serialVersionUID = -3332292346834265371L;
 
@@ -20,7 +20,7 @@ public class PasswordMismatchException extends RuntimeException {
    * Constructs a new PasswordMismatchException .
    *
    */
-  public PasswordMismatchException() {
-    super("Password mismatched");
+  public PasswordMatchException() {
+    super("New Password must not be equal to old Password");
   }
 }

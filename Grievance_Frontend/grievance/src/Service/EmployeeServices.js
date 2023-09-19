@@ -1,5 +1,5 @@
 import axios from "axios"
-import { FETCH_ALL_USERS_URL, LOGIN_USER_URL, SAVE_NEW_EMPLOYEE_URL } from "../URL/Url"
+import { CHANGE_PASSWORD_URL, FETCH_ALL_USERS_URL, LOGIN_USER_URL, SAVE_NEW_EMPLOYEE_URL } from "../URL/Url"
 
 
 const userDetails = () => {
@@ -11,9 +11,7 @@ export const LOGIN_USER = (userData) => {
         axios({
             url: LOGIN_USER_URL,
             method: 'POST',
-            // headers: headersData,
             data: userData,
-            // withCredentials:true
         })
             .then((res) => {
                 console.log(res.data);
@@ -24,6 +22,26 @@ export const LOGIN_USER = (userData) => {
                 reject({ data: e });
             });
     });
+}
+
+export const CHANGE_USER_PASSWORD = (values) => {
+    let userValues = userDetails()
+    let headersRequired = {
+        email: userValues.email,
+        password: userValues.password,
+    }
+    return new Promise((resolve, reject) => {
+        axios({
+            url: CHANGE_PASSWORD_URL,
+            method: 'PUT',
+            headers: headersRequired,
+            data : values
+        }).then(res => {
+            return resolve({ data: res.data })
+        }).catch(err => {
+            return reject({ data: err })
+        })
+    })
 }
 
 
@@ -39,9 +57,8 @@ export const FETCH_ALL_USERS = () => {
             method: 'GET',
             headers: headersRequired,
         }).then((res) => {
-            // const response = JSON.parse(res.data)
             console.log(res.data);
-            resolve({ data: res.data});
+            resolve({ data: res.data });
         })
             .catch((e) => {
                 console.error(e)

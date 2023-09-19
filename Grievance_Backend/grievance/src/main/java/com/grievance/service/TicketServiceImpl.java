@@ -22,6 +22,8 @@ import java.util.Objects;
 import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 /**
@@ -58,6 +60,11 @@ public class TicketServiceImpl implements TicketService {
   private EmployeeRepository employeeRepository;
 
   /**
+   * variable to store pageSize for pagination.
+   */
+  private final Integer pageSize = 10;
+
+  /**
    * save a new ticket in ticket table in database.
    */
   @Override
@@ -73,10 +80,10 @@ public class TicketServiceImpl implements TicketService {
    * @return optional of list of ticketOut DTO.
    */
   @Override
-  public Optional<List<TicketOutDto>> listOfAllTickets() {
+  public Optional<List<TicketOutDto>> listOfAllTickets(final Integer page) {
     List<TicketOutDto> tickets = new ArrayList<TicketOutDto>();
     ticketRepository
-      .findAll()
+      .findAll(PageRequest.of(page, pageSize).withSort(Sort.by("status")))
       .forEach(
         e -> {
           tickets.add(convertToDto(e));

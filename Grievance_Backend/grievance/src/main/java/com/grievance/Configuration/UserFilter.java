@@ -2,7 +2,6 @@ package com.grievance.Configuration;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,22 +11,17 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.grievance.authentication.AuthenticatingUser;
-import com.grievance.authentication.AuthenticatingUserImpl;
-import com.grievance.entity.Employee;
-import com.grievance.entity.UserType;
-import com.grievance.repository.EmployeeRepository;
-import com.grievance.service.Base64DecodeService;
+
+
 /**
  * A custom Servlet Filter implementation to
  * perform pre and post-processing of HTTP requests and responses.
@@ -35,15 +29,16 @@ import com.grievance.service.Base64DecodeService;
  * logic before and after a request reaches the controller.
  */
 @CrossOrigin("*")
-//@Component
-//@WebFilter("/*")
 public class UserFilter implements Filter {
 /**
  * logger.
  */
   private static final Logger LOGGER =
           LoggerFactory.getLogger(UserFilter.class);
-  String loginUrl = "/login";
+  /**
+   * loginUrl to compare with request url.
+   */
+  private String loginUrl = "/login";
   /**
    *
    * @param authenticatingUserField
@@ -57,9 +52,6 @@ public class UserFilter implements Filter {
    */
   @Autowired
   private AuthenticatingUser authenticatingUser;
-  /**
-   * 
-   */
 
   /**
    *
@@ -113,37 +105,39 @@ public class UserFilter implements Filter {
       String password = httpServletRequest.getHeader("password");
 
       if (httpServletRequest.getMethod().equals("OPTIONS")) {
-    	  httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
-    	  httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-    	  httpServletResponse.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, email, password");
-    	  httpServletResponse.setContentType("application/json");
-    	  httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-      }else {
-    	  
-    	  if(Objects.isNull(email) || Objects.isNull(password)) {
-         	  if(loginUrl.equals(requestUrl)) {
-    			  chain.doFilter(request, response);
-    		  }else {
-    			  ((HttpServletResponse) response).sendError(
-    			          HttpServletResponse.SC_UNAUTHORIZED, "Invalid User");
-    		  }
-    	  }else {
-    		  if(adminUrls.contains(requestUrl)) {
-    		     if(authenticatingUser.checkIfUserIsAdmin(email, password)) {
-    				  chain.doFilter(request, response);
-    			  }else {
-    				  ((HttpServletResponse) response).sendError(
-        			          HttpServletResponse.SC_UNAUTHORIZED, "Invalid User");
-    			  }
-    		  }else {
-    			  if(authenticatingUser.checkIfUserExists(email, password)) {
-    				  chain.doFilter(request, response);
-    			  }else {
-    				  ((HttpServletResponse) response).sendError(
-        			          HttpServletResponse.SC_UNAUTHORIZED, "Invalid User");
-    			  }
-    		  }
-    	  }
+             httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+             httpServletResponse.setHeader("Access-Control-Allow-Methods",
+                        "GET, POST, PUT, DELETE");
+          httpServletResponse.setHeader("Access-Control-Allow-Headers",
+                     "Authorization, Content-Type, email, password");
+          httpServletResponse.setContentType("application/json");
+          httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+      } else {
+          if (Objects.isNull(email) || Objects.isNull(password)) {
+              if (loginUrl.equals(requestUrl)) {
+                 chain.doFilter(request, response);
+              } else {
+                 ((HttpServletResponse) response).sendError(
+                        HttpServletResponse.SC_UNAUTHORIZED, "Invalid User");
+              }
+          } else {
+              if (adminUrls.contains(requestUrl)) {
+                  if (authenticatingUser.checkIfUserIsAdmin(email, password)) {
+                     chain.doFilter(request, response);
+                 } else {
+                     ((HttpServletResponse) response).sendError(
+                             HttpServletResponse.SC_UNAUTHORIZED,
+                             "Invalid User");
+                 }
+            } else {
+                  if (authenticatingUser.checkIfUserExists(email, password)) {
+                      chain.doFilter(request, response);
+                  } else {
+                       ((HttpServletResponse) response).sendError(
+                          HttpServletResponse.SC_UNAUTHORIZED, "Invalid User");
+                  }
+              }
+          }
       }
   }
 

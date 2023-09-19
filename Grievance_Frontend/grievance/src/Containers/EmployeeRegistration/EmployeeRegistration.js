@@ -219,7 +219,7 @@ export default function EmployeeRegistration(props) {
         let data = {
             email: controls.email.value,
             fullName: controls.name.value,
-            password: controls.password.value,
+            password: btoa(controls.password.value),
             userType: controls.userType.value,
             firstTimeUser: true,
             department: {

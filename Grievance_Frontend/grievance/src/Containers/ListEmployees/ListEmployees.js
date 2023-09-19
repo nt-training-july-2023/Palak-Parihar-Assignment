@@ -18,10 +18,9 @@ export default function ListEmployees(props) {
     }, [])
 
     return (
-        <>
-        
-            <div className="list_main_container">
-                <table id="list_content">
+        <>       
+            <div className= "list_main_container">
+                <table id= "list_content">
                     <tr>
                         <th>FullName</th>
                         <th>email</th>
@@ -42,6 +41,7 @@ export default function ListEmployees(props) {
                                             <i id="icon" class='fas fa-edit' />
                                             <i id="icon" class='fas fa-trash-alt'></i>
                                         </td>
+                
                                     </tr>
 
                                 </>)
@@ -49,7 +49,6 @@ export default function ListEmployees(props) {
                     }
 
                 </table>
-
             </div>
         </>
     )

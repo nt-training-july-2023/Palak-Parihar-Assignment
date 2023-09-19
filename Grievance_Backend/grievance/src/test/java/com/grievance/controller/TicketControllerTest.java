@@ -90,7 +90,7 @@ public class TicketControllerTest {
 		
 		when(authenticatingUser.checkIfUserIsAdmin(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
 		
-		when(ticketService.listOfAllTickets()).thenReturn(Optional.of(ticketOutDtos));
+		when(ticketService.listOfAllTickets(0)).thenReturn(Optional.of(ticketOutDtos));
 		
 		mockMvc.perform(MockMvcRequestBuilders.get("/ticket/listAllTickets")
 				.contentType(MediaType.APPLICATION_JSON)

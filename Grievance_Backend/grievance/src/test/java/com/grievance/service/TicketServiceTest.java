@@ -142,7 +142,7 @@ public class TicketServiceTest {
 		list.add(ticket);
 		when(ticketRepository.findAll()).thenReturn(list);
 		
-		Optional<List<TicketOutDto>> list2 = ticketService.listOfAllTickets();
+		Optional<List<TicketOutDto>> list2 = ticketService.listOfAllTickets(0);
 		assertEquals(list.get(0).getTitle(), list2.get().get(0).getTitle());
 	}
 	

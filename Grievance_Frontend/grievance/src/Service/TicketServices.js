@@ -14,7 +14,7 @@ export const FETCH_ALL_TICKETS = () => {
     }
     return new Promise((resolve, reject) => {
         axios({
-            url: FETCH_ALL_TICKETS_URL,
+            url: FETCH_ALL_TICKETS_URL + "?page=0",
             method: 'GET',
             headers : headersRequired
         }).then((res) => {
