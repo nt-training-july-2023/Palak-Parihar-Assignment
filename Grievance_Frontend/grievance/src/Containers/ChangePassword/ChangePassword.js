@@ -1,8 +1,9 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Button from "../../Components/UI/Button/Button";
 import InputElement from "../../Components/UI/InputElement/InputElement";
 import { CHANGE_USER_PASSWORD } from "../../Service/EmployeeServices";
 import Modal from "../../Components/UI/Modal/Modal";
+import { useNavigate } from "react-router";
 
 
 export default function ChangePassword(props) {
@@ -64,6 +65,7 @@ export default function ChangePassword(props) {
     const [controls, setControls] = useState(cont.controls);
     const [message, setMessage] = useState();
     const [modal, setModal] = useState();
+    const navigate = useNavigate()
 
     const formElementsArray = [];
     for (let key in controls) {
@@ -72,6 +74,14 @@ export default function ChangePassword(props) {
             config: controls[key]
         })
     }
+
+    useEffect(() => {
+        if (sessionStorage.getItem('userDetails') === null) {
+            navigate('/logout')
+            return
+        }
+    })
+
 
     const completeForm = formElementsArray.map(formElement => {
         return (<>
@@ -141,11 +151,6 @@ export default function ChangePassword(props) {
     const submithandler = (e) => {
         e.preventDefault();
 
-        let values = {
-            oldPassword: controls.oldPassword.value,
-            newPassword: controls.newPassword.value
-        }
-
         if (!controls.oldPassword.valid || !controls.newPassword.valid || !controls.confirmPassword.valid) {
             setMessage('Password must match requirements')
             return;
@@ -156,9 +161,17 @@ export default function ChangePassword(props) {
             return;
         }
 
+        let values = {
+            oldPassword: btoa(controls.oldPassword.value),
+            newPassword: btoa(controls.newPassword.value)
+        }
         console.log(values)
         const response = CHANGE_USER_PASSWORD(values)
             .then(res => {
+                setModal(()=> <Modal message="Password changed successfully"/>)
+                setTimeout(() => {
+                    navigate('/logout')
+                }, 1000);
                 return res.data
             })
             .catch(err => {

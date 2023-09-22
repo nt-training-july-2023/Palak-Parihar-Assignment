@@ -1,17 +1,18 @@
 package com.grievance.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.grievance.entity.Comment;
-import com.grievance.entity.Status;
-import com.grievance.entity.TicketType;
 import java.util.Date;
-import java.util.List;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-public class TicketOutDto {
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.grievance.entity.Status;
+import com.grievance.entity.TicketType;
+
+public class TicketOutWOComment {
+
   /**
    *minimumLength final integer.
    */
@@ -83,10 +84,6 @@ public class TicketOutDto {
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Kolkata")
   private Date lastUpdated;
 
-  /**
-   * comments that belongs to this ticket.
-   */
-  private List<Comment> comments;
 
   /**
    * The employee who created the ticket.
@@ -206,20 +203,6 @@ public class TicketOutDto {
   public void setLastUpdated(final Date lastUpdatedField) {
     this.lastUpdated = lastUpdatedField;
   }
-
-/**
- * @return the comments
- */
-public List<Comment> getComments() {
-return comments;
-}
-
-/**
- * @param commentsField the comments to set
- */
-public void setComments(final List<Comment> commentsField) {
-this.comments = commentsField;
-}
 
 /**
  * @return the employee

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import InputElement from "../../Components/UI/InputElement/InputElement";
 import Button from "../../Components/UI/Button/Button";
 import { useNavigate } from "react-router";
-import { FETCH_ALL_TICKETS, GENERATE_NEW_TICKET } from "../../Service/TicketServices";
+import { GENERATE_NEW_TICKET } from "../../Service/TicketServices";
 import { FETCH_ALL_DEPARTMENTS } from "../../Service/DepartmentService";
 import Modal from "../../Components/UI/Modal/Modal";
 
@@ -145,7 +145,6 @@ export default function NewTicket(props) {
 
     const submithandler = (e) => {
         e.preventDefault();
-        console.log(userValues)
         let ticketValues = {
             title: controls.title.value,
             department: {
@@ -162,15 +161,6 @@ export default function NewTicket(props) {
         console.log(ticketValues)
 
         GENERATE_NEW_TICKET(ticketValues).then(res => {
-        //     const updatedControls = {
-        //     ...controls,
-        //     [controlName]: {
-        //         ...controls[controlName],
-        //         value: e.target.value,
-        //         touched: true
-        //     }
-        // }
-        // setControls(updatedControls)
             setModal(() => <Modal message="Ticket successfully created" onClick={closeModal} />)
             console.log(res.data)
             return res.data;
@@ -188,20 +178,18 @@ export default function NewTicket(props) {
     }
 
     useEffect(() => {
-        let user = JSON.parse(sessionStorage.getItem('userDetails'))
-        if (!user.isAuthenticated) {
-            navigate("/login")
+        if (sessionStorage.getItem('userDetails') === null) {
+            navigate('/logout')
+            return
+        } else {
+            let values = JSON.parse(sessionStorage.getItem('userDetails'))
+            console.log(values.firstTimeUser)
+            if (values.firstTimeUser) {
+                navigate('/changePassword')
+                return
+            }
         }
-        setUserValues(user)
 
-        const response = FETCH_ALL_TICKETS()
-            .then(res => {
-                console.log(res.data)
-                return res.data
-            }).catch(err => {
-                console.log(err.data)
-                return err.data
-            })
         FETCH_ALL_DEPARTMENTS()
             .then(response => {
                 let updatedControls = {

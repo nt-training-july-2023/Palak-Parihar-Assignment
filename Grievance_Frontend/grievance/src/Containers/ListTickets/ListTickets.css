@@ -2,7 +2,6 @@
 .mainContainer{
     display: flex;
     flex-direction: column;
-    /* justify-content: center; */
     align-items: center;
     overflow : scroll;
     padding: 2%;
@@ -35,3 +34,22 @@
     padding: 0px 20px;
     cursor: pointer;
 }
+
+#menu{
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    width: 50%;
+}
+
+.status_dropdown{
+    display: flex;
+    width: 50%;
+    justify-content: right;
+}
+
+.menu_bar{
+    display: flex;
+    width: 80%;
+}
+

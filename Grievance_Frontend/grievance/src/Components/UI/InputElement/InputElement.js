@@ -42,13 +42,14 @@ function InputElement(props) {
                 value={props.value}
                 onChange={props.changed}
                 disabled={props.disabled}
+                placeholder={props.placeholder}
                 required />;
             break;
 
         case ('select'):
             inputElement = (<>
                 <select className={classes.InputElement} onChange={props.changed} {...props.shouldValidate} >
-                    <option value="" selected disabled hidden>Choose here</option>
+                    <option value='' selected disabled hidden>Choose here</option>
                     {props.options.map(option => (
                         <option key={option} value={option}>
                             {option}

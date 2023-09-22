@@ -1,10 +1,9 @@
 .list_main_container{
     display: flex;
     justify-content: center;
-    margin-top: 2%;
-    /* min-height: 100vh; */
-    height: 100%;
+    margin-top: 1%;
     overflow-x: hidden;
+    overflow-y: scroll;
 }
 
 table{
@@ -14,15 +13,15 @@ table{
 
 #list_content td, #list_content th{
     border: 1px solid #ddd;
-    padding: 6px;
-    padding-top: 12px;
+    padding: 4px;
+    padding-top: 10px;
+    text-align: center;
 }
 
 #list_content th{
     padding: 14px 2px 12px 2px;
     text-align: center;
-    background-color: #737374
-    ;
+    background-color: #266183;
     color: #fff;
 }
 
@@ -41,5 +40,73 @@ table{
 #icon{
     padding: 0px 10px 0px 10px;
     cursor: pointer;
+}
+
+#menu{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+#actions_arrow{
+    position: absolute;
+    left: 48%;
+    font-size: 30px;
+    bottom: 1cqi;
+}
+
+#action_icon{
+    margin: 10px;
+    color: #174c6b;
+    cursor: pointer;
+}
+
+#action_icon:hover{
+    color: #3c8dbc;
+}
+
+
+#disable_action_icon{
+    margin: 10px;
+    color: #7c7878;
+    cursor: default;
+}
+
+#disable_action_icon :hover{
+    margin: 10px;
+    color: #c5c0c0;
+    cursor: default;
+}
+
+#active{
+    background-color: gray;
+    color: white;
+}
+
+.menu_button{
+    border: 1px solid #c5c0c0;
+    padding: 6px;
+}
+
+.list_heading{
+    width: 100%;
+    text-align: center;
+    font-weight: 500;
+    font-size: larger;
+    padding-top: 20px;
+}
+
+.add_entry{
+    text-align: center;
+    padding: 10px;
+    font-size: larger;
+    font-weight: 500;
+}
+
+.status{
+    display: flex;
+    /* padding-right: 20px; */
+    /* margin-right: 20px; */
 }
 

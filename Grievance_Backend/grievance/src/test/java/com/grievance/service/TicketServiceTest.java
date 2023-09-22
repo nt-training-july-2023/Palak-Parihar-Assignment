@@ -1,5 +1,6 @@
 package com.grievance.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.lenient;
@@ -18,17 +19,25 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import com.grievance.dto.DepartmentInDto;
 import com.grievance.dto.EmployeeInDto;
 import com.grievance.dto.TicketInDto;
 import com.grievance.dto.TicketOutDto;
+import com.grievance.dto.TicketOutWOComment;
+import com.grievance.dto.TicketUpdateDto;
+import com.grievance.entity.Comment;
 import com.grievance.entity.Department;
 import com.grievance.entity.Employee;
 import com.grievance.entity.Status;
 import com.grievance.entity.Ticket;
 import com.grievance.entity.TicketType;
 import com.grievance.entity.UserType;
+import com.grievance.exception.EmployeeNotFoundException;
 import com.grievance.exception.TicketNotFoundException;
 import com.grievance.exception.UnauthorisedUserException;
 import com.grievance.repository.DepartmentRepository;
@@ -54,6 +63,10 @@ public class TicketServiceTest {
 	private TicketInDto ticketInDto;
 	
 	private TicketOutDto ticketOutDto;
+	
+	private TicketOutWOComment ticketOutWOComment;
+	
+	private TicketUpdateDto ticketUpdateDto;
 	
 	private Ticket ticket;
 	
@@ -101,6 +114,18 @@ public class TicketServiceTest {
 		ticketOutDto.setStatus(Status.INPROGRESS);
 		ticketOutDto.setTitle("Reimbursement");
 		
+		Comment comment1 = new Comment();
+		comment1.setDescription("Hello1");
+		comment1.setUserName("ayushi@nucleusteq.com");
+		
+		Comment comment2 = new Comment();
+		comment2.setDescription("Hello2");
+		comment2.setUserName("ayushi@nucleusteq.com");
+		
+		List<Comment> list = new ArrayList<Comment>();
+		list.add(comment1);
+		list.add(comment2);
+		
 		ticket = new Ticket();
 		ticket.setComments(null);
 		ticket.setDepartment(department);
@@ -110,16 +135,30 @@ public class TicketServiceTest {
 		ticket.setTitle("Reimbursement");
 		ticket.setDateOpened(new Date());
 		ticket.setLastUpdated(new Date());
+		ticket.setComments(list);
 		
 	    updatedTicket = new Ticket();
 		updatedTicket.setTicketId(66);
 		updatedTicket.setDescription("Hello");
 		updatedTicket.setDepartment(department);
 		
+		ticketUpdateDto = new TicketUpdateDto();
+		ticketUpdateDto.setDescription("Hello");
+		ticketUpdateDto.setStatus(Status.INPROGRESS);
+		
+		ticketOutWOComment = new TicketOutWOComment();
+		ticketOutWOComment.setTicketId(1);
+		ticketOutWOComment.setDepartment("FINANCE");
+		ticketOutWOComment.setDescription("Reimbursement");
+		ticketOutWOComment.setEmployee("ayushi@nucleusteq.com");
+		ticketOutWOComment.setTicketType(TicketType.GRIEVANCE);
+		ticketOutWOComment.setTitle("Reimbursement");
+		
 		lenient().when(modelMapper.map(ticketInDto, Ticket.class)).thenReturn(ticket);
 		
 		lenient().when(modelMapper.map(ticket, TicketOutDto.class)).thenReturn(ticketOutDto);
 		
+		lenient().when(modelMapper.map(ticket, TicketOutWOComment.class)).thenReturn(ticketOutWOComment);
 		
 		
 		
@@ -136,14 +175,16 @@ public class TicketServiceTest {
 	
 	@Test
 	void fetch_all_tickets() {
-		List<TicketOutDto> dtos = new ArrayList<TicketOutDto>();
-		dtos.add(ticketOutDto);
-		List<Ticket> list = new ArrayList<Ticket>();
-		list.add(ticket);
-		when(ticketRepository.findAll()).thenReturn(list);
+		List<TicketOutWOComment> dtos = new ArrayList<TicketOutWOComment>();
+		dtos.add(ticketOutWOComment);
+		List<Ticket> llist = new ArrayList<Ticket>();
+		llist.add(ticket);
+		Page<Ticket> list = new PageImpl<Ticket>(llist);
+		when(ticketRepository.findAll(Mockito.any(PageRequest.class))).thenReturn(list);
 		
-		Optional<List<TicketOutDto>> list2 = ticketService.listOfAllTickets(0);
-		assertEquals(list.get(0).getTitle(), list2.get().get(0).getTitle());
+		Optional<List<TicketOutWOComment>> list2 = ticketService.listOfAllTickets(0);
+		System.out.println();
+		assertEquals(llist.get(0).getTitle(), list2.get().get(0).getTitle());
 	}
 	
 	@Test
@@ -155,9 +196,10 @@ public class TicketServiceTest {
 		list.add(ticket);
 		when(departmentRepository.findByDepartmentName("FINANCE")).thenReturn(new Department("FINANCE"));
 		
-		when(ticketRepository.findByDepartment(Mockito.any(Department.class))).thenReturn(list);
+		when(ticketRepository.findByDepartment(Mockito.any(Department.class),
+				PageRequest.of(0, 10).withSort(Sort.by("status")))).thenReturn(list);
 		
-		Optional<List<TicketOutDto>> optional = ticketService.listOfAllTicketsByDepartmentName("FINANCE");
+		Optional<List<TicketOutWOComment>> optional = ticketService.listOfAllTicketsByDepartmentName("FINANCE");
 		
 		assertEquals("FINANCE", optional.get().get(0).getDepartment());
 	}
@@ -180,7 +222,7 @@ public class TicketServiceTest {
 		
 		when(ticketRepository.save(ticket)).thenReturn(ticket);
 					
-		Optional<TicketOutDto> optional = ticketService.updateTicket(ticketInDto, 66, "ayushi@nucleusteq.com");
+		Optional<TicketOutDto> optional = ticketService.updateTicket(ticketUpdateDto, 66, "ayushi@nucleusteq.com");
 		
 		
 		
@@ -197,10 +239,11 @@ public class TicketServiceTest {
 
 		ticketInDto.setTicketId(66);
 		
-		when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
+		when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(null);
+		
 				
-		assertThrows(UnauthorisedUserException.class, ()->{
-			ticketService.updateTicket(ticketInDto, 66, "ayushi@gmail.com");
+		assertThrows(EmployeeNotFoundException.class, ()->{
+			ticketService.updateTicket(ticketUpdateDto, 66, "ayushi@gmail.com");
 		});
 	}
 	
@@ -213,7 +256,27 @@ public class TicketServiceTest {
 		when(ticketRepository.findById(Mockito.anyInt())).thenReturn(Optional.empty());
 		
 		assertThrows(TicketNotFoundException.class, ()->{
-			ticketService.updateTicket(ticketInDto, 66, "ayushi@gmail.com");
+			ticketService.updateTicket(ticketUpdateDto, 66, "ayushi@gmail.com");
+		});
+	}
+	
+	@Test
+	void when_find_ticket_by_id_succeed() {
+		ticket.setTicketId(1);
+		when(ticketRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(ticket));
+		
+		Optional<TicketOutDto> optionalTicket = ticketService.findTicketByTicketId(1);
+		
+		assertEquals(ticket.getDescription(), optionalTicket.get().getDescription());
+	}
+	
+	@Test
+	void when_find_ticket_by_id_fails() {
+		ticket.setTicketId(1);
+		when(ticketRepository.findById(Mockito.anyInt())).thenReturn(Optional.empty());
+				
+		assertThrows(TicketNotFoundException.class, ()->{
+			ticketService.findTicketByTicketId(1);
 		});
 	}
 }

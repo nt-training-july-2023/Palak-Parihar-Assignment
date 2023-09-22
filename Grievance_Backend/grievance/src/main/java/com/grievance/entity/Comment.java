@@ -16,7 +16,8 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
 import org.hibernate.annotations.CreationTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Entity class representing a comment.
@@ -47,6 +48,7 @@ public class Comment {
    */
   @CreationTimestamp
   @Temporal(TemporalType.TIMESTAMP)
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Kolkata")
   private Date createdOn;
 
   /**
@@ -54,7 +56,7 @@ public class Comment {
    */
   @ManyToOne
   @JoinColumn(name = "ticketId")
-  @JsonBackReference
+  @JsonIgnore
   private Ticket ticket;
 
   /**
@@ -145,5 +147,18 @@ public class Comment {
    */
   public void setTicket(final Ticket ticketField) {
     this.ticket = ticketField;
+  }
+
+  /**
+   * constructor.
+   * @param desc
+   */
+  public Comment(final String desc) {
+      this.description = desc;
+  }
+  /**
+   *
+   */
+  public Comment() {
   }
 }

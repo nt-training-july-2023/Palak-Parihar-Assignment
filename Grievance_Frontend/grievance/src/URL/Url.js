@@ -12,4 +12,6 @@ export const GENERATE_NEW_DEPARTMENTS_URL = DEPARTMENT_BASE_URL + '/save'
 export const TICKET_BASE_URL = BASE_URL + "/ticket";
 export const FETCH_ALL_TICKETS_URL = TICKET_BASE_URL + "/listAllTickets";
 export const GENERATE_NEW_TICKET_URL = TICKET_BASE_URL + '/addTicket'
+export const GET_TICKET_BY_ID_URL = TICKET_BASE_URL + "/getTicket"
+export const UPDATE_TICKET_BY_ID_URL = TICKET_BASE_URL + "/update"
 

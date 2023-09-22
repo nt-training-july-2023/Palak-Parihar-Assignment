@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react"
-import { FETCH_ALL_USERS } from "../../Service/EmployeeServices"
-import './ListEmployees.css';
-import { useNavigate } from "react-router";
+import { FETCH_ALL_DEPARTMENTS, GENERATE_NEW_DEPARTMENT } from "../../Service/DepartmentService"
+import Modal from "../../Components/UI/Modal/Modal"
+import NewDepartment from "../NewDepartment/NewDepartment"
+import { useNavigate } from "react-router"
 
 
-export default function ListEmployees(props) {
+export default function ListDepartments(props) {
 
-    const [employees, setEmployees] = useState([]);
+    const [departments, setDepartments] = useState([])
+    const [modal, setModal] = useState()
     const navigate = useNavigate()
+
     useEffect(() => {
 
         if(sessionStorage.getItem('userDetails') === null){
@@ -22,42 +25,45 @@ export default function ListEmployees(props) {
             }
         }
 
-        FETCH_ALL_USERS()
+        FETCH_ALL_DEPARTMENTS()
             .then(res => {
+                setDepartments(res.data)
                 console.log(res.data)
-                setEmployees(res.data)
             })
             .catch(err => {
-                console.log(err.data)
+                setModal(() => <Modal message={err.data.response.data} onClick={closeModal} />)
             })
-    }, [])
+    }, [modal])
+
+    const closeModal = () => {
+        setModal(() => <></>)
+    }
+
+    const AddDepartment = () => {
+        setModal(() => <Modal component={<NewDepartment closeModal={closeModal} />} />)
+    }
 
     return (
         <>
+            {modal}
             <div className="list_heading">
-                Employees
+                Departments
             </div>
             <div className="list_main_container">
-
                 <table id="list_content">
                     <tr>
-                        <th>FullName</th>
-                        <th>email</th>
-                        <th>department</th>
-                        <th>userType</th>
+                        <th>Department Id</th>
+                        <th>Department Name</th>
                         <th>Actions</th>
                     </tr>
                     {
-                        employees.map(e => {
+                        departments.map(d => {
                             return (
                                 <>
                                     <tr>
-                                        <td>{e.fullName}</td>
-                                        <td>{e.email}</td>
-                                        <td>{e.department}</td>
-                                        <td>{e.userType}</td>
+                                        <td>{d.departmentId}</td>
+                                        <td>{d.departmentName}</td>
                                         <td>
-                                            <i id="icon" class='fas fa-edit' />
                                             <i id="icon" class='fas fa-trash-alt'></i>
                                         </td>
 
@@ -68,6 +74,9 @@ export default function ListEmployees(props) {
                     }
 
                 </table>
+            </div>
+            <div className="add_entry">
+                Add Department  <i id="icon" class='fas fa-plus-circle' onClick={() => AddDepartment()}></i>
             </div>
         </>
     )

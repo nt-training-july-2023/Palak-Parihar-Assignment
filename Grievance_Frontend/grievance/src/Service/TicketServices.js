@@ -1,12 +1,13 @@
 import axios from "axios"
-import { FETCH_ALL_TICKETS_URL, GENERATE_NEW_TICKET_URL } from "../URL/Url"
+import { FETCH_ALL_TICKETS_URL, GENERATE_NEW_TICKET_URL, GET_TICKET_BY_ID_URL, UPDATE_TICKET_BY_ID_URL } from "../URL/Url"
 
 
 const userDetails = () => {
-    return JSON.parse(sessionStorage.getItem('userDetails'))
+    const userDetailsData = JSON.parse(sessionStorage.getItem('userDetails'))
+    return userDetailsData;
 }
 
-export const FETCH_ALL_TICKETS = () => {
+export const FETCH_ALL_TICKETS = (parameters) => {
     let userValues = userDetails()
     let headersRequired = {
         email: userValues.email,
@@ -14,9 +15,10 @@ export const FETCH_ALL_TICKETS = () => {
     }
     return new Promise((resolve, reject) => {
         axios({
-            url: FETCH_ALL_TICKETS_URL + "?page=0",
+            url: FETCH_ALL_TICKETS_URL,
             method: 'GET',
-            headers : headersRequired
+            headers: headersRequired,
+            params: parameters
         }).then((res) => {
             return resolve({ data: res.data })
         }).catch((err) => {
@@ -36,11 +38,57 @@ export const GENERATE_NEW_TICKET = (ticketData) => {
             url: GENERATE_NEW_TICKET_URL,
             method: 'POST',
             data: ticketData,
-            headers:headersRequired
+            headers: headersRequired
         }).then(res => {
             return resolve({ data: res.data })
         }).catch(err => {
             return reject({ data: err })
         })
     });
+}
+
+export const GET_TICKET_BY_ID = (Id) => {
+    let userValues = userDetails()
+    let headersRequired = {
+        email: userValues.email,
+        password: userValues.password
+    }
+    return new Promise((resolve, reject) => {
+        axios({
+            url: GET_TICKET_BY_ID_URL,
+            params: {
+                ticketId: Id
+            },
+            headers: headersRequired
+        }).then(res => {
+            return resolve({ data: res.data })
+        }).catch(err => {
+            return reject({ data: err })
+        })
+    })
+}
+
+export const UPDATE_TICKET_BY_ID = (Id, ticketUpdate) => {
+    let userValues = userDetails()
+    let headersRequired = {
+        email: userValues.email,
+        password: userValues.password
+    }
+    console.log(ticketUpdate)
+
+    return new Promise((resolve, reject) => {
+        axios({
+            url: UPDATE_TICKET_BY_ID_URL,
+            params: {
+                ticketId: Id
+            },
+            data: ticketUpdate,
+            method: 'PUT',
+            headers: headersRequired
+        }).then(res => {
+            return resolve({ data: res.data })
+        }).catch(err => {
+            return reject({ data: err })
+        })
+    })
 }

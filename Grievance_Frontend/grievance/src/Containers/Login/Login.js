@@ -1,5 +1,4 @@
 import "./Login.css";
-import '../../Dashboard/Dashboard'
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom'
 import InputElement from "../../Components/UI/InputElement/InputElement";
@@ -8,7 +7,7 @@ import Button from "../../Components/UI/Button/Button";
 import { LOGIN_USER } from "../../Service/EmployeeServices";
 import Spinner from "../../Components/UI/Spinner/Spinner";
 
-export default function Login({ callback }) {
+export default function Login(props) {
     let cont = {
         isValid: false,
         submit: false,
@@ -37,7 +36,7 @@ export default function Login({ callback }) {
                 validation: {
                     required: true,
                     minLength: 6,
-                    isPassword:true
+                    isPassword: true
                 },
                 valid: false,
                 touched: false
@@ -108,7 +107,7 @@ export default function Login({ callback }) {
         if (rules.isPassword) {
             const pattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,20}$/;
             isValid = pattern.test(value) && isValid
-            if(!isValid){
+            if (!isValid) {
                 setMessage("Password doesn't match the requirements")
             }
         }
@@ -146,9 +145,9 @@ export default function Login({ callback }) {
         }
 
 
-        const response = LOGIN_USER(values)
+        LOGIN_USER(values)
             .then(res => {
-                setModal(() => <Modal component={Spinner} />)
+                setModal(() => <Modal component={<Spinner />} />)
                 console.log(values)
                 let userValues = {
                     email: values.email,
@@ -160,14 +159,14 @@ export default function Login({ callback }) {
                     isAuthenticated: true
                 }
                 sessionStorage.setItem('userDetails', JSON.stringify(userValues));
-                if(userValues.firstTimeUser){
+                if (userValues.firstTimeUser) {
                     setTimeout(() => {
                         navigate("/changePassword")
                     }, 1000);
                     return res.data;
                 }
                 setTimeout(() => {
-                    navigate("/listAllTickets")
+                    navigate("/tickets")
                 }, 1000);
                 return res.data;
             }).catch(err => {

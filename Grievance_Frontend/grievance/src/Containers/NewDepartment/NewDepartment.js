@@ -4,8 +4,10 @@ import classes from './NewDepartment.module.css'
 import InputElement from '../../Components/UI/InputElement/InputElement';
 import { FETCH_ALL_DEPARTMENTS, GENERATE_NEW_DEPARTMENT } from '../../Service/DepartmentService';
 import Modal from '../../Components/UI/Modal/Modal';
+import { useNavigate } from 'react-router';
 
 export default function NewDepartment(props) {
+
     const departmentName = {
         elementType: 'input',
         elementConfig: {
@@ -27,16 +29,6 @@ export default function NewDepartment(props) {
     const [controls, setControls] = useState(departmentName);
     const [modal, setModal] = useState();
 
-    useEffect(() => {
-        const departments = FETCH_ALL_DEPARTMENTS()
-            .then(response => {
-                return response.data;
-            }).catch(error => {
-                return error.data
-            })
-        console.log(departments)
-    })
-
     const inputChangeHandler = (e) => {
         const updatedControls = {
             ...controls,
@@ -56,6 +48,8 @@ export default function NewDepartment(props) {
         }
         const savedDepartment = GENERATE_NEW_DEPARTMENT(departmentData)
             .then(response => {
+                console.log(response)
+                setModal(() => <Modal message="Department successfully created" onClick={closeModal} />)
                 return response.data;
             }).catch(error => {
                 setModal(() => <Modal message={error.data.response.data} onClick={closeModal} />)
@@ -80,7 +74,12 @@ export default function NewDepartment(props) {
                 {modal}
             </div>
             <div className="reg-container">
-                <h3 className={classes.heading}>Generate New Department</h3>
+                <div className={classes.heading}>
+                    Generate New Department
+                    <div id={classes.icon_close}>
+                        <i class="fa fa-window-close" onClick={props.closeModal}></i>
+                    </div>
+                </div>
                 <div className={classes.outerDiv}>
                     <form onSubmit={submithandler}>
                         {formElement}

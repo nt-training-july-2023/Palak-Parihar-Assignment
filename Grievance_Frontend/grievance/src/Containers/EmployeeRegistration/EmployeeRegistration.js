@@ -5,6 +5,7 @@ import Button from '../../Components/UI/Button/Button';
 import { FETCH_ALL_DEPARTMENTS } from '../../Service/DepartmentService';
 import { SAVE_NEW_EMPLOYEE } from '../../Service/EmployeeServices';
 import Modal from '../../Components/UI/Modal/Modal';
+import { useNavigate } from 'react-router';
 
 
 export default function EmployeeRegistration(props) {
@@ -13,6 +14,7 @@ export default function EmployeeRegistration(props) {
     const [message, setMessage] = useState();
 
     const [modal, setModal] = useState();
+    const navigate = useNavigate()
 
     let cont = {
         isValid: false,
@@ -110,6 +112,19 @@ export default function EmployeeRegistration(props) {
     }
 
     useEffect(() => {
+        
+        if(sessionStorage.getItem('userDetails') === null){
+            navigate('/logout')
+            return
+        }else{ 
+            let values = JSON.parse(sessionStorage.getItem('userDetails'))
+            console.log(values.firstTimeUser)
+            if(values.firstTimeUser){
+                navigate('/changePassword')
+                return
+            }
+        }
+
         const departmentNames = async () => FETCH_ALL_DEPARTMENTS()
             .then(response => {
                 let updatedControls = {

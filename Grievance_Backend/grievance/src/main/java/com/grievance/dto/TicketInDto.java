@@ -4,8 +4,12 @@
 package com.grievance.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
- import com.grievance.entity.Status;
+import com.grievance.entity.Comment;
+import com.grievance.entity.Status;
 import com.grievance.entity.TicketType;
+
+import java.util.List;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -80,6 +84,12 @@ public class TicketInDto {
    */
   @JsonProperty("employee")
   private EmployeeInDto employeeInDto;
+
+  /**
+   * comments own by this ticket.
+   */
+  @JsonProperty("comments")
+  private List<Comment> comments;
 
   /**
    * @return the ticketId
@@ -177,6 +187,22 @@ return employeeInDto;
  */
 public void setEmployeeInDto(final EmployeeInDto employeeInDtoField) {
 this.employeeInDto = employeeInDtoField;
+}
+
+/**
+*
+* @return list of comments.
+*/
+public List<Comment> getComments() {
+  return comments;
+}
+
+/**
+ *
+ * @param commentsField
+ */
+public void get(final List<Comment> commentsField) {
+   this.comments = commentsField;
 }
 
 }

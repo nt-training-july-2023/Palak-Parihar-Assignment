@@ -18,6 +18,7 @@
     padding: 10px 20px;
     width: 100%;
     overflow: hidden;
+    height: 100%;
 
 }
 
@@ -38,11 +39,15 @@
 }
 
 .commentContent{
-    background-color: rgb(241, 240, 240);
+    display: inline-block;
+    background-color: #e2dddd;
     border : 1px solid black;
     border-radius: 10px 10px 0px 10px;
-    padding: 30px 20px 10px 20px;
-    margin: 50px 0px;
+    padding: 10px;
+    margin: 12px 0px;
+    align-self: flex-end;
+    width: 100%;
+    word-break: break-all;
 }
 
 .outerDiv {
@@ -57,12 +62,12 @@
 
 .heading {
     display: flex;
-    height: 120px;
+    min-height: 50px;
     width: 100%;
-    background-color: #53341d;
+    background-color: #737374;
     border-radius: 10px 10px 0px 0px;
     align-items: center;
-    justify-content: center;
+    text-align: right;
     color: #fff;
 }
 
@@ -85,4 +90,32 @@ label{
 
 #icon_close{
     cursor: pointer;
+    width: 50%;
+    float: right;
+    padding: 10px;
+}
+
+h3{
+    width: 60%;
+}
+
+p{
+    margin: 0px;
+}
+
+.date{
+    font-size: 13px;
+    opacity: 0.8;
+    padding: 0px;
+    float: right;
+}
+
+.userName{
+    padding: 0px;
+    font-weight: bolder;
+    /* font-size: larger; */
+}
+
+.description{
+    padding: 0px;
 }

@@ -5,17 +5,18 @@ package com.grievance.service;
 
 import com.grievance.dto.TicketInDto;
 import com.grievance.dto.TicketOutDto;
-import com.grievance.entity.Department;
+import com.grievance.dto.TicketOutWOComment;
+import com.grievance.dto.TicketUpdateDto;
+import com.grievance.entity.Comment;
 import com.grievance.entity.Employee;
+import com.grievance.entity.Status;
 import com.grievance.entity.Ticket;
 import com.grievance.exception.EmployeeNotFoundException;
 import com.grievance.exception.TicketNotFoundException;
 import com.grievance.exception.UnauthorisedUserException;
-import com.grievance.repository.DepartmentRepository;
 import com.grievance.repository.EmployeeRepository;
 import com.grievance.repository.TicketRepository;
 
-import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -46,13 +47,6 @@ public class TicketServiceImpl implements TicketService {
   private TicketRepository ticketRepository;
 
   /**
-   * department repository instance provide access
-   * method for interacting with database.
-   */
-  @Autowired
-  private DepartmentRepository departmentRepository;
-
-  /**
    * employee repository instance provide access
    * method for interacting with database.
    */
@@ -80,13 +74,14 @@ public class TicketServiceImpl implements TicketService {
    * @return optional of list of ticketOut DTO.
    */
   @Override
-  public Optional<List<TicketOutDto>> listOfAllTickets(final Integer page) {
-    List<TicketOutDto> tickets = new ArrayList<TicketOutDto>();
+  public Optional<List<TicketOutWOComment>> listOfAllTickets(
+         final Integer page) {
+    List<TicketOutWOComment> tickets = new ArrayList<TicketOutWOComment>();
     ticketRepository
       .findAll(PageRequest.of(page, pageSize).withSort(Sort.by("status")))
       .forEach(
         e -> {
-          tickets.add(convertToDto(e));
+          tickets.add(convertToWOCommentDto(e));
         }
       );
     return Optional.ofNullable(tickets);
@@ -94,21 +89,22 @@ public class TicketServiceImpl implements TicketService {
 
   /**
    * method to access rickets by their department Name.
-   * @param departmentName
+   * @param email
    * @return list of ticket out DTO
    */
   @Override
-  public Optional<List<TicketOutDto>> listOfAllTicketsByDepartmentName(
-    final String departmentName
+  public Optional<List<TicketOutWOComment>> listOfAllTicketsByDepartmentName(
+    final String email
   ) {
-    Department department = departmentRepository.findByDepartmentName(
-         departmentName);
-    List<TicketOutDto> ticketOutDtos = new ArrayList<TicketOutDto>();
+    Employee employee = employeeRepository.findByEmail(email);
+    List<TicketOutWOComment> ticketOutDtos =
+             new ArrayList<TicketOutWOComment>();
     ticketRepository
-      .findByDepartment(department)
+      .findByDepartment(employee.getDepartment(),
+             PageRequest.of(0, pageSize).withSort(Sort.by("status")))
       .forEach(
         e -> {
-          ticketOutDtos.add(convertToDto(e));
+          ticketOutDtos.add(convertToWOCommentDto(e));
         }
       );
     return Optional.ofNullable(ticketOutDtos);
@@ -116,35 +112,118 @@ public class TicketServiceImpl implements TicketService {
 
   /**
    * method to update ticket.
-   * @param ticketInDto
+   * @param ticketUpdateDto
    * @return updated ticket.
    */
   @Override
   public Optional<TicketOutDto> updateTicket(
-          final TicketInDto ticketInDto, final Integer ticketId,
+          final TicketUpdateDto ticketUpdateDto, final Integer ticketId,
           final String email
           ) {
        Employee employee = employeeRepository.findByEmail(email);
        if (Objects.isNull(employee)) {
           throw new EmployeeNotFoundException(email);
        } else {
-             if (!employee.getDepartment().getDepartmentName().equals(
-                    ticketInDto.getDepartment().getDepartmentName())) {
-                throw new UnauthorisedUserException(email);
-         }
-      }
-    Optional<Ticket> ticket = ticketRepository.findById(ticketId);
-    if (ticket.isPresent()) {
-        Date date = new Date(System.currentTimeMillis());
-        ticket.get().setLastUpdated(date);
-        ticket.get().setStatus(ticketInDto.getStatus());
+             Optional<Ticket> ticket = ticketRepository.findById(ticketId);
+             if (ticket.isPresent()) {
+                 if (!employee.getDepartment().getDepartmentName()
+                       .equals(ticket.get().getDepartment()
+                               .getDepartmentName())) {
+                     throw new UnauthorisedUserException(email);
+                }
+                if (!Objects.isNull(ticketUpdateDto.getStatus())) {
+                     ticket.get().setStatus(ticketUpdateDto.getStatus());
+                }
+                Comment comment = new Comment(ticketUpdateDto.getDescription());
+                comment.setTicket(ticket.get());
+                comment.setUserName(email);
+                 ticket.get().getComments().add(comment);
+                 Ticket updatedTicket = ticketRepository.save(ticket.get());
+                 return Optional.of(convertToDto(updatedTicket));
+             } else {
+                 throw new TicketNotFoundException(ticketId);
+          }
+  }
+  }
 
-        Ticket updatedTicket = ticketRepository.save(ticket.get());
-        TicketOutDto ticketOutDto = convertToDto(updatedTicket);
-        return Optional.ofNullable(ticketOutDto);
-    } else {
-        throw new TicketNotFoundException(ticketId);
+  /**
+  * @param page
+  * @param email
+  * @param status
+  * @return list of tickets raised by user.
+  */
+  @Override
+  public Optional<List<TicketOutWOComment>> listTicketsRaisedByUser(
+         final Integer page,
+         final Status status,
+         final String email) {
+      Employee employee = employeeRepository.findByEmail(email);
+      if (Objects.isNull(employee)) {
+          throw new EmployeeNotFoundException(email);
+      } else {
+         List<TicketOutWOComment> ticketOutDtos =
+               new ArrayList<TicketOutWOComment>();
+         ticketRepository.findByEmployee(employee,
+               PageRequest.of(page, pageSize).withSort(Sort.by("status")))
+           .forEach(e -> {
+               ticketOutDtos.add(convertToWOCommentDto(e));
+           });
+          return Optional.ofNullable(ticketOutDtos);
+     }
+  }
+
+  /**
+  *
+  * @param ticketId
+  * @return ticket
+  */
+  @Override
+  public Optional<TicketOutDto> findTicketByTicketId(final Integer ticketId) {
+     Optional<Ticket> ticket = ticketRepository.findById(ticketId);
+     if (ticket.isPresent()) {
+        Optional<TicketOutDto> optionalTicketOut =
+                 Optional.of(convertToDto(ticket.get()));
+        return optionalTicketOut;
+     }
+     throw new TicketNotFoundException(ticketId);
+  }
+
+  /**
+  * @param status
+  * @param page
+  * @param email
+  * @return list of tickets.
+  */
+  @Override
+  public Optional<List<TicketOutWOComment>> listTicketByStatusAndEmployee(
+         final Integer page,
+         final Status status,
+         final String email) {
+    Employee employee = employeeRepository.findByEmail(email);
+    List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
+    if (!Objects.isNull(employee)) {
+         ticketRepository
+           .findByStatusAndEmployee(status, employee,
+                  PageRequest.of(page, pageSize)).forEach(e -> {
+                        list.add(convertToWOCommentDto(e));
+             });
     }
+    return Optional.of(list);
+}
+
+  /**
+   * @param status
+   * @return list of tickets.
+   */
+  @Override
+  public Optional<List<TicketOutWOComment>> listTicketsByStatus(
+        final Status status) {
+     List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
+     ticketRepository.findByStatus(status)
+         .forEach(e -> {
+              list.add(convertToWOCommentDto(e));
+         });
+     return Optional.ofNullable(list);
   }
 
   /**
@@ -169,5 +248,18 @@ public class TicketServiceImpl implements TicketService {
   public Ticket convertToEntity(final TicketInDto ticketInDto) {
     Ticket ticket = modelMapper.map(ticketInDto, Ticket.class);
     return ticket;
+  }
+
+  /**
+   * Converts an Ticket entity object into an
+   * TicketOutDto data transfer object (DTO).
+   *
+   * @param ticket The Ticket entity to be converted.
+   * @return An TicketOutWOComment representing the employee's data.
+   */
+  public TicketOutWOComment convertToWOCommentDto(final Ticket ticket) {
+     TicketOutWOComment ticketOutWOComment =
+              modelMapper.map(ticket, TicketOutWOComment.class);
+     return ticketOutWOComment;
   }
 }

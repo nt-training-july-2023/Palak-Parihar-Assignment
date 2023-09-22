@@ -5,17 +5,18 @@
     flex-direction: column;
     height: fit-content;
     margin-top: 20px;
+    width: 100%;
 }
 
 .reg-content{
     height: fit-content;
-    width: 50%;
+    width: 60%;
     border: 0.2px solid black;
     border-top: none;
     padding: 0px 40px 40px 40px;
     background-color: rgb(240, 240, 240);
     border-radius: 0px 0px 5px 5px;
-    box-shadow: 20px 20px 10px grey;
+    box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.4);
 }
 
 .form-container{
@@ -36,7 +37,7 @@
     background-color: #9c9c9c;
     color: #fff;
     margin: 0px !important;
-    width: 50%;
+    width: 60%;
     padding: 10px;
     border-radius: 5px 5px 0px 0px;
     align-items: center;

@@ -9,7 +9,7 @@
 		<version>2.7.15</version>
 	</parent>
 
-	<groupId>com</groupId>
+	<groupId>com.grievance.exceptionHandler</groupId>
 	<artifactId>grievance</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>grievance</name>

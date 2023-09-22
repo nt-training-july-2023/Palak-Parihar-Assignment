@@ -26,6 +26,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.grievance.authentication.AuthenticatingUser;
 import com.grievance.dto.TicketInDto;
 import com.grievance.dto.TicketOutDto;
+import com.grievance.dto.TicketOutWOComment;
+import com.grievance.dto.TicketUpdateDto;
 import com.grievance.entity.Status;
 import com.grievance.entity.Ticket;
 import com.grievance.entity.TicketType;
@@ -86,7 +88,7 @@ public class TicketControllerTest {
 	
 	@Test
 	public void fetch_all_tickets() throws Exception {
-		List<TicketOutDto> ticketOutDtos = new ArrayList<TicketOutDto>();
+		List<TicketOutWOComment> ticketOutDtos = new ArrayList<TicketOutWOComment>();
 		
 		when(authenticatingUser.checkIfUserIsAdmin(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
 		
@@ -96,20 +98,40 @@ public class TicketControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.header("email", "ayushi@nucleusteq.com")
 				.header("password", "Ayushi#123")
+				.param("page", "0")
 				).andExpect(status().isAccepted()).andDo(MockMvcResultHandlers.print());
 	}
 	
 	@Test
 	public void fetch_all_tickets_by_department() throws Exception {
-		List<TicketOutDto> ticketOutDtos = new ArrayList<TicketOutDto>();
+		List<TicketOutWOComment> ticketOutDtos = new ArrayList<TicketOutWOComment>();
 		
-		when(authenticatingUser.checkIfUserExists(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
+		when(authenticatingUser.checkIfUserIsAdmin(Mockito.anyString(), Mockito.anyString())).thenReturn(false);
+		
+//		when(empl)
+		when(ticketService.listOfAllTicketsByDepartmentName(Mockito.anyString())).thenReturn(Optional.of(ticketOutDtos));
+		
+		mockMvc.perform(MockMvcRequestBuilders.get("/ticket/listAllTickets")
+				.contentType(MediaType.APPLICATION_JSON)
+				.param("departmentName", "FINANCE")
+				.param("page", "0")
+				.header("email", "ayushi@nucleusteq.com")
+				.header("password", "Ayushi#123")
+				).andExpect(status().isAccepted()).andDo(MockMvcResultHandlers.print());
+	}
+	
+	@Test
+	public void fetch_all_my_tickets() throws Exception {
+		List<TicketOutWOComment> ticketOutDtos = new ArrayList<TicketOutWOComment>();
+		
 		
 		when(ticketService.listOfAllTicketsByDepartmentName(Mockito.anyString())).thenReturn(Optional.of(ticketOutDtos));
 		
 		mockMvc.perform(MockMvcRequestBuilders.get("/ticket/listAllTickets")
 				.contentType(MediaType.APPLICATION_JSON)
 				.param("departmentName", "FINANCE")
+				.param("page", "0")
+				.param("myTickets", "true")
 				.header("email", "ayushi@nucleusteq.com")
 				.header("password", "Ayushi#123")
 				).andExpect(status().isAccepted()).andDo(MockMvcResultHandlers.print());
@@ -118,7 +140,7 @@ public class TicketControllerTest {
 	@Test
 	public void update_ticket_successfully() throws Exception {
 		
-		when(ticketService.updateTicket(Mockito.any(TicketInDto.class), Mockito.anyInt(), Mockito.anyString())).thenReturn(Optional.of(ticketOutDto));
+		when(ticketService.updateTicket(Mockito.any(TicketUpdateDto.class), Mockito.anyInt(), Mockito.anyString())).thenReturn(Optional.of(ticketOutDto));
 		mockMvc.perform(MockMvcRequestBuilders.put("/ticket/update?ticketId=66")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(ticketInDto))
@@ -131,13 +153,37 @@ public class TicketControllerTest {
 	@Test
 	public void update_ticket_failed() throws Exception {
 		
-		when(ticketService.updateTicket(Mockito.any(TicketInDto.class), Mockito.anyInt(), Mockito.anyString())).thenThrow(TicketNotFoundException.class);
-		mockMvc.perform(MockMvcRequestBuilders.put("/ticket/update?ticketId=66")
+		when(ticketService.updateTicket(Mockito.any(TicketUpdateDto.class), Mockito.anyInt(), Mockito.anyString())).thenThrow(TicketNotFoundException.class);
+		mockMvc.perform(MockMvcRequestBuilders.put("/ticket/update")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(ticketInDto))
 				.header("email", "ayushi@nucleusteq.com")
 				.header("password", "Ayushi#123")
 				.param("ticketId", "66")
+				).andExpect(status().isNotFound()).andDo(MockMvcResultHandlers.print());
+	}
+	
+	@Test
+	public void get_ticket_by_id_success() throws Exception {
+		when(ticketService.findTicketByTicketId(Mockito.anyInt())).thenReturn(Optional.of(ticketOutDto));
+		
+		mockMvc.perform(MockMvcRequestBuilders.get("/ticket/getTicket")
+				.contentType(MediaType.APPLICATION_JSON)
+				.header("email", "ayushi@nucleusteq.com")
+				.header("password", "Ayushi#123")
+				.param("ticketId", "1")
+				).andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
+	}
+	
+	@Test
+	public void get_ticket_by_id_fails() throws Exception {
+		when(ticketService.findTicketByTicketId(Mockito.anyInt())).thenThrow(TicketNotFoundException.class);
+		
+		mockMvc.perform(MockMvcRequestBuilders.get("/ticket/getTicket")
+				.contentType(MediaType.APPLICATION_JSON)
+				.header("email", "ayushi@nucleusteq.com")
+				.header("password", "Ayushi#123")
+				.param("ticketId", "1")
 				).andExpect(status().isNotFound()).andDo(MockMvcResultHandlers.print());
 	}
 }

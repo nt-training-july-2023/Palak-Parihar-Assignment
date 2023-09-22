@@ -12,9 +12,9 @@ public enum Status {
   /**
    * In Progress type of status.
    */
-  INPROGRESS,
+  BEING_ADDRESSED,
   /**
    * close type of status.
    */
-  CLOSED
+  RESOLVED
 }

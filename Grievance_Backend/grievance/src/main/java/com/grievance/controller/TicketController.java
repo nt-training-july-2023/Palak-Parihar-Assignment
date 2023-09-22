@@ -3,8 +3,10 @@ package com.grievance.controller;
 import com.grievance.authentication.AuthenticatingUser;
 import com.grievance.dto.TicketInDto;
 import com.grievance.dto.TicketOutDto;
-import com.grievance.exception.TicketNotFoundException;
-import com.grievance.exception.UnauthorisedUserException;
+import com.grievance.dto.TicketOutWOComment;
+import com.grievance.dto.TicketUpdateDto;
+import com.grievance.entity.Status;
+import com.grievance.exception.EmployeeNotFoundException;
 import com.grievance.service.TicketService;
 import java.util.List;
 import java.util.Objects;
@@ -41,6 +43,7 @@ public class TicketController {
   @Autowired
   private AuthenticatingUser authenticatingUser;
 
+
   /**
    *
    * Controller method to create a new ticket.
@@ -58,67 +61,86 @@ public class TicketController {
   /**
    * controller method to return list of all tickets.
    *
-   * @param departmentName
    * @param email
    * @param password
    * @param page
+   * @param myTickets
+   * @param status
    * @return ResponseEntity with optional of list of all tickets.
    */
   @GetMapping("/listAllTickets")
   public ResponseEntity<?> listAllTickets(
-    @RequestParam(required = false) final String departmentName,
     @RequestHeader final String email,
     @RequestHeader final String password,
-    @RequestParam final Integer page
+    @RequestParam final Integer page,
+    @RequestParam(required = false) final Status status,
+    @RequestParam(required = false) final Boolean myTickets
   ) {
-    try {
-      if (Objects.isNull(departmentName)) {
-        if (!authenticatingUser.checkIfUserIsAdmin(email, password)) {
-           throw new UnauthorisedUserException(email);
-        }
-        Optional<List<TicketOutDto>> optionalListOfTickets =
-              ticketService.listOfAllTickets(page);
-        return new ResponseEntity<>(optionalListOfTickets, HttpStatus.ACCEPTED);
+      if (!Objects.isNull(myTickets)) {
+         try {
+              if (!Objects.isNull(status)) {
+                  Optional<List<TicketOutWOComment>> optionalListOfTickets =
+                        ticketService.listTicketByStatusAndEmployee(
+                                page, status, email);
+                 return new ResponseEntity<>(optionalListOfTickets,
+                         HttpStatus.ACCEPTED);
+              }
+            Optional<List<TicketOutWOComment>> optionalListOfTickets =
+                    ticketService.listTicketsRaisedByUser(page, status, email);
+            return new ResponseEntity<>(optionalListOfTickets,
+                  HttpStatus.ACCEPTED);
+         } catch (EmployeeNotFoundException e) {
+           return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+         }
+       }
+      Boolean isAdmin = authenticatingUser.checkIfUserIsAdmin(email, password);
+      if (isAdmin) {
+            if (!Objects.isNull(status)) {
+               Optional<List<TicketOutWOComment>> optionalListOfTickets =
+                       ticketService.listTicketsByStatus(status);
+                    return new ResponseEntity<>(optionalListOfTickets,
+                     HttpStatus.ACCEPTED);
+         }
+          Optional<List<TicketOutWOComment>> optionalListOfTickets =
+                 ticketService.listOfAllTickets(page);
+          return new ResponseEntity<>(optionalListOfTickets,
+                  HttpStatus.ACCEPTED);
       } else {
-        Optional<List<TicketOutDto>> optionalListOfTickets =
-              ticketService.listOfAllTicketsByDepartmentName(
-          departmentName
-        );
-        return new ResponseEntity<>(optionalListOfTickets, HttpStatus.ACCEPTED);
+          Optional<List<TicketOutWOComment>> optionalListOfTickets =
+                  ticketService.listOfAllTicketsByDepartmentName(email);
+          return new ResponseEntity<>(optionalListOfTickets,
+                 HttpStatus.ACCEPTED);
       }
-    } catch (UnauthorisedUserException e) {
-      return new ResponseEntity<>("Unauthorised User", HttpStatus.UNAUTHORIZED);
-    }
   }
 
   /**
    * controller method to return list of all tickets.
    * @param ticketId
-   * @param ticketInDto
+   * @param ticketUpdateDto
    * @param email
-   * @param password
    * @return Responseentity with optional of updated TicketOut DTO.
    */
   @PutMapping("/update")
   public ResponseEntity<?> updateTickets(
           @RequestHeader final String email,
-          @RequestHeader final String password,
           @RequestParam final Integer ticketId,
-          @RequestBody final TicketInDto ticketInDto) {
-      try {
-           try {
-              authenticatingUser.checkIfUserExists(email, password);
-           } catch (UnauthorisedUserException e) {
-              return new ResponseEntity<>("Unauthorised User",
-                    HttpStatus.UNAUTHORIZED);
-          }
+          @RequestBody final TicketUpdateDto ticketUpdateDto) {
       Optional<TicketOutDto>  optionalTicketOutDto = ticketService.updateTicket(
-            ticketInDto, ticketId, email);
+            ticketUpdateDto, ticketId, email);
       return new ResponseEntity<>(optionalTicketOutDto, HttpStatus.OK);
-       } catch (TicketNotFoundException e) {
-            return new ResponseEntity<>("Ticket with id not found",
-                                    HttpStatus.NOT_FOUND);
-       }
+  }
+
+  /**
+   * controller method to return ticket by Id.
+   * @param ticketId
+   * @return Responseentity with optional of TicketOut DTO.
+   */
+  @GetMapping("/getTicket")
+  public ResponseEntity<?> getTicketById(@RequestParam final Integer ticketId) {
+        Optional<TicketOutDto> ticketOut = ticketService
+               .findTicketByTicketId(ticketId);
+         return new ResponseEntity<>(ticketOut, HttpStatus.OK);
+
   }
 
 }
