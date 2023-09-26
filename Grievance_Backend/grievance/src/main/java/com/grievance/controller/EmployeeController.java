@@ -53,7 +53,8 @@ public class EmployeeController {
       @Valid @RequestBody final EmployeeLoginDto employeeLoginDto) {
       Optional<EmployeeOutDto> employeeDtoOptional =
           employeeService.loginEmployee(employeeLoginDto);
-      return new ResponseEntity<>(employeeDtoOptional, HttpStatus.ACCEPTED);
+      return new ResponseEntity<>(employeeDtoOptional.get(),
+          HttpStatus.ACCEPTED);
   }
 
   /**
@@ -69,7 +70,7 @@ public class EmployeeController {
       @RequestHeader final String password) {
     Optional<List<EmployeeOutDto>> listOfAllEmployees =
         employeeService.listAllEmployees();
-    return new ResponseEntity<>(listOfAllEmployees, HttpStatus.ACCEPTED);
+    return new ResponseEntity<>(listOfAllEmployees.get(), HttpStatus.ACCEPTED);
   }
 
   /**
@@ -86,7 +87,7 @@ public class EmployeeController {
       @RequestBody final EmployeeInDto employeeInDto) {
     Optional<EmployeeOutDto> optional =
         employeeService.saveEmployee(employeeInDto);
-    return new ResponseEntity<>(optional, HttpStatus.CREATED);
+    return new ResponseEntity<>(optional.get(), HttpStatus.CREATED);
   }
 
   /**

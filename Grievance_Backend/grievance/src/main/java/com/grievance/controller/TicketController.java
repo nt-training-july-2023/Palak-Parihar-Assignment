@@ -45,7 +45,7 @@ public class TicketController {
             @RequestBody final TicketInDto ticketInDto) {
     Optional<TicketOutDto> optionalTicketOutDto =
             ticketService.saveTicket(ticketInDto);
-    return new ResponseEntity<>(optionalTicketOutDto, HttpStatus.CREATED);
+    return new ResponseEntity<>(optionalTicketOutDto.get(), HttpStatus.CREATED);
   }
 
   /**
@@ -58,7 +58,7 @@ public class TicketController {
    * @return ResponseEntity with optional of list of all tickets.
    */
   @GetMapping("/listAllTickets")
-  public ResponseEntity<?> listAllTickets(
+  public ResponseEntity<List<TicketOutWOComment>> listAllTickets(
     @RequestHeader final String email,
     @RequestParam final Integer page,
     @RequestParam(required = false) final Status status,
@@ -67,7 +67,7 @@ public class TicketController {
       Optional<List<TicketOutWOComment>> response =
           ticketService.listAllTickets(email, page, status,
               myTickets);
-      return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+      return new ResponseEntity<>(response.get(), HttpStatus.ACCEPTED);
   }
 
   /**
@@ -78,13 +78,13 @@ public class TicketController {
    * @return Responseentity with optional of updated TicketOut DTO.
    */
   @PutMapping("/update")
-  public ResponseEntity<?> updateTickets(
+  public ResponseEntity<TicketOutDto> updateTickets(
           @RequestHeader final String email,
           @RequestParam final Integer ticketId,
           @RequestBody final TicketUpdateDto ticketUpdateDto) {
       Optional<TicketOutDto>  optionalTicketOutDto = ticketService.updateTicket(
             ticketUpdateDto, ticketId, email);
-      return new ResponseEntity<>(optionalTicketOutDto, HttpStatus.OK);
+      return new ResponseEntity<>(optionalTicketOutDto.get(), HttpStatus.OK);
   }
 
   /**
@@ -93,10 +93,11 @@ public class TicketController {
    * @return Responseentity with optional of TicketOut DTO.
    */
   @GetMapping("/getTicket")
-  public ResponseEntity<?> getTicketById(@RequestParam final Integer ticketId) {
+  public ResponseEntity<TicketOutDto> getTicketById(
+      @RequestParam final Integer ticketId) {
         Optional<TicketOutDto> ticketOut = ticketService
                .findTicketByTicketId(ticketId);
-         return new ResponseEntity<>(ticketOut, HttpStatus.OK);
+         return new ResponseEntity<>(ticketOut.get(), HttpStatus.OK);
 
   }
 

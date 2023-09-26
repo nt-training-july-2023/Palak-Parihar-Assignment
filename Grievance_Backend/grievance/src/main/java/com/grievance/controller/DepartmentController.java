@@ -44,7 +44,7 @@ public class DepartmentController {
       @RequestBody final DepartmentInDto departmentInDto) {
     Optional<DepartmentOutDto> optional =
         departmentService.saveDepartment(departmentInDto);
-    return new ResponseEntity<>(optional, HttpStatus.CREATED);
+    return new ResponseEntity<>(optional.get(), HttpStatus.CREATED);
   }
 
   /**
@@ -59,7 +59,7 @@ public class DepartmentController {
       @RequestParam(required = false) final Integer page) {
     Optional<List<DepartmentOutDto>> departmentOutDtos =
         departmentService.listAllDepartment(page);
-    return new ResponseEntity<>(departmentOutDtos, HttpStatus.ACCEPTED);
+    return new ResponseEntity<>(departmentOutDtos.get(), HttpStatus.ACCEPTED);
   }
 
   /**
