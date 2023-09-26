@@ -5,7 +5,6 @@ import java.util.Date;
 import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.grievance.entity.Status;
 import com.grievance.entity.TicketType;
@@ -49,7 +48,6 @@ public class TicketOutWOComment {
    * The employee who created the ticket.
    */
   @JsonProperty("employee")
-  @JsonIgnore
   private String employeeOutDto;
 
   /**

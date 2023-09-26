@@ -124,7 +124,7 @@ export default function Login() {
                     department: res.data.department,
                     isAuthenticated: true
                 }
-                sessionStorage.setItem('userDetails', JSON.stringify(userValues));
+                localStorage.setItem('userDetails', JSON.stringify(userValues));
                 if (userValues.firstTimeUser) {
                     setTimeout(() => {
                         navigate("/changePassword")

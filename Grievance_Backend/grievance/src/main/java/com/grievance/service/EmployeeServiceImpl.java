@@ -15,6 +15,7 @@ import java.util.Objects;
 import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 /**
@@ -41,6 +42,11 @@ public class EmployeeServiceImpl implements EmployeeService {
   private ModelMapper modelMapper;
 
   /**
+   * page size during pagibation.
+   */
+  private final Integer pageSize = 10;
+
+  /**
    * Saves a new employee record.
    *
    * @param employeeInDto The input DTO containing
@@ -65,13 +71,23 @@ public class EmployeeServiceImpl implements EmployeeService {
 
   /**
    * Retrieves a list of all employees.
-   *
+   * @param page
    * @return An optional containing a list of
    *     EmployeeOutDto objects representing all employees.
    */
   @Override
-  public Optional<List<EmployeeOutDto>> listAllEmployees() {
+  public Optional<List<EmployeeOutDto>> listAllEmployees(final Integer page) {
     List<EmployeeOutDto> employeeOutDtoList = new ArrayList<>();
+    if (!Objects.isNull(page)) {
+      employeeRepository
+      .findAll(PageRequest.of(page, pageSize))
+      .forEach(
+        e -> {
+          employeeOutDtoList.add(convertToDto(e));
+        }
+      );
+      return Optional.of(employeeOutDtoList);
+    }
     employeeRepository
       .findAll()
       .forEach(

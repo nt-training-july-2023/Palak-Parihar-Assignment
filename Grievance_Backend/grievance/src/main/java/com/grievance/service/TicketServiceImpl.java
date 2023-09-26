@@ -129,21 +129,24 @@ public class TicketServiceImpl implements TicketService {
     } else {
       Optional<Ticket> ticket = ticketRepository.findById(ticketId);
       if (ticket.isPresent()) {
-        if (!employee.getDepartment().equals(ticket.get().getDepartment())) {
+        Boolean belongsToUser = ticket.get().getEmployee().equals(employee);
+        Boolean belongstoUserDepartment = employee.getDepartment()
+            .equals(ticket.get().getDepartment());
+        if (!belongsToUser && !belongstoUserDepartment) {
           throw new UnauthorisedUserException(email);
         }
 
       if (!Objects.isNull(ticketUpdateDto.getStatus())) {
-        if (ticketUpdateDto.getStatus() == Status.RESOLVED) {
+        if (ticketUpdateDto.getStatus() == Status.RESOLVED
+            & Objects.isNull(ticketUpdateDto.getDescription())) {
           if (ticket.get().getComments().isEmpty()) {
             throw new CommentNotFoundException();
           }
         }
         ticket.get().setStatus(ticketUpdateDto.getStatus());
       }
-      Comment comment = new Comment(ticketUpdateDto.getDescription());
-      comment.setTicket(ticket.get());
-      comment.setUserName(email);
+      Comment comment =
+          new Comment(ticketUpdateDto.getDescription(), email, ticket.get());
       ticket.get().getComments().add(comment);
       Ticket updatedTicket = ticketRepository.save(ticket.get());
       return Optional.ofNullable(convertToDto(updatedTicket));

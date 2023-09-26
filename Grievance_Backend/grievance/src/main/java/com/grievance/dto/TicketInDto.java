@@ -4,12 +4,9 @@
 package com.grievance.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.grievance.entity.Comment;
 import com.grievance.entity.Status;
 import com.grievance.entity.TicketType;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.GeneratedValue;
@@ -80,13 +77,6 @@ public class TicketInDto {
    */
   @JsonProperty("employee")
   private EmployeeInDto employeeInDto;
-
-  /**
-   * comments own by this ticket.
-   */
-  @JsonProperty("comments")
-  private List<Comment> comments = new ArrayList<Comment>();
-
   /**
    * @return the ticketId
    */
@@ -184,29 +174,12 @@ public class TicketInDto {
   public void setEmployeeInDto(final EmployeeInDto employeeInDtoField) {
     this.employeeInDto = employeeInDtoField;
   }
-
-  /**
-   *
-   * @return list of comments.
-   */
-  public List<Comment> getComments() {
-    return comments;
-  }
-
-  /**
-   *
-   * @param commentsField
-   */
-  public void get(final List<Comment> commentsField) {
-    this.comments = commentsField;
-  }
-
   /**
    * hashCode of this object.
    */
   @Override
   public int hashCode() {
-    return Objects.hash(comments, departmentInDto, description,
+    return Objects.hash(departmentInDto, description,
         employeeInDto, status, ticketType, title);
   }
 
@@ -225,8 +198,7 @@ public class TicketInDto {
       return false;
     }
     TicketInDto other = (TicketInDto) obj;
-    return Objects.equals(comments, other.comments)
-        && Objects.equals(departmentInDto, other.departmentInDto)
+    return Objects.equals(departmentInDto, other.departmentInDto)
         && Objects.equals(description, other.description)
         && Objects.equals(employeeInDto, other.employeeInDto)
         && status == other.status && ticketType == other.ticketType

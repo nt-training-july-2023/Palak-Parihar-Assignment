@@ -16,8 +16,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
 import org.hibernate.annotations.CreationTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 /**
  * Entity class representing a comment.
@@ -28,8 +27,7 @@ public class Comment {
    * Integer commentId of Comment.
    */
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "com_seq")
-  @JsonIgnore
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer commentId;
 
   /**
@@ -49,7 +47,6 @@ public class Comment {
    */
   @CreationTimestamp
   @Temporal(TemporalType.TIMESTAMP)
-  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Kolkata")
   private Date createdOn;
 
   /**
@@ -57,7 +54,7 @@ public class Comment {
    */
   @ManyToOne
   @JoinColumn(name = "ticketId")
-  @JsonIgnore
+  @JsonBackReference
   private Ticket ticket;
 
   /**
@@ -151,15 +148,24 @@ public class Comment {
   }
 
   /**
-   * constructor.
-   * @param desc
+   * parametrised constructor.
+   * @param descriptionField
+   * @param userNameField
+   * @param ticketField
    */
-  public Comment(final String desc) {
-      this.description = desc;
+  public Comment(@NotEmpty final String descriptionField,
+      @NotEmpty final String userNameField,
+      final Ticket ticketField) {
+    super();
+    this.description = descriptionField;
+    this.userName = userNameField;
+    this.ticket = ticketField;
   }
+
   /**
-   *
+   * default constructor.
    */
   public Comment() {
+    super();
   }
 }

@@ -3,14 +3,26 @@ package com.grievance.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.grievance.entity.Comment;
 import com.grievance.entity.Status;
 import com.grievance.entity.TicketType;
 import java.util.Date;
 import java.util.List;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 public class TicketOutDto {
+  /**
+   * minimumLength final integer.
+   */
+  private final int minimumLength = 1;
+  /**
+   * maximumLengthOfTitle final integer.
+   */
+  private final int maximumLengthOfTitle = 50;
+  /**
+   * maximumLengthOfDescription final integer.
+   */
+  private final int maximumLengthOfDescription = 500;
 
   /**
    * Integer ticketId of Ticket.
@@ -20,6 +32,9 @@ public class TicketOutDto {
   /**
    * The title of the ticket.
    */
+  @NotEmpty
+  @Size(min = minimumLength, max = maximumLengthOfTitle,
+  message = "Title too long (max 50 characters)")
   private String title;
 
   /**
@@ -38,6 +53,9 @@ public class TicketOutDto {
   /**
    * The description of the ticket.
    */
+  @NotEmpty
+  @Size(min = minimumLength, max = maximumLengthOfDescription,
+  message = "Description too long (max 500 characters)")
   private String description;
 
   /**
@@ -45,16 +63,17 @@ public class TicketOutDto {
    */
   @NotEmpty
   private Status status;
+
   /**
    * The date when the ticket was last updated.
    */
-  @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss aa", timezone = "Asia/Kolkata")
+  @JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss aa", timezone = "Asia/Kolkata")
   private Date lastUpdated;
 
   /**
    * comments that belongs to this ticket.
    */
-  private List<Comment> comments;
+  private List<CommentOutDto> comments;
 
   /**
    * The employee who created the ticket.
@@ -146,7 +165,6 @@ public class TicketOutDto {
   public void setStatus(final Status statusField) {
     this.status = statusField;
   }
-
   /**
    * @return the lastUpdated
    */
@@ -161,32 +179,32 @@ public class TicketOutDto {
     this.lastUpdated = lastUpdatedField;
   }
 
-/**
- * @return the comments
- */
-public List<Comment> getComments() {
-return comments;
-}
+  /**
+   * @return the comments
+   */
+  public List<CommentOutDto> getComments() {
+    return comments;
+  }
 
-/**
- * @param commentsField the comments to set
- */
-public void setComments(final List<Comment> commentsField) {
-this.comments = commentsField;
-}
+  /**
+   * @param commentsField the comments to set
+   */
+  public void setComments(final List<CommentOutDto> commentsField) {
+    this.comments = commentsField;
+  }
 
-/**
- * @return the employee
- */
-public String getEmployee() {
-return employeeOutDto;
-}
+  /**
+   * @return the employee
+   */
+  public String getEmployee() {
+    return employeeOutDto;
+  }
 
-/**
- * @param employeeField the employee to set
- */
-public void setEmployee(final String employeeField) {
-this.employeeOutDto = employeeField;
-}
+  /**
+   * @param employeeField the employee to set
+   */
+  public void setEmployee(final String employeeField) {
+    this.employeeOutDto = employeeField;
+  }
 
 }

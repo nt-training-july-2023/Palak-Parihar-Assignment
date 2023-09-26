@@ -109,8 +109,8 @@ public class Ticket {
      * The list of comments associated with the ticket.
      */
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY,
-            mappedBy = "ticket",
+    @OneToMany(fetch = FetchType.EAGER,
+        mappedBy = "ticket",
             cascade = CascadeType.ALL)
     private List<Comment> comments;
 
@@ -335,5 +335,13 @@ public class Ticket {
      */
     public Ticket() {
       super();
+    }
+
+    /**
+     * String value of ticket.
+     */
+    @Override
+    public String toString() {
+      return "Ticket [ticketId=" + ticketId + "]";
     }
 }

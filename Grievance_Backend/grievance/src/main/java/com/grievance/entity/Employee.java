@@ -53,7 +53,7 @@ public class Employee {
   /**
    * Indicates if the employee is a first-time user.
    */
-  private Boolean firstTimeUser;
+  private Boolean firstTimeUser = true;
 
   /**
    * The department to which the employee belongs.
@@ -239,7 +239,6 @@ public class Employee {
         && Objects.equals(firstTimeUser, other.firstTimeUser)
         && Objects.equals(fullName, other.fullName)
         && Objects.equals(password, other.password)
-        && Objects.equals(tickets, other.tickets)
         && userType == other.userType;
   }
 

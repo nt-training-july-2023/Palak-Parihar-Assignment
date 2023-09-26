@@ -26,7 +26,7 @@ export default function Main(props) {
                 <Route exact path='/viewTicket' element={<ViewTicket />} />
                 <Route path='/changePassword' element={<ChangePassword />} />
                 <Route exact path="/profile" element={<AdminProfile />} >
-                    <Route index element={<UserDetails />} />
+                    <Route index element={<ChangePassword />} />
                     <Route path="/profile/departments" element={<ListDepartments />} />
                     <Route path='/profile/employees' element={<ListEmployees />} />
                     <Route path='/profile/employeeRegistration' element={<EmployeeRegistration />} />

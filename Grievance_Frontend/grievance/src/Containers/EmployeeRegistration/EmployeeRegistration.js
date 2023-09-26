@@ -113,11 +113,11 @@ export default function EmployeeRegistration(props) {
 
     useEffect(() => {
         
-        if(sessionStorage.getItem('userDetails') === null){
+        if(localStorage.getItem('userDetails') === null){
             navigate('/logout')
             return
         }else{ 
-            let values = JSON.parse(sessionStorage.getItem('userDetails'))
+            let values = JSON.parse(localStorage.getItem('userDetails'))
             console.log(values.firstTimeUser)
             if(values.firstTimeUser){
                 navigate('/changePassword')

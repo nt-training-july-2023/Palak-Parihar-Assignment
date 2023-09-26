@@ -43,9 +43,9 @@ public class TicketController {
   @PostMapping("/addTicket")
   public ResponseEntity<?> saveTicket(
             @RequestBody final TicketInDto ticketInDto) {
-    Optional<TicketOutDto> optionalTicketOutDto =
             ticketService.saveTicket(ticketInDto);
-    return new ResponseEntity<>(optionalTicketOutDto.get(), HttpStatus.CREATED);
+    return new ResponseEntity<>("Ticket created successfully",
+        HttpStatus.CREATED);
   }
 
   /**

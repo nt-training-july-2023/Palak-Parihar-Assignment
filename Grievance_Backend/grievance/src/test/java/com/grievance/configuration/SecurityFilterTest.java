@@ -8,10 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 import com.grievance.Configuration.SecurityFilter;
 import com.grievance.authentication.AuthenticatingUser;
 import com.grievance.authentication.AuthenticatingUserImpl;
+import com.grievance.entity.Employee;
 import com.grievance.entity.UserType;
 import com.grievance.repository.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 public class SecurityFilterTest {
@@ -19,16 +21,17 @@ public class SecurityFilterTest {
   private HttpServletRequest request;
   private HttpServletResponse response;
   private FilterChain filterChain;
+  private AuthenticatingUserImpl authenticatingUser;
   private EmployeeRepository employeeRepository;
-  private AuthenticatingUser authenticatingUser;
 
   @BeforeEach
   public void setup() {
-    employeeRepository = mock(EmployeeRepository.class);
     request = mock(HttpServletRequest.class);
     response = mock(HttpServletResponse.class);
     filterChain = mock(FilterChain.class);
+    employeeRepository = mock(EmployeeRepository.class);
     securityFilter = new SecurityFilter(authenticatingUser);
+    authenticatingUser = mock(AuthenticatingUserImpl.class);
   }
 
   @Test
@@ -41,6 +44,7 @@ public class SecurityFilterTest {
 
   @Test
     public void testDoFilter_WithLoginUrl() throws Exception {
+        when(request.getMethod()).thenReturn("POST");
         when(request.getRequestURI()).thenReturn("/employee/login");
         securityFilter.doFilter(request, response, filterChain);
         verify(filterChain).doFilter(request, response);
@@ -57,11 +61,13 @@ public class SecurityFilterTest {
 
   @Test
     public void testDoFilter_AdminAccess() throws Exception {
-    when(request.getMethod()).thenReturn("POST");
+        when(request.getMethod()).thenReturn("POST");
         when(request.getHeader("email")).thenReturn("admin@nucleusteq.com");
         when(request.getHeader("password")).thenReturn("Password");
         when(request.getRequestURI()).thenReturn("/employee/saveEmployee");
-        when(authenticatingUser.checkIfUserIsAdmin(Mockito.eq("admin@nucleusteq.com"), Mockito.eq("Password"))).thenReturn(true);
+//        when(employeeRepository.findByEmailAndPasswordAndUserType("admin@nucleusteq.com", "Password", UserType.ADMIN)).thenReturn(new Employee());
+        when(authenticatingUser.checkIfUserIsAdmin(Mockito.eq("admin@nucleusteq.com"),Mockito.eq("Password"))).thenReturn(true);
+        System.out.println(authenticatingUser.checkIfUserIsAdmin("", ""));
         securityFilter.doFilter(request, response, filterChain);
         verify(filterChain).doFilter(request, response);
     }
@@ -71,28 +77,39 @@ public class SecurityFilterTest {
         when(request.getHeader("email")).thenReturn("member@nucleusteq.com");
         when(request.getHeader("password")).thenReturn("Password");
         when(request.getRequestURI()).thenReturn("/api/ticket/create");
-        when(employeeRepository.existsByEmailAndPasswordAndRole("member@nucleusteq.com", "Password", UserType.MEMBER)).thenReturn(true);
         securityFilter.doFilter(request, response, filterChain);
         verify(filterChain).doFilter(request, response);
     }
 
   @Test
     public void testDoFilter_UnauthorizedRole() throws Exception {
+        when(request.getMethod()).thenReturn("GET");
         when(request.getHeader("email")).thenReturn("member@nucleusteq.com");
         when(request.getHeader("password")).thenReturn("Password");
-        when(request.getRequestURI()).thenReturn("/api/member/create");
-        when(employeeRepository.existsByEmailAndPasswordAndRole("member@nucleusteq.com", "Password", MemberRole.MEMBER)).thenReturn(true);
+        
+        System.out.println(request+" , "+authenticatingUser.checkIfUserIsAdmin("", ""));
+        when(authenticatingUser.checkIfUserIsAdmin(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
+        
+        when(request.getRequestURI()).thenReturn("/employee/saveEmployee");
         securityFilter.doFilter(request, response, filterChain);
-        verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized Role");
+        verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid User");
     }
 
   @Test
-    public void testDoFilter_InvalidUrl() throws Exception {
-        when(request.getHeader("email")).thenReturn("admin@nucleusteq.com");
-        when(request.getHeader("password")).thenReturn("Password");
-        when(request.getRequestURI()).thenReturn("/api/invalidurl");
-        when(employeeRepository.existsByEmailAndPasswordAndRole("admin@nucleusteq.com", "Password", MemberRole.ADMIN)).thenReturn(true);
-        securityFilter.doFilter(request, response, filterChain);
-        verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized Role");
-    }
+  public void testDoFilter_InvalidUrl() throws Exception {
+      when(request.getMethod()).thenReturn("GET");
+      when(request.getHeader("email")).thenReturn("admin@nucleusteq.com");
+      when(request.getHeader("password")).thenReturn("Password");
+      when(request.getRequestURI()).thenReturn("/api/invalidurl");
+
+      // Mock the behavior of the employeeRepository
+      Employee mockEmployee = new Employee(); // Create a mock Employee object
+      when(employeeRepository.findByEmailAndPasswordAndUserType("admin@nucleusteq.com", "Password", UserType.ADMIN)).thenReturn(mockEmployee);
+
+      when(authenticatingUser.checkIfUserIsAdmin(Mockito.anyString(), Mockito.anyString())).thenReturn(false);
+
+      securityFilter.doFilter(request, response, filterChain);
+      verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized Role");
+  }
+
 }

@@ -79,7 +79,7 @@ export default function ChangePassword(props) {
     }
 
     useEffect(() => {
-        if (sessionStorage.getItem('userDetails') === null) {
+        if (localStorage.getItem('userDetails') === null) {
             navigate('/logout')
             return
         }
@@ -156,7 +156,8 @@ export default function ChangePassword(props) {
                 return res.data
             })
             .catch(err => {
-                setModal(() => <Modal message={err.data.response.data} onClick={closeModal} />)
+                console.log(err)
+                setModal(() => <Modal message="error" onClick={closeModal} />)
                 return err.data
             })
         console.log(response)

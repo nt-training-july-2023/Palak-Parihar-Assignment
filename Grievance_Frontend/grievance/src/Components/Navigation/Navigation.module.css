@@ -16,8 +16,9 @@
     flex-direction: row;
     color: #fff;
     position: absolute;
-    right: 0px;
+    right: 15px;
     justify-content: center;
+    margin: 0px;
 }
 
 ul{
@@ -43,13 +44,15 @@ li a:hover {
 .heading {
     position: absolute;
     left: 0px;
+    padding: 12px 0 0 0;
+    margin: 0px;
 }
 
 
 .dropdownContent {
     display: none;
     position: absolute;
-    min-width: 160px;
+    min-width: 120px;
     z-index: 1;
     text-align: left;
     padding-left: 0px;

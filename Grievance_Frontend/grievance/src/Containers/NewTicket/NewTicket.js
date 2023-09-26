@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import { GENERATE_NEW_TICKET } from "../../Service/TicketServices";
 import { FETCH_ALL_DEPARTMENTS } from "../../Service/DepartmentService";
 import Modal from "../../Components/UI/Modal/Modal";
+import { headers } from "../../API/Headers";
 
 export default function NewTicket(props) {
 
@@ -166,10 +167,9 @@ export default function NewTicket(props) {
             return res.data;
         }).catch(err => {
             console.log(err.data)
-            setModal(() => <Modal message={err.data.response.data} onClick={closeModal} />)
+            // setModal(() => <Modal message={err.data.response.data} onClick={closeModal} />)
             return err.data
         })
-        console.log(GENERATE_NEW_TICKET)
     }
 
 
@@ -178,11 +178,13 @@ export default function NewTicket(props) {
     }
 
     useEffect(() => {
-        if (sessionStorage.getItem('userDetails') === null) {
+        console.log(userValues)
+        if (headers() == null) {
             navigate('/logout')
             return
         } else {
-            let values = JSON.parse(sessionStorage.getItem('userDetails'))
+            let values = headers()
+            setUserValues(values)
             console.log(values.firstTimeUser)
             if (values.firstTimeUser) {
                 navigate('/changePassword')
@@ -199,7 +201,6 @@ export default function NewTicket(props) {
                         options: response.data
                     }
                 }
-                console.log(response)
                 setControls(updatedControls);
                 return response.data;
             }).catch(error => {
@@ -217,7 +218,7 @@ export default function NewTicket(props) {
                 <div className="reg-content">
                     <form onSubmit={submithandler}>
                         {completeForm}
-                        <Button type='submit' content='submit' />
+                        <Button type='submit' content='submit' enable={true}/>
                     </form>
                 </div>
             </div>

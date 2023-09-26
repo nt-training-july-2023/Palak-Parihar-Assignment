@@ -36,11 +36,11 @@ public interface EmployeeService {
 
   /**
    * Retrieves a list of all employees.
-   *
+   * @param page
    * @return An optional containing a list of
    *     EmployeeOutDto objects representing all employees.
    */
-  Optional<List<EmployeeOutDto>> listAllEmployees();
+  Optional<List<EmployeeOutDto>> listAllEmployees(Integer page);
 
   /**
    * changePassword for existing user.

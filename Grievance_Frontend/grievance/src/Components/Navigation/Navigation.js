@@ -9,7 +9,7 @@ export default function Navigation(props) {
     const location = useLocation();
 
     useEffect(() => {
-        if (sessionStorage.getItem('userDetails') !== null) {
+        if (localStorage.getItem('userDetails') !== null) {
             setShow(true)
         }
     })
@@ -22,7 +22,7 @@ export default function Navigation(props) {
         <>
             <div className={classes.container}>
                 <div>
-                    <p className={classes.heading}>NucleusTeq</p>
+                    <h1 className={classes.heading}>NucleusTeq</h1>
                 </div>
                 <div>
                     <ul className={classes.navItems}>

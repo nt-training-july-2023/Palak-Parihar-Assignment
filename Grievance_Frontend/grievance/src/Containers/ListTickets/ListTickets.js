@@ -21,14 +21,9 @@ export default function ListTickets(props) {
         // departmentTickets: null
     })
 
-    const [headings, setHeadings] = useState(["Ticket Id", "Title", "Ticket Type", "Status", "Last Updated", "Raised By", "Department"])
-    const actions = (
-        <>
-            {config.myTickets && <td>
-                <i id="icon" class='fas fa-edit' />
-            </td>}
-        </>
-    )
+    const headings= ["Ticket Id", "Title", "Ticket Type", "Department", "Raised By", "Status", "Last Updated", "Actions"]
+    
+    const columns = ["ticketId", "title","ticketType", "department", "employee", "status", "lastUpdated"]
 
     const [ticketUpdate, setTicketUpdate] = useState({
         status: null,
@@ -37,17 +32,12 @@ export default function ListTickets(props) {
 
 
     useEffect(() => {
-        if (config.myTickets) {
-            setHeadings([...headings, "Actions"])
-        }else{
-            setHeadings(headings.filter((item) => item !== "Actions"));
-        }
         console.log(config)
-        if (sessionStorage.getItem('userDetails') === null) {
+        if (localStorage.getItem('userDetails') === null) {
             navigate('/logout')
             return
         } else {
-            let values = JSON.parse(sessionStorage.getItem('userDetails'))
+            let values = JSON.parse(localStorage.getItem('userDetails'))
             console.log(values.firstTimeUser)
             if (values.firstTimeUser) {
                 navigate('/changePassword')
@@ -180,27 +170,28 @@ export default function ListTickets(props) {
     return (
         <>
             {showTicket ? <Modal component={ViewTicket({ ticket, closeModal, updateStatus, updateComment, updateTicket })} /> : null}
-            <div className="menu_bar">
-                <div id="menu">
-                    <button class="menu_button" id={config.myTickets ? '' : 'active'} onClick={() => AllTickets()}>All Tickets</button>
-                    <button class="menu_button" id={config.myTickets ? 'active' : ''} onClick={() => MyTickets()}>MyTickets</button>
-                </div>
-                <div className="status_dropdown">
-                    <p>Status :</p>
-                    <select onChange={(e) => setStatus(e)}>
-                        <option value=''>ALL TICKETS</option>
-                        <option value='OPEN'> OPEN </option>
-                        <option value='BEING_ADDRESSED'> BEING ADDRESSED </option>
-                        <option value='RESOLVED'> RESOLVED </option>
-                    </select>
-                </div>
-            </div>
             <div className="list_main_container">
+                <div className="menu_bar">
+                    <div id="menu">
+                        <button class="menu_button" id={config.myTickets ? '' : 'active'} onClick={() => AllTickets()}>All Tickets</button>
+                        <button class="menu_button" id={config.myTickets ? 'active' : ''} onClick={() => MyTickets()}>MyTickets</button>
+                    </div>
+                    <div className="status_dropdown">
+                        <p>Status :</p>
+                        <select onChange={(e) => setStatus(e)}>
+                            <option value=''>ALL TICKETS</option>
+                            <option value='OPEN'> OPEN </option>
+                            <option value='BEING_ADDRESSED'> BEING ADDRESSED </option>
+                            <option value='RESOLVED'> RESOLVED </option>
+                        </select>
+                    </div>
+                </div>
                 <Table
                     values={tickets}
                     headings={headings}
-                    view={actions}
-                    viewSelectedTicket={viewSelectedTicket} />
+                    view={viewSelectedTicket}
+                    columns={columns}
+                    id="ticketId"/>
             </div >
             <div id="actions_arrow">
                 {disablePrevious ?

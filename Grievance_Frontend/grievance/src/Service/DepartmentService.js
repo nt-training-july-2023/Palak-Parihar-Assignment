@@ -1,48 +1,69 @@
 import axios from "axios";
-import { FETCH_ALL_DEPARTMENTS_URL, GENERATE_NEW_DEPARTMENTS_URL } from "../URL/Url";
+import { DELETE_DEPARTMENT_URL, FETCH_ALL_DEPARTMENTS_URL, GENERATE_NEW_DEPARTMENTS_URL } from "../API/Url";
+import { deleteMapping, getMapping, postMapping } from "../API/url-order";
+import { headers } from "../API/Headers";
 
 
-const userDetails = () => {
-    return JSON.parse(sessionStorage.getItem('userDetails'))
-}
-
-export const FETCH_ALL_DEPARTMENTS = () => {
-    let userValues = userDetails()
+export const FETCH_ALL_DEPARTMENTS = (pageNo) => {
+    let userValues = headers()
     let headersRequired = {
         email: userValues.email,
         password: userValues.password
     }
     return new Promise((resolve, reject) => {
-        axios({
-            url: FETCH_ALL_DEPARTMENTS_URL,
-            method: 'GET',
-            headers: headersRequired,
-        }).then((res) => {
-            // console.log(res.data);
-            resolve({ data: res.data });
-        }).catch((e) => {
-            console.error(e);
-            reject({ data: e });
-        });
+        getMapping(
+            FETCH_ALL_DEPARTMENTS_URL,
+            {
+                headers: headersRequired,
+                params: {
+                    page: pageNo
+                }
+            }
+        ).then(res => {
+            return resolve({ data: res.data })
+        }).catch(err => {
+            return reject({ data: err })
+        })
     })
 }
 
-export const GENERATE_NEW_DEPARTMENT = (departmentName) => {
-    let userValues = userDetails()
+export const GENERATE_NEW_DEPARTMENT = (deptName) => {
+    let userValues = headers()
     let headersRequired = {
         email: userValues.email,
         password: userValues.password
     }
     return new Promise((resolve, reject) => {
-        axios({
-            url: GENERATE_NEW_DEPARTMENTS_URL,
-            method: 'POST',
-            headers: headersRequired,
-            data: departmentName
-        }).then(res => {
-            resolve({ data: res.data })
-        }).catch(e => {
-            reject({ data: e })
-        })
+        postMapping(GENERATE_NEW_DEPARTMENTS_URL,
+            deptName,
+            {
+                headers: headersRequired,
+            }).then(res => {
+                resolve({ data: res.data })
+            }).catch(err => {
+                reject({ data: err })
+            })
+    });
+}
+
+export const DELETE_DEPARTMENT = (deptId) => {
+    let userValues = headers()
+    let headersRequired = {
+        email: userValues.email,
+        password: userValues.password
+    }
+    return new Promise((resolve, reject) => {
+        deleteMapping(DELETE_DEPARTMENT_URL,
+            {
+                headers: headersRequired,
+                params: {
+                    departmentId: deptId
+                }
+            }).then(res => {
+                console.log(res)
+                return resolve({ data: res.data })
+            }).catch(err => {
+                return reject({ data: err })
+            })
     });
 }

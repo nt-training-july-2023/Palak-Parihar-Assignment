@@ -62,14 +62,16 @@ public class EmployeeController {
    *
    * @param email
    * @param password
+   * @param page
    * @return ResponseEntity with list of All Employees.
    */
   @GetMapping(value = "/listAllEmployees")
   public ResponseEntity<?> listAllEmployees(
       @RequestHeader final String email,
-      @RequestHeader final String password) {
+      @RequestHeader final String password,
+      @RequestParam final Integer page) {
     Optional<List<EmployeeOutDto>> listOfAllEmployees =
-        employeeService.listAllEmployees();
+        employeeService.listAllEmployees(page);
     return new ResponseEntity<>(listOfAllEmployees.get(), HttpStatus.ACCEPTED);
   }
 

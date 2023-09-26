@@ -1,8 +1,6 @@
 package com.grievance.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.grievance.entity.UserType;
-import java.util.List;
 import java.util.Objects;
 import javax.validation.constraints.NotEmpty;
 
@@ -21,7 +19,6 @@ public class EmployeeOutDto {
   /**
    * The full name of the employee.
    */
-  @NotEmpty
   private String fullName;
 
   /**
@@ -32,19 +29,12 @@ public class EmployeeOutDto {
   /**
    * Indicates if the employee is a first-time user.
    */
-  private Boolean firstTimeUser = true;
+  private Boolean firstTimeUser;
 
   /**
    * The department of the employee.
    */
-  @NotEmpty
   private String departmentOutDto;
-
-  /**
-   * The list of tickets associated with the employee.
-   */
-  @JsonIgnore
-  private List<TicketOutDto> tickets;
 
   /**
    * Get the email of the employee.
@@ -136,25 +126,6 @@ public class EmployeeOutDto {
   public void setDepartment(final String departmentField) {
     this.departmentOutDto = departmentField;
   }
-
-  /**
-   * Get the list of tickets associated with the employee.
-   *
-   * @return the tickets
-   */
-  public List<TicketOutDto> getTickets() {
-    return tickets;
-  }
-
-  /**
-   * Set the list of tickets associated with the employee.
-   *
-   * @param ticketsField the tickets to set
-   */
-  public void setTickets(final List<TicketOutDto> ticketsField) {
-    this.tickets = ticketsField;
-  }
-
   /**
    * Default constructor for EmployeeOutDto.
    */
@@ -168,7 +139,7 @@ public class EmployeeOutDto {
   @Override
   public int hashCode() {
     return Objects.hash(departmentOutDto, email,
-        firstTimeUser, fullName, tickets, userType);
+        firstTimeUser, fullName, userType);
   }
 
   /**
@@ -190,7 +161,7 @@ public class EmployeeOutDto {
         && Objects.equals(email, other.email)
         && Objects.equals(firstTimeUser, other.firstTimeUser)
         && Objects.equals(fullName, other.fullName)
-        && Objects.equals(tickets, other.tickets) && userType == other.userType;
+        && userType == other.userType;
   }
 
   /**
@@ -200,22 +171,19 @@ public class EmployeeOutDto {
    * @param userTypeField
    * @param firstTimeUserField
    * @param departmentOutDtoField
-   * @param ticketsField
    */
   public EmployeeOutDto(
       final String emailField,
       @NotEmpty final String fullNameField,
       final UserType userTypeField,
       final Boolean firstTimeUserField,
-      @NotEmpty final String departmentOutDtoField,
-      final List<TicketOutDto> ticketsField) {
+      @NotEmpty final String departmentOutDtoField) {
     super();
     this.email = emailField;
     this.fullName = fullNameField;
     this.userType = userTypeField;
     this.firstTimeUser = firstTimeUserField;
     this.departmentOutDto = departmentOutDtoField;
-    this.tickets = ticketsField;
   }
 
 }

@@ -4,7 +4,6 @@ import com.grievance.entity.Status;
 
 import java.util.Objects;
 
-import javax.validation.constraints.NotEmpty;
 
 public class TicketUpdateDto {
   /**
@@ -15,7 +14,6 @@ public class TicketUpdateDto {
   /**
    * description of comment.
    */
-  @NotEmpty
   private String description;
 
   /**

@@ -10,7 +10,7 @@ export default function LogOut() {
 
     useEffect(() => {
         setTimeout(() => {
-            sessionStorage.clear();
+            localStorage.clear();
             navigate("/")
         }, 1000)
     })

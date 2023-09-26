@@ -47,7 +47,6 @@ class EmployeeServiceTest {
 
   private EmployeeLoginDto employeeLoginDto;
 
-//	@Autowired
   @InjectMocks
   EmployeeServiceImpl employeeService;
 

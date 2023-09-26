@@ -151,7 +151,7 @@ public class Department {
    */
   @Override
   public int hashCode() {
-    return Objects.hash(departmentId, departmentName, employees, tickets);
+    return Objects.hash(departmentId, departmentName);
   }
 
   /**
@@ -170,9 +170,7 @@ public class Department {
     }
     Department other = (Department) obj;
     return Objects.equals(departmentId, other.departmentId)
-        && Objects.equals(departmentName, other.departmentName)
-        && Objects.equals(employees, other.employees)
-        && Objects.equals(tickets, other.tickets);
+        && Objects.equals(departmentName, other.departmentName);
   }
 
 }
