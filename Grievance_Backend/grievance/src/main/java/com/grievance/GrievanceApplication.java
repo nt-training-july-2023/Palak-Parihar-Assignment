@@ -7,7 +7,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
-import com.grievance.Configuration.UserFilter;
+import com.grievance.Configuration.SecurityFilter;
 import com.grievance.authentication.AuthenticatingUser;
 
 /**
@@ -48,11 +48,11 @@ public class GrievanceApplication {
    * instance configured for the UserFilter.
    */
   @Bean
-  FilterRegistrationBean<UserFilter> userFilter() {
-      FilterRegistrationBean<UserFilter> registrationBean =
+  FilterRegistrationBean<SecurityFilter> securityFilter() {
+      FilterRegistrationBean<SecurityFilter> registrationBean =
              new FilterRegistrationBean<>();
 
-      registrationBean.setFilter(new UserFilter(authenticatingUser));
+      registrationBean.setFilter(new SecurityFilter(authenticatingUser));
 
       registrationBean.addUrlPatterns("/*");
 

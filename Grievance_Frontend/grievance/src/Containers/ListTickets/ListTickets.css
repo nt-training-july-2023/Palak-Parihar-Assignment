@@ -1,4 +1,3 @@
-
 .mainContainer{
     display: flex;
     flex-direction: column;
@@ -25,7 +24,6 @@
     height: 60px;
     padding: 10px;
     width: 150px;
-    align-items: start;
     justify-content: center;
     border: 1px solid rgb(208, 208, 209);
 }
@@ -51,5 +49,40 @@
 .menu_bar{
     display: flex;
     width: 80%;
+}
+
+#actions_arrow{
+    position: absolute;
+    left: 48%;
+    font-size: 30px;
+    bottom: 1cqi;
+}
+
+#action_icon{
+    margin: 10px;
+    color: #174c6b;
+    cursor: pointer;
+}
+
+#action_icon:hover{
+    color: #3c8dbc;
+}
+
+
+#disable_action_icon{
+    margin: 10px;
+    color: #7c7878;
+    cursor: default;
+}
+
+#disable_action_icon :hover{
+    margin: 10px;
+    color: #c5c0c0;
+    cursor: default;
+}
+
+#active{
+    background-color: gray;
+    color: white;
 }
 

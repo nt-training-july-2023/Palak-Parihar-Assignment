@@ -8,6 +8,8 @@
 
 package com.grievance.dto;
 
+import java.util.Objects;
+
 /**
  * The DepartmentDto class represents a data transfer
  * object for department-related information.
@@ -65,6 +67,45 @@ public class DepartmentInDto {
    */
   public DepartmentInDto() {
     super();
-    // TODO Auto-generated constructor stub
+  }
+
+  /**
+   * hashCode method of this departmentInDto.
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(departmentId, departmentName);
+  }
+
+  /**
+   * method to compare this departmentInDto with objects.
+   */
+  @Override
+  public boolean equals(final Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    DepartmentInDto other = (DepartmentInDto) obj;
+    return Objects.equals(departmentId, other.departmentId)
+        && Objects.equals(departmentName, other.departmentName);
+  }
+
+  /**
+   * parameterized constructor.
+   * @param departmentIdField
+   * @param departmentNameField
+   */
+  public DepartmentInDto(
+      final Integer departmentIdField,
+      final String departmentNameField) {
+    super();
+    this.departmentId = departmentIdField;
+    this.departmentName = departmentNameField;
   }
 }

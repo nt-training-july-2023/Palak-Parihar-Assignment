@@ -26,8 +26,9 @@
     color: black;
 }
 
-.menuItems.active{
-    background-color: pink;
+.menuItems.active {
+    background-color: white;
+    color: black;
 }
 
 #icon {
@@ -35,7 +36,3 @@
     padding-top: 6px;
 }
 
-.active {
-    background-color: #007bff;
-    color: #fff;
-}

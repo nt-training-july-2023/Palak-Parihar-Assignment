@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Button from '../../Components/UI/Button/Button'
 import classes from './NewDepartment.module.css'
 import InputElement from '../../Components/UI/InputElement/InputElement';
-import { FETCH_ALL_DEPARTMENTS, GENERATE_NEW_DEPARTMENT } from '../../Service/DepartmentService';
+import {GENERATE_NEW_DEPARTMENT } from '../../Service/DepartmentService';
 import Modal from '../../Components/UI/Modal/Modal';
-import { useNavigate } from 'react-router';
 
 export default function NewDepartment(props) {
 
@@ -52,7 +51,7 @@ export default function NewDepartment(props) {
                 setModal(() => <Modal message="Department successfully created" onClick={closeModal} />)
                 return response.data;
             }).catch(error => {
-                setModal(() => <Modal message={error.data.response.data} onClick={closeModal} />)
+                setModal(() => <Modal message={error.data.response.data.message} onClick={closeModal} />)
                 console.log(error.data.response.data)
             })
         console.log(savedDepartment)
@@ -83,7 +82,7 @@ export default function NewDepartment(props) {
                 <div className={classes.outerDiv}>
                     <form onSubmit={submithandler}>
                         {formElement}
-                        <Button type='submit' content='submit' />
+                        <Button type='submit' content='submit' enable={true}/>
                     </form>
                 </div>
             </div >

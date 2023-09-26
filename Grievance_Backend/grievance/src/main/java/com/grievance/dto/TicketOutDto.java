@@ -9,21 +9,8 @@ import com.grievance.entity.TicketType;
 import java.util.Date;
 import java.util.List;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 
 public class TicketOutDto {
-  /**
-   *minimumLength final integer.
-   */
-  private final int minimumLength = 1;
-  /**
-   *maximumLengthOfTitle final integer.
-   */
-  private final int maximumLengthOfTitle = 50;
-  /**
-   *maximumLengthOfDescription final integer.
-   */
-  private final int maximumLengthOfDescription = 500;
 
   /**
    * Integer ticketId of Ticket.
@@ -33,12 +20,6 @@ public class TicketOutDto {
   /**
    * The title of the ticket.
    */
-  @NotEmpty
-  @Size(
-    min = minimumLength,
-    max = maximumLengthOfTitle,
-    message = "Title too long (max 50 characters)"
-  )
   private String title;
 
   /**
@@ -57,12 +38,6 @@ public class TicketOutDto {
   /**
    * The description of the ticket.
    */
-  @NotEmpty
-  @Size(
-    min = minimumLength,
-    max = maximumLengthOfDescription,
-    message = "Description too long (max 500 characters)"
-  )
   private String description;
 
   /**
@@ -70,17 +45,10 @@ public class TicketOutDto {
    */
   @NotEmpty
   private Status status;
-
-  /**
-   * The date when the ticket was opened.
-   */
-  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Kolkata")
-  private Date dateOpened;
-
   /**
    * The date when the ticket was last updated.
    */
-  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Kolkata")
+  @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss aa", timezone = "Asia/Kolkata")
   private Date lastUpdated;
 
   /**
@@ -180,20 +148,6 @@ public class TicketOutDto {
   }
 
   /**
-   * @return the dateOpened
-   */
-  public Date getDateOpened() {
-    return dateOpened;
-  }
-
-  /**
-   * @param dateOpenedField the dateOpened to set
-   */
-  public void setDateOpened(final Date dateOpenedField) {
-    this.dateOpened = dateOpenedField;
-  }
-
-  /**
    * @return the lastUpdated
    */
   public Date getLastUpdated() {
@@ -234,6 +188,5 @@ return employeeOutDto;
 public void setEmployee(final String employeeField) {
 this.employeeOutDto = employeeField;
 }
-
 
 }

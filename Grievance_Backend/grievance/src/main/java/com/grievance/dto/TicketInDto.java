@@ -8,30 +8,32 @@ import com.grievance.entity.Comment;
 import com.grievance.entity.Status;
 import com.grievance.entity.TicketType;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+
 /**
  *
  */
 public class TicketInDto {
   /**
-   *minimumLength final integer.
+   * minimumLength final integer.
    */
   private final int minimumLength = 1;
   /**
-   *maximumLengthOfTitle final integer.
+   * maximumLengthOfTitle final integer.
    */
   private final int maximumLengthOfTitle = 50;
   /**
-   *maximumLengthOfDescription final integer.
+   * maximumLengthOfDescription final integer.
    */
   private final int maximumLengthOfDescription = 500;
-
 
   /**
    * Integer ticketId of Ticket.
@@ -44,11 +46,8 @@ public class TicketInDto {
    * The title of the ticket.
    */
   @NotEmpty
-  @Size(
-    min = minimumLength,
-    max = maximumLengthOfTitle,
-    message = "Title too long (max 50 characters)"
-  )
+  @Size(min = minimumLength, max = maximumLengthOfTitle,
+  message = "Title too long (max 50 characters)")
   private String title;
 
   /**
@@ -66,11 +65,8 @@ public class TicketInDto {
    * The description of the ticket.
    */
   @NotEmpty
-  @Size(
-    min = minimumLength,
-    max = maximumLengthOfDescription,
-    message = "Description too long (max 500 characters)"
-  )
+  @Size(min = minimumLength, max = maximumLengthOfDescription,
+  message = "Description too long (max 500 characters)")
   private String description;
 
   /**
@@ -89,7 +85,7 @@ public class TicketInDto {
    * comments own by this ticket.
    */
   @JsonProperty("comments")
-  private List<Comment> comments;
+  private List<Comment> comments = new ArrayList<Comment>();
 
   /**
    * @return the ticketId
@@ -175,34 +171,67 @@ public class TicketInDto {
     this.status = statusField;
   }
 
-/**
- * @return the employeeInDto
- */
-public EmployeeInDto getEmployeeInDto() {
-return employeeInDto;
-}
+  /**
+   * @return the employeeInDto
+   */
+  public EmployeeInDto getEmployeeInDto() {
+    return employeeInDto;
+  }
 
-/**
- * @param employeeInDtoField the employeeInDto to set
- */
-public void setEmployeeInDto(final EmployeeInDto employeeInDtoField) {
-this.employeeInDto = employeeInDtoField;
-}
+  /**
+   * @param employeeInDtoField the employeeInDto to set
+   */
+  public void setEmployeeInDto(final EmployeeInDto employeeInDtoField) {
+    this.employeeInDto = employeeInDtoField;
+  }
 
-/**
-*
-* @return list of comments.
-*/
-public List<Comment> getComments() {
-  return comments;
-}
+  /**
+   *
+   * @return list of comments.
+   */
+  public List<Comment> getComments() {
+    return comments;
+  }
 
-/**
- *
- * @param commentsField
- */
-public void get(final List<Comment> commentsField) {
-   this.comments = commentsField;
-}
+  /**
+   *
+   * @param commentsField
+   */
+  public void get(final List<Comment> commentsField) {
+    this.comments = commentsField;
+  }
+
+  /**
+   * hashCode of this object.
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(comments, departmentInDto, description,
+        employeeInDto, status, ticketType, title);
+  }
+
+  /**
+   * equals method to compare this ticketInDto with object.
+   */
+  @Override
+  public boolean equals(final Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    TicketInDto other = (TicketInDto) obj;
+    return Objects.equals(comments, other.comments)
+        && Objects.equals(departmentInDto, other.departmentInDto)
+        && Objects.equals(description, other.description)
+        && Objects.equals(employeeInDto, other.employeeInDto)
+        && status == other.status && ticketType == other.ticketType
+        && Objects.equals(title, other.title);
+  }
+
 
 }

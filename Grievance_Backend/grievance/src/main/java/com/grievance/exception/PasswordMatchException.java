@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * to retrieve an employee by email fails.
  */
 @ResponseStatus(
-  value = HttpStatus.NOT_FOUND,
+  value = HttpStatus.CONFLICT,
   reason = "New Password must not be equal to old Password"
 )
 public class PasswordMatchException extends RuntimeException {

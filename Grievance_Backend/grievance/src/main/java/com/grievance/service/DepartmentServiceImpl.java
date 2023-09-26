@@ -3,13 +3,16 @@ package com.grievance.service;
 import com.grievance.dto.DepartmentInDto;
 import com.grievance.dto.DepartmentOutDto;
 import com.grievance.entity.Department;
-import com.grievance.exception.DepartmentAlreadyExists;
+import com.grievance.exception.DepartmentAlreadyExistsException;
+import com.grievance.exception.DepartmentNotFound;
 import com.grievance.repository.DepartmentRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 /**
@@ -19,6 +22,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
+
+  /**
+   * pageSize for list of departments.
+   */
+  private final Integer pageSize = 10;
   /**
    * The DepartmentRepository instance provides data access methods
    * for interacting with the database to perform operations
@@ -52,7 +60,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     departmentInDto.getDepartmentName().toUpperCase());
 
     if (savedDepartment != null) {
-       throw new DepartmentAlreadyExists(departmentInDto.getDepartmentName());
+       throw new DepartmentAlreadyExistsException();
     }
     department2.setDepartmentName(
         department2.getDepartmentName().toUpperCase());
@@ -63,20 +71,40 @@ public class DepartmentServiceImpl implements DepartmentService {
   /**
    * Retrieves a list of all departments from the database and
    * converts them into a list of DepartmentDto objects.
-   *
+   * @param page
    * @return An optional containing a list of DepartmentDto
    *     objects representing all departments.
    */
   @Override
-  public Optional<List<DepartmentOutDto>> listAllDepartment() {
+  public Optional<List<DepartmentOutDto>> listAllDepartment(
+      final Integer page) {
     List<DepartmentOutDto> list = new ArrayList<DepartmentOutDto>();
+    if (Objects.isNull(page)) {
+      departmentRepository.findAll()
+      .forEach(e -> {
+        list.add(convertToDto(e));
+      });
+      return Optional.ofNullable(list);
+    }
     departmentRepository
-        .findAll()
+        .findAll(PageRequest.of(page, pageSize))
         .forEach(
           e -> {
             list.add(convertToDto(e));
           });
     return Optional.of(list);
+  }
+
+  /**
+   * method to delete department by Id.
+   * @param departmentId
+   */
+  public void deleteDepartment(final Integer departmentId) {
+    Optional<Department> dept = departmentRepository.findById(departmentId);
+    if (!dept.isPresent()) {
+      throw new DepartmentNotFound();
+    }
+    departmentRepository.deleteById(departmentId);
   }
 
 

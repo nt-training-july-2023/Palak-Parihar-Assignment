@@ -2,6 +2,9 @@ package com.grievance.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.grievance.entity.UserType;
+
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
@@ -40,11 +43,6 @@ public class EmployeeInDto {
    * The user type of the employee.
    */
   private UserType userType;
-
-  /**
-   * Indicates if the employee is a first-time user.
-   */
-  private Boolean firstTimeUser = true;
 
   /**
    * The department of the employee.
@@ -126,24 +124,6 @@ public class EmployeeInDto {
   }
 
   /**
-   * Get the status of whether the employee is a first-time user.
-   *
-   * @return the firstTimeUser
-   */
-  public Boolean getFirstTimeUser() {
-    return firstTimeUser;
-  }
-
-  /**
-   * Set the status of whether the employee is a first-time user.
-   *
-   * @param firstTimeUserField the firstTimeUser to set
-   */
-  public void setFirstTimeUser(final Boolean firstTimeUserField) {
-    this.firstTimeUser = firstTimeUserField;
-  }
-
-  /**
    * Get the department of the employee.
    *
    * @return the department
@@ -167,7 +147,58 @@ public class EmployeeInDto {
     super();
   }
 
+  /**
+   * hashcode of employeeInDto.
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(departmentInDto, email,
+        fullName, password, userType);
+  }
 
+  /**
+   * equals method.
+   */
+  @Override
+  public boolean equals(final Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    EmployeeInDto other = (EmployeeInDto) obj;
+    return Objects.equals(departmentInDto, other.departmentInDto)
+        && Objects.equals(email, other.email)
+        && Objects.equals(fullName, other.fullName)
+        && Objects.equals(password, other.password)
+        && userType == other.userType;
+  }
 
+  /**
+   * parameterized constructor.
+   * @param emailField
+   * @param fullNameField
+   * @param passwordField
+   * @param userTypeField
+   * @param departmentInDtoField
+   */
+  public EmployeeInDto(
+      @Email(regexp = "^[A-Za-z0-9+_.-]+@nucleusteq.com(.+)$")
+      @NotBlank final String emailField,
+      @NotEmpty final String fullNameField,
+      @NotEmpty final String passwordField,
+      final UserType userTypeField,
+      @NotEmpty final DepartmentInDto departmentInDtoField) {
+    super();
+    this.email = emailField;
+    this.fullName = fullNameField;
+    this.password = passwordField;
+    this.userType = userTypeField;
+    this.departmentInDto = departmentInDtoField;
+  }
 
 }

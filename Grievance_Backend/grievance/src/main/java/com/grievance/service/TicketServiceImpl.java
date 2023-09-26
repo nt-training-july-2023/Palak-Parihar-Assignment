@@ -11,6 +11,8 @@ import com.grievance.entity.Comment;
 import com.grievance.entity.Employee;
 import com.grievance.entity.Status;
 import com.grievance.entity.Ticket;
+import com.grievance.entity.UserType;
+import com.grievance.exception.CommentNotFoundException;
 import com.grievance.exception.EmployeeNotFoundException;
 import com.grievance.exception.TicketNotFoundException;
 import com.grievance.exception.UnauthorisedUserException;
@@ -33,22 +35,22 @@ import org.springframework.stereotype.Service;
 @Service
 public class TicketServiceImpl implements TicketService {
   /**
-   * The employeeRepository instance provide data access method
-   * for interacting with database.
+   * The employeeRepository instance provide data access method for interacting
+   * with database.
    */
   @Autowired
   private ModelMapper modelMapper;
 
   /**
-   * ticket repository instance provide access
-   * method for interacting with database.
+   * ticket repository instance provide access method for interacting with
+   * database.
    */
   @Autowired
   private TicketRepository ticketRepository;
 
   /**
-   * employee repository instance provide access
-   * method for interacting with database.
+   * employee repository instance provide access method for interacting with
+   * database.
    */
   @Autowired
   private EmployeeRepository employeeRepository;
@@ -75,15 +77,14 @@ public class TicketServiceImpl implements TicketService {
    */
   @Override
   public Optional<List<TicketOutWOComment>> listOfAllTickets(
-         final Integer page) {
+      final Integer page) {
     List<TicketOutWOComment> tickets = new ArrayList<TicketOutWOComment>();
     ticketRepository
-      .findAll(PageRequest.of(page, pageSize).withSort(Sort.by("status")))
-      .forEach(
-        e -> {
-          tickets.add(convertToWOCommentDto(e));
-        }
-      );
+        .findAll(PageRequest.of(page, pageSize).withSort(Sort.by("status")))
+        .forEach(
+            e -> {
+              tickets.add(convertToWOCommentDto(e));
+            });
     return Optional.ofNullable(tickets);
   }
 
@@ -93,20 +94,23 @@ public class TicketServiceImpl implements TicketService {
    * @return list of ticket out DTO
    */
   @Override
-  public Optional<List<TicketOutWOComment>> listOfAllTicketsByDepartmentName(
-    final String email
-  ) {
+  public Optional<List<TicketOutWOComment>>
+  listOfAllTicketsByEmployeeDepartment(
+      final String email,
+      final Integer page) {
     Employee employee = employeeRepository.findByEmail(email);
+    if (Objects.isNull(employee)) {
+      throw new EmployeeNotFoundException(email);
+    }
     List<TicketOutWOComment> ticketOutDtos =
-             new ArrayList<TicketOutWOComment>();
+        new ArrayList<TicketOutWOComment>();
     ticketRepository
-      .findByDepartment(employee.getDepartment(),
-             PageRequest.of(0, pageSize).withSort(Sort.by("status")))
-      .forEach(
-        e -> {
-          ticketOutDtos.add(convertToWOCommentDto(e));
-        }
-      );
+        .findByDepartment(employee.getDepartment(),
+            PageRequest.of(page, pageSize).withSort(Sort.by("status")))
+        .forEach(
+            e -> {
+              ticketOutDtos.add(convertToWOCommentDto(e));
+            });
     return Optional.ofNullable(ticketOutDtos);
   }
 
@@ -117,99 +121,103 @@ public class TicketServiceImpl implements TicketService {
    */
   @Override
   public Optional<TicketOutDto> updateTicket(
-          final TicketUpdateDto ticketUpdateDto, final Integer ticketId,
-          final String email
-          ) {
-       Employee employee = employeeRepository.findByEmail(email);
-       if (Objects.isNull(employee)) {
-          throw new EmployeeNotFoundException(email);
-       } else {
-             Optional<Ticket> ticket = ticketRepository.findById(ticketId);
-             if (ticket.isPresent()) {
-                 if (!employee.getDepartment().getDepartmentName()
-                       .equals(ticket.get().getDepartment()
-                               .getDepartmentName())) {
-                     throw new UnauthorisedUserException(email);
-                }
-                if (!Objects.isNull(ticketUpdateDto.getStatus())) {
-                     ticket.get().setStatus(ticketUpdateDto.getStatus());
-                }
-                Comment comment = new Comment(ticketUpdateDto.getDescription());
-                comment.setTicket(ticket.get());
-                comment.setUserName(email);
-                 ticket.get().getComments().add(comment);
-                 Ticket updatedTicket = ticketRepository.save(ticket.get());
-                 return Optional.of(convertToDto(updatedTicket));
-             } else {
-                 throw new TicketNotFoundException(ticketId);
+      final TicketUpdateDto ticketUpdateDto, final Integer ticketId,
+      final String email) {
+    Employee employee = employeeRepository.findByEmail(email);
+    if (Objects.isNull(employee)) {
+      throw new EmployeeNotFoundException(email);
+    } else {
+      Optional<Ticket> ticket = ticketRepository.findById(ticketId);
+      if (ticket.isPresent()) {
+        if (!employee.getDepartment().equals(ticket.get().getDepartment())) {
+          throw new UnauthorisedUserException(email);
+        }
+
+      if (!Objects.isNull(ticketUpdateDto.getStatus())) {
+        if (ticketUpdateDto.getStatus() == Status.RESOLVED) {
+          if (ticket.get().getComments().isEmpty()) {
+            throw new CommentNotFoundException();
           }
-  }
+        }
+        ticket.get().setStatus(ticketUpdateDto.getStatus());
+      }
+      Comment comment = new Comment(ticketUpdateDto.getDescription());
+      comment.setTicket(ticket.get());
+      comment.setUserName(email);
+      ticket.get().getComments().add(comment);
+      Ticket updatedTicket = ticketRepository.save(ticket.get());
+      return Optional.ofNullable(convertToDto(updatedTicket));
+    }
+    throw new TicketNotFoundException(ticketId);
+    }
   }
 
   /**
-  * @param page
-  * @param email
-  * @param status
-  * @return list of tickets raised by user.
-  */
+   * @param page
+   * @param email
+   * @return list of tickets raised by user.
+   */
   @Override
   public Optional<List<TicketOutWOComment>> listTicketsRaisedByUser(
-         final Integer page,
-         final Status status,
-         final String email) {
-      Employee employee = employeeRepository.findByEmail(email);
-      if (Objects.isNull(employee)) {
-          throw new EmployeeNotFoundException(email);
-      } else {
-         List<TicketOutWOComment> ticketOutDtos =
-               new ArrayList<TicketOutWOComment>();
-         ticketRepository.findByEmployee(employee,
-               PageRequest.of(page, pageSize).withSort(Sort.by("status")))
-           .forEach(e -> {
-               ticketOutDtos.add(convertToWOCommentDto(e));
-           });
-          return Optional.ofNullable(ticketOutDtos);
-     }
+      final Integer page,
+      final String email) {
+    Employee employee = employeeRepository.findByEmail(email);
+    if (Objects.isNull(employee)) {
+      throw new EmployeeNotFoundException(email);
+    } else {
+      List<TicketOutWOComment> ticketOutDtos =
+          new ArrayList<TicketOutWOComment>();
+      ticketRepository.findByEmployee(employee,
+          PageRequest.of(page, pageSize).withSort(Sort.by("status")))
+          .forEach(e -> {
+            ticketOutDtos.add(convertToWOCommentDto(e));
+          });
+      return Optional.ofNullable(ticketOutDtos);
+    }
   }
 
   /**
-  *
-  * @param ticketId
-  * @return ticket
-  */
+   *
+   * @param ticketId
+   * @return ticket
+   */
   @Override
   public Optional<TicketOutDto> findTicketByTicketId(final Integer ticketId) {
-     Optional<Ticket> ticket = ticketRepository.findById(ticketId);
-     if (ticket.isPresent()) {
-        Optional<TicketOutDto> optionalTicketOut =
-                 Optional.of(convertToDto(ticket.get()));
-        return optionalTicketOut;
-     }
-     throw new TicketNotFoundException(ticketId);
+    Optional<Ticket> ticket = ticketRepository.findById(ticketId);
+    if (ticket.isPresent()) {
+      Optional<TicketOutDto> optionalTicketOut =
+          Optional.ofNullable(convertToDto(ticket.get()));
+      return optionalTicketOut;
+    }
+    throw new TicketNotFoundException(ticketId);
   }
 
   /**
-  * @param status
-  * @param page
-  * @param email
-  * @return list of tickets.
-  */
+   * @param status
+   * @param page
+   * @param email
+   * @return list of tickets.
+   */
   @Override
   public Optional<List<TicketOutWOComment>> listTicketByStatusAndEmployee(
-         final Integer page,
-         final Status status,
-         final String email) {
+      final Integer page,
+      final Status status,
+      final String email) {
     Employee employee = employeeRepository.findByEmail(email);
+    if (Objects.isNull(employee)) {
+      throw new EmployeeNotFoundException(email);
+    }
     List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
     if (!Objects.isNull(employee)) {
-         ticketRepository
-           .findByStatusAndEmployee(status, employee,
-                  PageRequest.of(page, pageSize)).forEach(e -> {
-                        list.add(convertToWOCommentDto(e));
-             });
+      ticketRepository
+          .findByStatusAndEmployee(status, employee,
+              PageRequest.of(page, pageSize))
+          .forEach(e -> {
+            list.add(convertToWOCommentDto(e));
+          });
     }
     return Optional.of(list);
-}
+  }
 
   /**
    * @param status
@@ -217,18 +225,85 @@ public class TicketServiceImpl implements TicketService {
    */
   @Override
   public Optional<List<TicketOutWOComment>> listTicketsByStatus(
-        final Status status) {
-     List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
-     ticketRepository.findByStatus(status)
-         .forEach(e -> {
-              list.add(convertToWOCommentDto(e));
-         });
-     return Optional.ofNullable(list);
+      final Status status,
+      final Integer page) {
+    List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
+    ticketRepository.findByStatus(status,
+        PageRequest.of(page, pageSize).withSort(Sort.by("status")))
+        .forEach(e -> {
+          list.add(convertToWOCommentDto(e));
+        });
+    return Optional.ofNullable(list);
   }
 
   /**
-   * Converts an Ticket entity object into an
-   * TicketOutDto data transfer object (DTO).
+   *
+   * @param email
+   * @param status
+   * @param page
+   * @return list of tickets by department and status.
+   */
+  @Override
+  public Optional<List<TicketOutWOComment>>
+  listTicketsRaisedByDepartmentAndStatus(
+      final String email,
+      final Status status,
+      final Integer page) {
+    Employee employee = employeeRepository.findByEmail(email);
+    if (Objects.isNull(employee)) {
+      throw new EmployeeNotFoundException(email);
+      }
+    List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
+    ticketRepository.findByDepartmentAndStatusAndEmployee(
+        employee.getDepartment(),
+        status, employee, PageRequest.of(page, pageSize))
+        .forEach(e -> {
+          list.add(convertToWOCommentDto(e));
+        });
+    return Optional.ofNullable(list);
+  }
+
+  /**
+   * @param email
+   * @param page
+   * @param status
+   * @param myTickets
+   * @return list of tickets.
+   */
+  @Override
+  public Optional<List<TicketOutWOComment>> listAllTickets(
+      final String email,
+      final Integer page,
+      final Status status,
+      final Boolean myTickets) {
+    Boolean isAdmin = employeeRepository.existsByEmailAndUserType(
+        email, UserType.ADMIN);
+    if (Objects.isNull(myTickets)) {
+      if (isAdmin) {
+        if (Objects.isNull(status)) {
+          return listOfAllTickets(page);
+        } else {
+          return listTicketsByStatus(status, page);
+        }
+      } else {
+        if (Objects.isNull(status)) {
+          return listOfAllTicketsByEmployeeDepartment(email, page);
+        } else {
+          return listTicketsRaisedByDepartmentAndStatus(email, status, page);
+        }
+      }
+    } else {
+      if (Objects.isNull(status)) {
+        return listTicketsRaisedByUser(page, email);
+      } else {
+        return listTicketByStatusAndEmployee(page, status, email);
+      }
+    }
+  }
+
+  /**
+   * Converts an Ticket entity object into an TicketOutDto data transfer object
+   * (DTO).
    *
    * @param ticket The Ticket entity to be converted.
    * @return An TicketOutDto representing the employee's data.
@@ -239,8 +314,7 @@ public class TicketServiceImpl implements TicketService {
   }
 
   /**
-   * Converts an TicketInDto dto object into an
-   * Ticket entity.
+   * Converts an TicketInDto dto object into an Ticket entity.
    *
    * @param ticketInDto The Ticket entity to be converted.
    * @return An Employee representing the employee's data.
@@ -251,15 +325,15 @@ public class TicketServiceImpl implements TicketService {
   }
 
   /**
-   * Converts an Ticket entity object into an
-   * TicketOutDto data transfer object (DTO).
+   * Converts an Ticket entity object into an TicketOutDto data transfer object
+   * (DTO).
    *
    * @param ticket The Ticket entity to be converted.
    * @return An TicketOutWOComment representing the employee's data.
    */
   public TicketOutWOComment convertToWOCommentDto(final Ticket ticket) {
-     TicketOutWOComment ticketOutWOComment =
-              modelMapper.map(ticket, TicketOutWOComment.class);
-     return ticketOutWOComment;
+    TicketOutWOComment ticketOutWOComment =
+        modelMapper.map(ticket, TicketOutWOComment.class);
+    return ticketOutWOComment;
   }
 }

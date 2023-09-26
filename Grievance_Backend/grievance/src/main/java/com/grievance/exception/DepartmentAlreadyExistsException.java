@@ -12,15 +12,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
   value = HttpStatus.CONFLICT,
   reason = "Department with this Title already exists"
 )
-public class DepartmentAlreadyExists extends RuntimeException {
+public class DepartmentAlreadyExistsException extends RuntimeException {
    private static final long serialVersionUID = -3332292346834265691L;
   /**
    * Constructs a new ResourceNotFoundException with a specific email address.
    *
-   * @param departmentName already present.
    *
    */
-  public DepartmentAlreadyExists(final String departmentName) {
-    super("Department Already Exist with departmentName = " + departmentName);
+  public DepartmentAlreadyExistsException() {
+    super("Department Already Exist with this title");
   }
 }

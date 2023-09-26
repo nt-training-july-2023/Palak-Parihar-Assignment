@@ -1,15 +1,12 @@
 package com.grievance.controller;
 
-import com.grievance.authentication.AuthenticatingUser;
 import com.grievance.dto.TicketInDto;
 import com.grievance.dto.TicketOutDto;
 import com.grievance.dto.TicketOutWOComment;
 import com.grievance.dto.TicketUpdateDto;
 import com.grievance.entity.Status;
-import com.grievance.exception.EmployeeNotFoundException;
 import com.grievance.service.TicketService;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,13 +36,6 @@ public class TicketController {
 
   /**
    *
-   */
-  @Autowired
-  private AuthenticatingUser authenticatingUser;
-
-
-  /**
-   *
    * Controller method to create a new ticket.
    * @param ticketInDto
    * @return Responseentity with optional of TicketOut DTO.
@@ -62,7 +52,6 @@ public class TicketController {
    * controller method to return list of all tickets.
    *
    * @param email
-   * @param password
    * @param page
    * @param myTickets
    * @param status
@@ -71,46 +60,14 @@ public class TicketController {
   @GetMapping("/listAllTickets")
   public ResponseEntity<?> listAllTickets(
     @RequestHeader final String email,
-    @RequestHeader final String password,
     @RequestParam final Integer page,
     @RequestParam(required = false) final Status status,
     @RequestParam(required = false) final Boolean myTickets
   ) {
-      if (!Objects.isNull(myTickets)) {
-         try {
-              if (!Objects.isNull(status)) {
-                  Optional<List<TicketOutWOComment>> optionalListOfTickets =
-                        ticketService.listTicketByStatusAndEmployee(
-                                page, status, email);
-                 return new ResponseEntity<>(optionalListOfTickets,
-                         HttpStatus.ACCEPTED);
-              }
-            Optional<List<TicketOutWOComment>> optionalListOfTickets =
-                    ticketService.listTicketsRaisedByUser(page, status, email);
-            return new ResponseEntity<>(optionalListOfTickets,
-                  HttpStatus.ACCEPTED);
-         } catch (EmployeeNotFoundException e) {
-           return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-         }
-       }
-      Boolean isAdmin = authenticatingUser.checkIfUserIsAdmin(email, password);
-      if (isAdmin) {
-            if (!Objects.isNull(status)) {
-               Optional<List<TicketOutWOComment>> optionalListOfTickets =
-                       ticketService.listTicketsByStatus(status);
-                    return new ResponseEntity<>(optionalListOfTickets,
-                     HttpStatus.ACCEPTED);
-         }
-          Optional<List<TicketOutWOComment>> optionalListOfTickets =
-                 ticketService.listOfAllTickets(page);
-          return new ResponseEntity<>(optionalListOfTickets,
-                  HttpStatus.ACCEPTED);
-      } else {
-          Optional<List<TicketOutWOComment>> optionalListOfTickets =
-                  ticketService.listOfAllTicketsByDepartmentName(email);
-          return new ResponseEntity<>(optionalListOfTickets,
-                 HttpStatus.ACCEPTED);
-      }
+      Optional<List<TicketOutWOComment>> response =
+          ticketService.listAllTickets(email, page, status,
+              myTickets);
+      return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
   }
 
   /**

@@ -22,7 +22,7 @@ export default function Navigation(props) {
         <>
             <div className={classes.container}>
                 <div>
-                    <h1 className={classes.heading}>NucleusTeq</h1>
+                    <p className={classes.heading}>NucleusTeq</p>
                 </div>
                 <div>
                     <ul className={classes.navItems}>

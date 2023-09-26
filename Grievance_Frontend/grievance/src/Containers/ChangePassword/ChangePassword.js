@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react"
-import Button from "../../Components/UI/Button/Button";
 import InputElement from "../../Components/UI/InputElement/InputElement";
 import { CHANGE_USER_PASSWORD } from "../../Service/EmployeeServices";
 import Modal from "../../Components/UI/Modal/Modal";
 import { useNavigate } from "react-router";
+import Form from "../../Components/Form/Form";
+import { inputValidity } from "../../Validation/Validation";
 
 
 export default function ChangePassword(props) {
@@ -24,6 +25,7 @@ export default function ChangePassword(props) {
                     minLength: 6,
                     isPassword: true
                 },
+                error: '',
                 valid: false,
                 touched: false,
                 label: "Old Password"
@@ -34,6 +36,7 @@ export default function ChangePassword(props) {
                     type: 'password',
                     placeholder: 'New Password'
                 },
+                error: '',
                 value: '',
                 validation: {
                     required: true,
@@ -80,7 +83,8 @@ export default function ChangePassword(props) {
             navigate('/logout')
             return
         }
-    })
+        setMessage('')
+    },[controls])
 
 
     const completeForm = formElementsArray.map(formElement => {
@@ -95,6 +99,7 @@ export default function ChangePassword(props) {
                         options={formElement.config.options}
                         value={formElement.config.value}
                         invalid={!formElement.config.valid}
+                        error={formElement.config.error}
                         shouldValidate={formElement.config.validation}
                         touched={formElement.config.touched}
                         changed={(e) => inputChangeHandler(e, formElement.id)}
@@ -104,44 +109,19 @@ export default function ChangePassword(props) {
         </>)
     })
 
-    const checkValidity = (value, rules) => {
-        let isValid = true;
-        if (!rules) {
-            return true;
-        }
-
-        if (rules.required) {
-            isValid = value.trim() !== '' && isValid;
-        }
-
-        if (rules.minLength) {
-            isValid = value.length >= rules.minLength && isValid;
-            setMessage("Password doesn't match the min length of 6")
-        }
-
-        if (rules.maxLength) {
-            isValid = value.length >= rules.minLength && isValid;
-            setMessage("Password doesn't match the max length of 15")
-        }
-
-        if (rules.isPassword) {
-            const pattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
-            isValid = pattern.test(value) && isValid
-            setMessage("Password doesn't match the requirements")
-        }
-        if (isValid) {
-            setMessage('')
-        }
-        return isValid;
-    }
+    const checkValidity = (value, rules) => inputValidity(value, rules)
 
     const inputChangeHandler = (e, controlName) => {
+
+        const message = checkValidity(e.target.value, controls[controlName].validation)
+        console.log(message)
         const updatedControls = {
             ...controls,
             [controlName]: {
                 ...controls[controlName],
                 value: e.target.value,
-                valid: checkValidity(e.target.value, controls[controlName].validation),
+                error: message,
+                valid: message === '',
                 touched: true
             }
         }
@@ -151,10 +131,11 @@ export default function ChangePassword(props) {
     const submithandler = (e) => {
         e.preventDefault();
 
-        if (!controls.oldPassword.valid || !controls.newPassword.valid || !controls.confirmPassword.valid) {
-            setMessage('Password must match requirements')
-            return;
+        if(!controls.confirmPassword.valid){
+            setMessage("Mandatory field can't be empty")
+            return
         }
+
 
         if (controls.confirmPassword.value !== controls.newPassword.value) {
             setMessage('New Password and Confirm Password values are mismatched')
@@ -168,7 +149,7 @@ export default function ChangePassword(props) {
         console.log(values)
         const response = CHANGE_USER_PASSWORD(values)
             .then(res => {
-                setModal(()=> <Modal message="Password changed successfully"/>)
+                setModal(() => <Modal message="Password changed successfully" />)
                 setTimeout(() => {
                     navigate('/logout')
                 }, 1000);
@@ -188,15 +169,13 @@ export default function ChangePassword(props) {
     return (
         <>
             <div className="reg-container">
-                <h3 className='heading'>Change Password</h3>
-                <div className="reg-content">
-                    <form onSubmit={submithandler}>
-                        {completeForm}
-                        <p className="message">
-                            {message}
-                        </p>
-                        <Button type='submit' content='submit' />
-                    </form>
+                <div className="container">
+                    <Form
+                        content={completeForm}
+                        heading='Change Password'
+                        onSubmit={submithandler}
+                        enable={true}
+                        message={message} />
                 </div>
             </div>
         </>

@@ -1,9 +1,10 @@
 const BASE_URL = "http://localhost:8080"
 
-export const LOGIN_USER_URL = BASE_URL + "/login";
-export const CHANGE_PASSWORD_URL = BASE_URL + "/changePassword";
-export const FETCH_ALL_USERS_URL = BASE_URL + "/listAllEmployees";
-export const SAVE_NEW_EMPLOYEE_URL = BASE_URL + "/saveEmployee";
+export const EMPLOYEE_BASE_URL = BASE_URL + "/employee";
+export const LOGIN_USER_URL = EMPLOYEE_BASE_URL + "/login";
+export const CHANGE_PASSWORD_URL = EMPLOYEE_BASE_URL + "/changePassword";
+export const FETCH_ALL_USERS_URL = EMPLOYEE_BASE_URL + "/listAllEmployees";
+export const SAVE_NEW_EMPLOYEE_URL = EMPLOYEE_BASE_URL + "/saveEmployee";
 
 export const DEPARTMENT_BASE_URL = BASE_URL + "/department";
 export const FETCH_ALL_DEPARTMENTS_URL = DEPARTMENT_BASE_URL + '/listDepartments'

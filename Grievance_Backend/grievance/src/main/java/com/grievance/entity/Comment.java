@@ -28,7 +28,8 @@ public class Comment {
    * Integer commentId of Comment.
    */
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "com_seq")
+  @JsonIgnore
   private Integer commentId;
 
   /**

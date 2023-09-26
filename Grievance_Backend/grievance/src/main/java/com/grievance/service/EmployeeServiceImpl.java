@@ -60,7 +60,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         EmployeeOutDto employeeOutDto = convertToDto(employee);
         return Optional.of(employeeOutDto);
     }
-    throw new EmployeeAlreadyExistException(employeeInDto.getEmail());
+    throw new EmployeeAlreadyExistException();
   }
 
   /**
@@ -120,15 +120,29 @@ public class EmployeeServiceImpl implements EmployeeService {
        if (Objects.isNull(employee)) {
            throw new EmployeeNotFoundException(email);
        }
-       if (!changePasswordInDto.getOldPassword()
-               .equals(changePasswordInDto.getNewPassword())) {
-           employee.setPassword(changePasswordInDto.getNewPassword());
-           employee.setFirstTimeUser(false);
-           employeeRepository.save(employee);
-           return;
+
+       if (!employee.getPassword().equals(
+           changePasswordInDto.getNewPassword())) {
+         employee.setPassword(changePasswordInDto.getNewPassword());
+         employee.setFirstTimeUser(false);
+         employeeRepository.save(employee);
+         return;
        }
      throw new PasswordMatchException();
    }
+
+  /**
+   * delete employee by Id.
+   * @param email
+   */
+  @Override
+  public void deleteEmployeeById(final String email) {
+    Employee employee = employeeRepository.findByEmail(email);
+    if (Objects.isNull(employee)) {
+      throw new EmployeeNotFoundException(email);
+    }
+    employeeRepository.delete(employee);
+  }
 
   /**
    * Converts an Employee entity object into an

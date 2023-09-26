@@ -11,7 +11,7 @@ export default function Modal({ component, message, onClick }) {
                         <p>{message}</p>
 
                         <div className={classes.close}>
-                            {onClick && <Button type='button' content='close' onClick={onClick} />}
+                            {onClick && <Button type='button' content='close' onClick={onClick} enable={true} />}
                         </div>
                     </div> : component
                 }

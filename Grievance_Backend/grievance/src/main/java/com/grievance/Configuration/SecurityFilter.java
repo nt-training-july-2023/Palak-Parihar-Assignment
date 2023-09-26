@@ -29,21 +29,21 @@ import com.grievance.authentication.AuthenticatingUser;
  * logic before and after a request reaches the controller.
  */
 @CrossOrigin("*")
-public class UserFilter implements Filter {
+public class SecurityFilter implements Filter {
 /**
  * logger.
  */
   private static final Logger LOGGER =
-          LoggerFactory.getLogger(UserFilter.class);
+          LoggerFactory.getLogger(SecurityFilter.class);
   /**
    * loginUrl to compare with request url.
    */
-  private String loginUrl = "/login";
+  private String loginUrl = "/employee/login";
   /**
    *
    * @param authenticatingUserField
    */
-  public UserFilter(final AuthenticatingUser authenticatingUserField) {
+  public SecurityFilter(final AuthenticatingUser authenticatingUserField) {
       this.authenticatingUser = authenticatingUserField;
   }
 
@@ -59,9 +59,10 @@ public class UserFilter implements Filter {
   private static List<String> adminUrls = new ArrayList<String>();
 
   static {
-      adminUrls.add("/listAllEmployees");
+      adminUrls.add("/employee/listAllEmployees");
       adminUrls.add("/department/save");
-      adminUrls.add("/saveEmployee");
+      adminUrls.add("/department/deleteDepartment");
+      adminUrls.add("/employee/saveEmployee");
    }
 
   /**

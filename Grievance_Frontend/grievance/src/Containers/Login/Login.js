@@ -1,13 +1,14 @@
 import "./Login.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'
 import InputElement from "../../Components/UI/InputElement/InputElement";
 import Modal from "../../Components/UI/Modal/Modal";
-import Button from "../../Components/UI/Button/Button";
 import { LOGIN_USER } from "../../Service/EmployeeServices";
 import Spinner from "../../Components/UI/Spinner/Spinner";
+import { inputValidity} from "../../Validation/Validation";
+import Form from "../../Components/Form/Form";
 
-export default function Login(props) {
+export default function Login() {
     let cont = {
         isValid: false,
         submit: false,
@@ -16,13 +17,15 @@ export default function Login(props) {
                 elementType: 'input',
                 elementConfig: {
                     type: 'email',
-                    placeholder: 'UserName'
+                    placeholder: 'Your Email'
                 },
                 value: '',
+                label: 'Your email',
                 validation: {
                     required: true,
                     isEmail: true
                 },
+                error: '',
                 valid: false,
                 touched: false
             },
@@ -33,20 +36,21 @@ export default function Login(props) {
                     placeholder: 'Password'
                 },
                 value: '',
+                label: 'Your password',
                 validation: {
                     required: true,
                     minLength: 6,
                     isPassword: true
                 },
+                error: '',
                 valid: false,
                 touched: false
             }
         }
     }
 
-    const [disableButton, setDisableButton] = useState(cont.isValid);
+    const [enableButton, setEnableButton] = useState(cont.isValid);
     const [controls, setControls] = useState(cont.controls);
-    const [message, setMessage] = useState();
     const [modal, setModal] = useState();
     const navigate = useNavigate();
 
@@ -65,7 +69,9 @@ export default function Login(props) {
                 elementType={formElement.config.elementType}
                 elementConfig={formElement.config.elementConfig}
                 value={formElement.config.value}
-                invalid={!formElement.config.valid}
+                label={formElement.config.label}
+                invalid={formElement.config.valid}
+                error={formElement.config.error}
                 shouldValidate={formElement.config.validation}
                 touched={formElement.config.touched}
                 changed={(e) => inputChangeHandler(e, formElement.id)}
@@ -73,58 +79,24 @@ export default function Login(props) {
         </>
     ))
 
-    const checkValidity = (value, rules) => {
-        console.log("checkvalidity")
-        let isValid = true;
-        if (!rules) {
-            return true;
+    useEffect(() => {
+        if (controls.email.valid && controls.password.valid) {
+            setEnableButton(true)
         }
+    }, [controls])
 
-        if (rules.required) {
-            isValid = value.trim() !== '' && isValid;
-        }
-
-        if (rules.minLength) {
-            isValid = value.length >= rules.minLength && isValid;
-            setMessage("Password doesn't match the min length of 6")
-        }
-
-        if (rules.maxLength) {
-            isValid = value.length >= rules.minLength && isValid;
-            setMessage("Password doesn't match the max length of 15")
-        }
-
-        if (rules.isEmail) {
-            const pattern = /^[A-Za-z0-9+_.-]+@+nucleusteq.com$/;
-            console.log(value.endsWith("@nucleusteq.com") + " " + pattern.test(value))
-            isValid = pattern.test(value) && isValid
-            if (!isValid) {
-                setMessage("Invalid email domain")
-            }
-
-        }
-
-        if (rules.isPassword) {
-            const pattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,20}$/;
-            isValid = pattern.test(value) && isValid
-            if (!isValid) {
-                setMessage("Password doesn't match the requirements")
-            }
-        }
-        if (isValid) {
-            setMessage('')
-            setDisableButton(false)
-        }
-        return isValid;
-    }
+    const checkValidity = (value, rules) => inputValidity(value, rules);
 
     const inputChangeHandler = (e, controlName) => {
+
+        const message = checkValidity(e.target.value, controls[controlName].validation)
         const updatedControls = {
             ...controls,
             [controlName]: {
                 ...controls[controlName],
                 value: e.target.value,
-                valid: checkValidity(e.target.value, controls[controlName].validation),
+                error: message,
+                valid: message === '',
                 touched: true
             }
         }
@@ -133,11 +105,6 @@ export default function Login(props) {
 
     const submithandler = (e) => {
         e.preventDefault();
-
-        if (!(controls.email.valid && controls.password.valid)) {
-            setMessage("Credentials doesn't match the requirements")
-            return
-        }
 
         var values = {
             email: controls.email.value,
@@ -148,7 +115,6 @@ export default function Login(props) {
         LOGIN_USER(values)
             .then(res => {
                 setModal(() => <Modal component={<Spinner />} />)
-                console.log(values)
                 let userValues = {
                     email: values.email,
                     password: values.password,
@@ -171,7 +137,7 @@ export default function Login(props) {
                 return res.data;
             }).catch(err => {
                 console.log(err)
-                setModal(() => <Modal message={err.data.response.data} onClick={closeModal} />)
+                setModal(() => <Modal message={err.data.response.data.message} onClick={closeModal} />)
                 return err.data.response.data;
             })
 
@@ -184,19 +150,13 @@ export default function Login(props) {
 
     return (
         <>
-            <div className="modal-container">
-                {modal}
-            </div>
+            {modal}
             <h1 className="login-heading"><p>Grievance Management System</p></h1>
-            <div className="container">
-                <div className="main_body">
-                    <form onSubmit={e => submithandler(e)}>
-                        {completeForm}
-                        <p className="message">
-                            {message}
-                        </p>
-                        <Button type="submit" value="submit" disabled={disableButton} />
-                    </form>
+            <div>
+                {/* <i class='fas fa-lock'></i> */}
+
+                <div className="container">
+                    <Form content={completeForm} onSubmit={submithandler} enable={enableButton} />
                 </div>
             </div>
         </>

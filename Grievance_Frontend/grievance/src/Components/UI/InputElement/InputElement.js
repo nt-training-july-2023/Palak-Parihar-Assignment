@@ -7,9 +7,6 @@ function InputElement(props) {
     if (props.invalid && props.shouldValidate && props.touched) {
         inputClasses.push(classes.Invalid);
     }
-
-
-
     const fetchOptions = (options) => {
         const selectOptions = [];
         Object.keys(options).forEach(key => {
@@ -25,14 +22,16 @@ function InputElement(props) {
 
     switch (props.elementType) {
         case ('input'):
-            inputElement = <input
+            inputElement = <> <input
                 className={inputClasses.join(' ')}
                 type={props.elementConfig.type}
                 {...props.elementConfig}
                 value={props.value}
                 onChange={props.changed}
                 disabled={props.disabled}
-                required />;
+                />
+                <p className={classes.errorMessage}>{props.error}</p>
+            </>;
             break;
 
         case ('textarea'):

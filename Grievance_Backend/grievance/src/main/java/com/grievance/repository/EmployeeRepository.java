@@ -49,4 +49,12 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
    * @return existed Employee by email and password.
    */
   Employee findByEmailAndPassword(String email, String password);
+
+  /**
+   * @param email
+   * @param userType
+   * @return boolean if user exist with given mail and userType
+   */
+  Boolean existsByEmailAndUserType(String email, UserType userType);
+
 }

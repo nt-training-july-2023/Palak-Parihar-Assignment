@@ -248,8 +248,8 @@ export default function EmployeeRegistration(props) {
                 setModal(() => <Modal message="Employee successfully created" onClick={closeModal} />)
                 return res.data;
             }).catch(err => {
-                console.log(err.data.response.data)
-                setModal(() => <Modal message={err.data.response.data} onClick={closeModal} />)
+                console.log(err.data.response.data.message)
+                setModal(() => <Modal message={err.data.response.data.message} onClick={closeModal} />)
                 return err.data;
             })
     }
@@ -271,7 +271,7 @@ export default function EmployeeRegistration(props) {
                         <p className="message">
                             {message}
                         </p>
-                        <Button type='submit' content='submit' />
+                        <Button type='submit' content='submit' enable={true}/>
                     </form>
                 </div>
             </div>

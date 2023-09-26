@@ -20,6 +20,7 @@ export const FETCH_ALL_TICKETS = (parameters) => {
             headers: headersRequired,
             params: parameters
         }).then((res) => {
+            console.log(res.data)
             return resolve({ data: res.data })
         }).catch((err) => {
             return reject({ data: err })

@@ -4,6 +4,7 @@ import Modal from "../../Components/UI/Modal/Modal";
 import ViewTicket from "../ViewTicket/ViewTicket";
 import './ListTickets.css';
 import { useNavigate } from "react-router";
+import Table from "../../Components/Table/Table";
 
 
 export default function ListTickets(props) {
@@ -16,8 +17,18 @@ export default function ListTickets(props) {
     const [config, setConfig] = useState({
         page: 0,
         myTickets: null,
-        status: null
+        status: null,
+        // departmentTickets: null
     })
+
+    const [headings, setHeadings] = useState(["Ticket Id", "Title", "Ticket Type", "Status", "Last Updated", "Raised By", "Department"])
+    const actions = (
+        <>
+            {config.myTickets && <td>
+                <i id="icon" class='fas fa-edit' />
+            </td>}
+        </>
+    )
 
     const [ticketUpdate, setTicketUpdate] = useState({
         status: null,
@@ -26,19 +37,24 @@ export default function ListTickets(props) {
 
 
     useEffect(() => {
-
-        if(sessionStorage.getItem('userDetails') === null){
+        if (config.myTickets) {
+            setHeadings([...headings, "Actions"])
+        }else{
+            setHeadings(headings.filter((item) => item !== "Actions"));
+        }
+        console.log(config)
+        if (sessionStorage.getItem('userDetails') === null) {
             navigate('/logout')
             return
-        }else {
+        } else {
             let values = JSON.parse(sessionStorage.getItem('userDetails'))
             console.log(values.firstTimeUser)
-            if(values.firstTimeUser){
+            if (values.firstTimeUser) {
                 navigate('/changePassword')
                 return
             }
         }
-        
+
         FETCH_ALL_TICKETS(config).
             then(res => {
                 if (res.data.length < 10) {
@@ -75,12 +91,13 @@ export default function ListTickets(props) {
 
     const MyTickets = () => {
         console.log(config)
-        let parameters = {
+        let updateConfig = {
             ...config,
             myTickets: true,
+            departmentTickets: null,
             page: 0,
         }
-        setConfig(parameters)
+        setConfig(updateConfig)
         console.log(config)
         setDisablePrevious(true)
     }
@@ -98,7 +115,8 @@ export default function ListTickets(props) {
         let updateConfig = {
             ...config,
             page: 0,
-            myTickets: null
+            myTickets: null,
+            departmentTickets: null
         }
         console.log(updateConfig)
         setConfig(updateConfig)
@@ -111,6 +129,7 @@ export default function ListTickets(props) {
             ...config,
             status: e.target.value
         }
+        console.log(updateConfig)
         setConfig(updateConfig)
     }
 
@@ -177,39 +196,11 @@ export default function ListTickets(props) {
                 </div>
             </div>
             <div className="list_main_container">
-                <table id="list_content">
-                    <tr>
-                        <th>Ticket Id</th>
-                        <th>Ticket Type</th>
-                        <th>Title</th>
-                        <th>Department</th>
-                        <th>Raised By</th>
-                        <th>Last Updated</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-
-                    {
-                        tickets.map(t => {
-                            return (
-                                <>
-                                    <tr>
-                                        <td>{t.ticketId}</td>
-                                        <td>{t.ticketType}</td>
-                                        <td>{t.title}</td>
-                                        <td>{t.department}</td>
-                                        <td>{t.employee}</td>
-                                        <td>{t.lastUpdated}</td>
-                                        <td>{t.status}</td>
-                                        <td>
-                                            <i id="icon" class='fas fa-edit' onClick={() => viewSelectedTicket(t.ticketId)} />
-                                        </td>
-                                    </tr>
-                                </>
-                            )
-                        })
-                    }
-                </table>
+                <Table
+                    values={tickets}
+                    headings={headings}
+                    view={actions}
+                    viewSelectedTicket={viewSelectedTicket} />
             </div >
             <div id="actions_arrow">
                 {disablePrevious ?

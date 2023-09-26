@@ -1,10 +1,6 @@
 package com.grievance.dto;
 
-
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
+import java.util.Objects;
 
 public class DepartmentOutDto {
   /**
@@ -16,18 +12,6 @@ public class DepartmentOutDto {
    * The name of the department.
    */
   private String departmentName;
-
-  /**
-   * The list of employees associated with this department.
-   */
-  @JsonManagedReference
-  private List<EmployeeOutDto> employees;
-
-  /**
-   * The list of tickets associated with this department.
-   */
-  @JsonManagedReference
-  private List<TicketOutDto> tickets;
 
   /**
    * @return the departmentId
@@ -58,30 +42,49 @@ public class DepartmentOutDto {
   }
 
   /**
-   * @return the employees
+   * parameterized constructor.
+   * @param departmentIdField
+   * @param departmentNameField
    */
-  public List<EmployeeOutDto> getEmployees() {
-    return employees;
+  public DepartmentOutDto(
+      final Integer departmentIdField,
+      final String departmentNameField) {
+    super();
+    this.departmentId = departmentIdField;
+    this.departmentName = departmentNameField;
   }
 
   /**
-   * @param employeesField the employees to set
+   * hashCode of this departmentOutDto.
    */
-  public void setEmployees(final List<EmployeeOutDto> employeesField) {
-    this.employees = employeesField;
+  @Override
+  public int hashCode() {
+    return Objects.hash(departmentId, departmentName);
   }
 
   /**
-   * @return the tickets
+   * method to compare departmentOutDto with object.
    */
-  public List<TicketOutDto> getTickets() {
-    return tickets;
+  @Override
+  public boolean equals(final Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    DepartmentOutDto other = (DepartmentOutDto) obj;
+    return Objects.equals(departmentId, other.departmentId)
+        && Objects.equals(departmentName, other.departmentName);
   }
 
   /**
-   * @param ticketsField the tickets to set
+   * default constructor.
    */
-  public void setTickets(final List<TicketOutDto> ticketsField) {
-    this.tickets = ticketsField;
+  public DepartmentOutDto() {
+    super();
   }
 }

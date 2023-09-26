@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(
   value = HttpStatus.NOT_FOUND,
   reason = "Ticket with this ticket Id doesn't exist"
-) // HTTP 404
+)
 public class CommentNotFoundException extends RuntimeException {
   private static final long serialVersionUID = -3332292346834265371L;
 

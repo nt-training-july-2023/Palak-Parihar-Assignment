@@ -2,21 +2,30 @@ import { useEffect, useState } from "react"
 import { FETCH_ALL_USERS } from "../../Service/EmployeeServices"
 import './ListEmployees.css';
 import { useNavigate } from "react-router";
+import Table from "../../Components/Table/Table";
 
 
 export default function ListEmployees(props) {
 
     const [employees, setEmployees] = useState([]);
+    const actions = (
+        <td>
+            <i id="icon" class='fas fa-edit' />
+            <i id="icon" class='fas fa-trash-alt'></i>
+        </td>
+    )
+
+    const headings = ['Full Name', 'Email', 'Department', 'UserType', 'Actions']
     const navigate = useNavigate()
     useEffect(() => {
 
-        if(sessionStorage.getItem('userDetails') === null){
+        if (sessionStorage.getItem('userDetails') === null) {
             navigate('/logout')
             return
-        }else {
+        } else {
             let values = JSON.parse(sessionStorage.getItem('userDetails'))
             console.log(values.firstTimeUser)
-            if(values.firstTimeUser){
+            if (values.firstTimeUser) {
                 navigate('/changePassword')
                 return
             }
@@ -38,36 +47,7 @@ export default function ListEmployees(props) {
                 Employees
             </div>
             <div className="list_main_container">
-
-                <table id="list_content">
-                    <tr>
-                        <th>FullName</th>
-                        <th>email</th>
-                        <th>department</th>
-                        <th>userType</th>
-                        <th>Actions</th>
-                    </tr>
-                    {
-                        employees.map(e => {
-                            return (
-                                <>
-                                    <tr>
-                                        <td>{e.fullName}</td>
-                                        <td>{e.email}</td>
-                                        <td>{e.department}</td>
-                                        <td>{e.userType}</td>
-                                        <td>
-                                            <i id="icon" class='fas fa-edit' />
-                                            <i id="icon" class='fas fa-trash-alt'></i>
-                                        </td>
-
-                                    </tr>
-
-                                </>)
-                        })
-                    }
-
-                </table>
+                <Table values={employees} headings={headings} view={actions} />
             </div>
         </>
     )

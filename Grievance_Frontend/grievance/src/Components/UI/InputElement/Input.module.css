@@ -4,6 +4,7 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     margin: 13px 0px;
+    margin-bottom: 5px;
     background-color: white;
     font: inherit;
     padding: 8px 10px;
@@ -35,4 +36,12 @@
 .InputElement:focus {
     outline: none;
     background-color: #ccc;
+}
+
+
+.errorMessage{
+    min-height: 15px;
+    color: rgb(197, 45, 45);
+    margin-top: 0px;
+    margin-bottom: 5px;
 }

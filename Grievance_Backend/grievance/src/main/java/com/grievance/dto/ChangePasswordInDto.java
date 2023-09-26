@@ -1,5 +1,6 @@
 package com.grievance.dto;
 
+
 /**
  * Data Transfer Object (DTO) for changing a user's password.
  */

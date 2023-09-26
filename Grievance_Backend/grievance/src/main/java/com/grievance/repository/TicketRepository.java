@@ -44,7 +44,19 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
   /**
    * method to access all the tickets by status.
    * @param status
-   * @return list of tickets.
+   * @param pageRequest
+   * @return list of tickets by status.
    */
-  List<Ticket> findByStatus(Status status);
+  List<Ticket> findByStatus(Status status, PageRequest pageRequest);
+
+  /**
+   * @param department
+   * @param status
+   * @param employee
+   * @param pageRequest
+   * @return list of tickets by status department and employee.
+   */
+  List<Ticket> findByDepartmentAndStatusAndEmployee(
+      Department department, Status status,
+      Employee employee, PageRequest pageRequest);
 }

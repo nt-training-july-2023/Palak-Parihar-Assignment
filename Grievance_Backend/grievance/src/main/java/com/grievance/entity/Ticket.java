@@ -2,6 +2,8 @@ package com.grievance.entity;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -260,7 +262,78 @@ public class Ticket {
         this.employee = employeeField;
     }
 
+    /**
+     * hashCOde of this object.
+     */
+    @Override
+    public int hashCode() {
+      return Objects.hash(comments, department, description, employee,
+          status, ticketId, ticketType, title);
+    }
 
+    /**
+     * method to compare two ticket objects.
+     */
+    @Override
+    public boolean equals(final Object obj) {
+      if (this == obj) {
+        return true;
+      }
+      if (obj == null) {
+        return false;
+      }
+      if (getClass() != obj.getClass()) {
+        return false;
+      }
+      Ticket other = (Ticket) obj;
+      return Objects.equals(comments, other.comments)
+          && Objects.equals(department, other.department)
+          && Objects.equals(description, other.description)
+          && Objects.equals(employee, other.employee)
+          && status == other.status && Objects.equals(ticketId, other.ticketId)
+          && ticketType == other.ticketType
+          && Objects.equals(title, other.title);
+    }
 
+    /**
+     * parameterized constructor.
+     * @param titleField
+     * @param ticketTypeField
+     * @param departmentField
+     * @param descriptionField
+     * @param statusField
+     * @param lastUpdatedField
+     * @param employeeField
+     */
+    public Ticket(
+        @NotEmpty
+        @Size(min = minimumLength,
+        max = maximumLengthOfTitle,
+        message = "Title too long (max 50 characters)")
+        final String titleField,
+        final TicketType ticketTypeField,
+        final Department departmentField,
+        @NotEmpty @Size(min = minimumLength,
+        max = maximumLengthOfDescription,
+        message = "Description too long (max 500 characters)")
+        final String descriptionField,
+        final Status statusField,
+        final Date lastUpdatedField,
+        final Employee employeeField) {
+      super();
+      this.title = titleField;
+      this.ticketType = ticketTypeField;
+      this.department = departmentField;
+      this.description = descriptionField;
+      this.status = statusField;
+      this.lastUpdated = lastUpdatedField;
+      this.employee = employeeField;
+    }
 
+    /**
+     * default constructor.
+     */
+    public Ticket() {
+      super();
+    }
 }

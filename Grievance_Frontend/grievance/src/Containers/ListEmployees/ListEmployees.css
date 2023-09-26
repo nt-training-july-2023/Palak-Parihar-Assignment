@@ -1,4 +1,4 @@
-.list_main_container{
+/* .list_main_container{
     display: flex;
     justify-content: center;
     margin-top: 1%;
@@ -12,7 +12,6 @@ table{
 }
 
 #list_content td, #list_content th{
-    border: 1px solid #ddd;
     padding: 4px;
     padding-top: 10px;
     text-align: center;
@@ -97,16 +96,9 @@ table{
     padding-top: 20px;
 }
 
-.add_entry{
-    text-align: center;
-    padding: 10px;
-    font-size: larger;
-    font-weight: 500;
-}
+
 
 .status{
     display: flex;
-    /* padding-right: 20px; */
-    /* margin-right: 20px; */
 }
-
+ */

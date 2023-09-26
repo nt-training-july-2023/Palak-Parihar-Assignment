@@ -50,4 +50,10 @@ public interface EmployeeService {
    */
   void changePassword(ChangePasswordInDto changePasswordInDto, String email);
 
+  /**
+   * delete employee by Id.
+   * @param email
+   */
+  void deleteEmployeeById(String email);
+
 }

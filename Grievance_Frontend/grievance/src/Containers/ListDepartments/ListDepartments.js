@@ -3,23 +3,31 @@ import { FETCH_ALL_DEPARTMENTS, GENERATE_NEW_DEPARTMENT } from "../../Service/De
 import Modal from "../../Components/UI/Modal/Modal"
 import NewDepartment from "../NewDepartment/NewDepartment"
 import { useNavigate } from "react-router"
+import Table from "../../Components/Table/Table"
+import classes from './ListDepartment.module.css';
 
 
 export default function ListDepartments(props) {
 
     const [departments, setDepartments] = useState([])
     const [modal, setModal] = useState()
+    const headings = ["Department Id", " Department Name", "Actions"]
+    const actions = (
+        <td>
+            <i id="icon" class='fas fa-trash-alt'></i>
+        </td>
+    )
     const navigate = useNavigate()
 
     useEffect(() => {
 
-        if(sessionStorage.getItem('userDetails') === null){
+        if (sessionStorage.getItem('userDetails') === null) {
             navigate('/logout')
             return
-        }else {
+        } else {
             let values = JSON.parse(sessionStorage.getItem('userDetails'))
             console.log(values.firstTimeUser)
-            if(values.firstTimeUser){
+            if (values.firstTimeUser) {
                 navigate('/changePassword')
                 return
             }
@@ -49,34 +57,11 @@ export default function ListDepartments(props) {
             <div className="list_heading">
                 Departments
             </div>
-            <div className="list_main_container">
-                <table id="list_content">
-                    <tr>
-                        <th>Department Id</th>
-                        <th>Department Name</th>
-                        <th>Actions</th>
-                    </tr>
-                    {
-                        departments.map(d => {
-                            return (
-                                <>
-                                    <tr>
-                                        <td>{d.departmentId}</td>
-                                        <td>{d.departmentName}</td>
-                                        <td>
-                                            <i id="icon" class='fas fa-trash-alt'></i>
-                                        </td>
-
-                                    </tr>
-
-                                </>)
-                        })
-                    }
-
-                </table>
-            </div>
-            <div className="add_entry">
+            <div className={classes.add_entry}>
                 Add Department  <i id="icon" class='fas fa-plus-circle' onClick={() => AddDepartment()}></i>
+            </div>
+            <div className="list_main_container">
+                <Table headings={headings} values={departments} view={actions} />
             </div>
         </>
     )

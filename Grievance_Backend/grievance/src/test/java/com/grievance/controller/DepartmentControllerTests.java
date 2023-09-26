@@ -1,14 +1,16 @@
 package com.grievance.controller;
 
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.grievance.authentication.AuthenticatingUser;
 import com.grievance.dto.DepartmentInDto;
 import com.grievance.dto.DepartmentOutDto;
-import com.grievance.exception.DepartmentAlreadyExists;
+import com.grievance.exception.DepartmentAlreadyExistsException;
+import com.grievance.exception.DepartmentNotFound;
 import com.grievance.service.DepartmentService;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +34,6 @@ public class DepartmentControllerTests {
   @Mock
   private DepartmentService departmentService;
 
-  @Mock
-  private AuthenticatingUser authenticatingUser;
-
   @InjectMocks
   private DepartmentController departmentController;
 
@@ -57,10 +56,8 @@ public class DepartmentControllerTests {
   }
 
   @Test
-  void when_authorised_user_save_department_successfully_return_saved_department()
+  void whenuser_save_department_successfully_return_saved_department()
     throws JsonProcessingException, Exception {
-    when(authenticatingUser.checkIfUserIsAdmin(Mockito.anyString(), Mockito.anyString()))
-      .thenReturn(true);
 
     when(departmentService.saveDepartment(Mockito.any(DepartmentInDto.class)))
       .thenReturn(Optional.ofNullable(departmentOutDto));
@@ -77,15 +74,13 @@ public class DepartmentControllerTests {
       .andExpect(status().isCreated())
       .andDo(MockMvcResultHandlers.print());
   }
-  
+
   @Test
-  void when_authorised_user_save_department_fails_return_exception()
+  void when_save_department_fails_return_exception()
     throws JsonProcessingException, Exception {
-    when(authenticatingUser.checkIfUserIsAdmin(Mockito.anyString(), Mockito.anyString()))
-      .thenReturn(true);
 
     when(departmentService.saveDepartment(Mockito.any(DepartmentInDto.class)))
-      .thenThrow(DepartmentAlreadyExists.class);
+      .thenThrow(DepartmentAlreadyExistsException.class);
 
     mockMvc
       .perform(
@@ -101,60 +96,53 @@ public class DepartmentControllerTests {
   }
 
   @Test
-  void when_unauthorised_user_save_department_return_fail()
-    throws JsonProcessingException, Exception {
-    when(authenticatingUser.checkIfUserIsAdmin(Mockito.anyString(), Mockito.anyString()))
-      .thenReturn(false);
+  void when_fetchAllDepartments_fails() throws Exception {
 
-    mockMvc
-      .perform(
-        MockMvcRequestBuilders
-          .post("/department/save")
-          .contentType(MediaType.APPLICATION_JSON)
-          .content(objectMapper.writeValueAsString(departmentInDto))
-          .header("email", "ayushi@gmail.com")
-          .header("password", "Ayushi#123")
-      )
-      .andExpect(status().isUnauthorized())
-      .andDo(MockMvcResultHandlers.print());
-  }
-
-  @Test
-  void when_authorised_user_fetchAllDepartments_return_departments() throws Exception {
-	  
-	  when(authenticatingUser.checkIfUserIsAdmin(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
-	  
     List<DepartmentOutDto> departmentOutDtos = new ArrayList<DepartmentOutDto>();
     departmentOutDtos.add(departmentOutDto);
-    when(departmentService.listAllDepartment()).thenReturn(Optional.ofNullable(departmentOutDtos));
+    when(departmentService.listAllDepartment(Mockito.anyInt())).thenReturn(Optional.ofNullable(departmentOutDtos));
 
     mockMvc
-      .perform(
-        MockMvcRequestBuilders
-          .get("/department/listDepartments")
-          .contentType(MediaType.APPLICATION_JSON)
-          .header("email", "ayushi@gmail.com")
-          .header("password", "Ayushi#123")
-      )
-      .andExpect(status().isAccepted())
-      .andDo(MockMvcResultHandlers.print());
+        .perform(
+            MockMvcRequestBuilders
+                .get("/department/listDepartments")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("page", "0")
+                .header("email", "ayushi@gmail.com")
+                .header("password", "Ayushi#123"))
+        .andExpect(status().isAccepted())
+        .andDo(MockMvcResultHandlers.print());
+  }
+
+  @Test
+  void when_delete_department_success() throws Exception {
+
+    doNothing().when(departmentService).deleteDepartment(Mockito.anyInt());
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders
+                .delete("/department/delete")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("departmentId", "101")
+                .header("email", "ayushi@gmail.com")
+                .header("password", "Ayushi#123"))
+        .andExpect(status().isNoContent())
+        .andDo(MockMvcResultHandlers.print());
   }
   
   @Test
-  void when_unauthorised_user_fetchAllDepartments_fails() throws Exception {
-	  
-	when(authenticatingUser.checkIfUserIsAdmin(Mockito.anyString(), Mockito.anyString())).thenReturn(false);
-	  
+  void when_delete_department_fails() throws Exception {
+
+    doThrow(DepartmentNotFound.class).when(departmentService).deleteDepartment(Mockito.anyInt());;
     mockMvc
-      .perform(
-        MockMvcRequestBuilders
-          .get("/department/listDepartments")
-          .contentType(MediaType.APPLICATION_JSON)
-          .header("email", "ayushi@gmail.com")
-          .header("password", "Ayushi#123")
-      )
-      .andExpect(status().isUnauthorized())
-      .andDo(MockMvcResultHandlers.print());
+        .perform(
+            MockMvcRequestBuilders
+                .delete("/department/delete")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("departmentId", "101")
+                .header("email", "ayushi@gmail.com")
+                .header("password", "Ayushi#123"))
+        .andExpect(status().isNotFound())
+        .andDo(MockMvcResultHandlers.print());
   }
-  
 }
