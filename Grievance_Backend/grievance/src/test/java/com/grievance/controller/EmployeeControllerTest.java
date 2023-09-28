@@ -69,7 +69,6 @@ class EmployeeControllerTest {
     employeeOutDto.setDepartment(null);
     employeeOutDto.setFirstTimeUser(true);
     employeeOutDto.setFullName("Example ");
-    employeeOutDto.setTickets(null);
     employeeOutDto.setUserType(UserType.MEMBER);
 
     employee = new Employee();
@@ -94,11 +93,12 @@ class EmployeeControllerTest {
     List<EmployeeOutDto> employeeOutDtos = new ArrayList<EmployeeOutDto>();
     employeeOutDtos.add(employeeOutDto);
 
-    when(employeeService.listAllEmployees()).thenReturn(Optional.of(employeeOutDtos));
+    when(employeeService.listAllEmployees(Mockito.anyInt())).thenReturn(Optional.of(employeeOutDtos));
 
     mockMvc.perform(MockMvcRequestBuilders.get("/employee/listAllEmployees")
         .contentType(MediaType.APPLICATION_JSON)
         .header("email", "ayushi@nucleusteq.com")
+        .param("page", "0")
         .header("password", "Ayushi#123")).andExpect(status().isAccepted()).andDo(MockMvcResultHandlers.print());
   }
 

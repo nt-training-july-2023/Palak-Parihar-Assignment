@@ -1,9 +1,9 @@
-import axios from "axios"
 import { FETCH_ALL_TICKETS_URL, GENERATE_NEW_TICKET_URL, GET_TICKET_BY_ID_URL, UPDATE_TICKET_BY_ID_URL } from "../API/Url"
 import { getMapping, postMapping, putMapping } from "../API/url-order";
 import { headers } from "../API/Headers";
 
 export const FETCH_ALL_TICKETS = (parameters) => {
+    console.log(headers())
     let userValues = headers()
     let headersRequired = {
         email: userValues.email,
@@ -16,6 +16,7 @@ export const FETCH_ALL_TICKETS = (parameters) => {
         }).then((res) => {
             return resolve({ data: res.data })
         }).catch((err) => {
+            console.log(err)
             return reject({ data: err })
         })
     })
@@ -71,19 +72,6 @@ export const UPDATE_TICKET_BY_ID = (Id, ticketUpdate) => {
     console.log(ticketUpdate)
 
     return new Promise((resolve, reject) => {
-        // axios({
-        //     url: UPDATE_TICKET_BY_ID_URL,
-        //     params: {
-        //         ticketId: Id
-        //     },
-        //     data: ticketUpdate,
-        //     method: 'PUT',
-        //     headers: headersRequired
-        // }).then(res => {
-        //     return resolve({ data: res.data })
-        // }).catch(err => {
-        //     return reject({ data: err })
-        // })
         putMapping(UPDATE_TICKET_BY_ID_URL,
             ticketUpdate, {
             headers: headersRequired,

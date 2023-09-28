@@ -11,7 +11,6 @@ export default function Button(props) {
         <div className={classes.btnDiv}>
             <button
                 className={inputClasses}
-                type={props.type}
                 onClick={props.onClick}
                 disabled={!props.enable} >
                 {props.content}

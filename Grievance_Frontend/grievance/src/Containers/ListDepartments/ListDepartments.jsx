@@ -81,27 +81,22 @@ export default function ListDepartments(props) {
     return (
         <>
             {modal}
-            <div className="list_heading">
-                Departments
-            </div>
-            <div className={classes.add_entry}>
-                Add Department  <i id="icon" class='fas fa-plus-circle' onClick={() => AddDepartment()}></i>
-            </div>
-            <div className="list_main_container">
-                <Table
-                    headings={headings}
-                    values={departments}
-                    columns={columns}
-                    delete ={deleteDepartment} 
-                    id="departmentId"/>
-            </div>
-            <div id="actions_arrow">
-                {disablePrevious ?
-                    <i id="disable_action_icon" class='fas fa-arrow-alt-circle-left'></i>
-                    : <i id="action_icon" class='fas fa-arrow-alt-circle-left' onClick={previousPage}></i>}
-
-                {disableNext ? <i id="disable_action_icon" class='fas fa-arrow-alt-circle-right'></i> :
-                    <i id="action_icon" class='fas fa-arrow-alt-circle-right' onClick={nextPage}></i>}
+            <div>
+                <div className={classes.add_entry}>
+                    Add Department  <i id="icon" class='fas fa-plus-circle' onClick={() => AddDepartment()}></i>
+                </div>
+                <div className="list_main_container">
+                    <Table
+                        headings={headings}
+                        values={departments}
+                        columns={columns}
+                        delete={deleteDepartment}
+                        id="departmentId" 
+                        previousPage={previousPage}
+                        nextPage={nextPage}
+                        disablePrevious={disablePrevious}
+                        disableNext={disableNext}/>
+                </div>
             </div>
         </>
     )

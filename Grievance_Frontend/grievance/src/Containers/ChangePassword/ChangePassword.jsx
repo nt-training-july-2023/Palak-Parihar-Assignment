@@ -5,6 +5,7 @@ import Modal from "../../Components/UI/Modal/Modal";
 import { useNavigate } from "react-router";
 import Form from "../../Components/Form/Form";
 import { inputValidity } from "../../Validation/Validation";
+import { LIST_TICKETS_PATH } from "../../API/PathConstant";
 
 
 export default function ChangePassword(props) {
@@ -65,9 +66,15 @@ export default function ChangePassword(props) {
             }
         }
     }
+    let containerCss = {
+        display: 'flex',
+        'justify-content': 'center',
+        'align-items': 'center',
+    }
     const [controls, setControls] = useState(cont.controls);
-    const [message, setMessage] = useState();
+    const [message, setMessage] = useState('');
     const [modal, setModal] = useState();
+    const [enableBtn, setEnableButton] = useState(false)
     const navigate = useNavigate()
 
     const formElementsArray = [];
@@ -84,13 +91,26 @@ export default function ChangePassword(props) {
             return
         }
         setMessage('')
-    },[controls])
+
+        let count = 0;
+        for (let key in controls) {
+            console.log(controls[key].valid)
+            if (controls[key].valid) {
+                count += 1;
+            }
+        }
+        console.log(count)
+        if (count > 0) {
+            setEnableButton(false)
+        } else {
+            setEnableButton(true)
+        }
+    }, controls)
 
 
     const completeForm = formElementsArray.map(formElement => {
         return (<>
             <div className='form-container'>
-                <p className='input-label'>{formElement.config.label}</p>
                 <div className='input-content'>
                     <InputElement
                         key={formElement.id}
@@ -102,6 +122,7 @@ export default function ChangePassword(props) {
                         error={formElement.config.error}
                         shouldValidate={formElement.config.validation}
                         touched={formElement.config.touched}
+                        label={formElement.config.label}
                         changed={(e) => inputChangeHandler(e, formElement.id)}
                     />
                 </div>
@@ -131,11 +152,6 @@ export default function ChangePassword(props) {
     const submithandler = (e) => {
         e.preventDefault();
 
-        if(!controls.confirmPassword.valid){
-            setMessage("Mandatory field can't be empty")
-            return
-        }
-
 
         if (controls.confirmPassword.value !== controls.newPassword.value) {
             setMessage('New Password and Confirm Password values are mismatched')
@@ -149,9 +165,14 @@ export default function ChangePassword(props) {
         console.log(values)
         const response = CHANGE_USER_PASSWORD(values)
             .then(res => {
-                setModal(() => <Modal message="Password changed successfully" />)
+                setModal(() => <Modal message="Password changed successfully" onClick={closeModal} />)
+                const userDetails = {
+                    ...JSON.parse(localStorage.getItem('userDetails')),
+                    firstTimeUser: false
+                }
+                localStorage.setItem('userDetails', userDetails);
                 setTimeout(() => {
-                    navigate('/logout')
+                    navigate(LIST_TICKETS_PATH)
                 }, 1000);
                 return res.data
             })
@@ -167,16 +188,21 @@ export default function ChangePassword(props) {
         setModal(() => <></>)
     }
 
+
+
     return (
         <>
+            {modal}
             <div className="reg-container">
                 <div className="container">
-                    <Form
-                        content={completeForm}
-                        heading='Change Password'
-                        onSubmit={submithandler}
-                        enable={true}
-                        message={message} />
+                    <div style={containerCss} >
+                        <Form
+                            content={completeForm}
+                            heading='Change Password'
+                            onSubmit={submithandler}
+                            enable={enableBtn}
+                            message={message} />
+                    </div>
                 </div>
             </div>
         </>

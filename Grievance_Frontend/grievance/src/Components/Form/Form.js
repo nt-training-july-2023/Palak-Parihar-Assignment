@@ -1,4 +1,4 @@
-import classes from '../../CSS/Form.module.css';
+import classes from './Form.module.css';
 import Button from '../UI/Button/Button';
 
 export default function Form(props) {
@@ -10,7 +10,7 @@ export default function Form(props) {
                 <form onSubmit={e => props.onSubmit(e)}>
                     {props.content}
                     <p className={classes.message}>{props.message}</p>
-                    <Button content='SUBMIT' type='submit' enable={props.enable} />
+                    <Button content='SUBMIT' enable={props.enable} />
                 </form>
             </div>
         </>

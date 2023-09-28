@@ -3,8 +3,6 @@ import { DELETE_EMPLOYEE, FETCH_ALL_USERS } from "../../Service/EmployeeServices
 import './ListEmployees.css';
 import { useNavigate } from "react-router";
 import Table from "../../Components/Table/Table";
-import { DELETE_DEPARTMENT } from "../../Service/DepartmentService";
-
 
 export default function ListEmployees(props) {
 
@@ -38,6 +36,11 @@ export default function ListEmployees(props) {
 
         FETCH_ALL_USERS(page)
             .then(res => {
+                if (res.data.length < 10) {
+                    setDisableNext(true)
+                } else {
+                    setDisableNext(false)
+                }
                 console.log(res.data)
                 setEmployees(res.data)
             })
@@ -70,24 +73,19 @@ export default function ListEmployees(props) {
 
     return (
         <>
-            <div className="list_heading">
-                Employees
-            </div>
             <div className="list_main_container">
                 <Table values={employees}
                     headings={headings}
                     delete={deleteEmployee}
                     columns={columns}
-                    id="email" />
+                    heading=" Employees "
+                    id="email"
+                    previousPage={previousPage}
+                    nextPage={nextPage}
+                    disablePrevious={disablePrevious}
+                    disableNext={disableNext} />
             </div>
-            <div id="actions_arrow">
-                {disablePrevious ?
-                    <i id="disable_action_icon" class='fas fa-arrow-alt-circle-left'></i>
-                    : <i id="action_icon" class='fas fa-arrow-alt-circle-left' onClick={previousPage}></i>}
 
-                {disableNext ? <i id="disable_action_icon" class='fas fa-arrow-alt-circle-right'></i> :
-                    <i id="action_icon" class='fas fa-arrow-alt-circle-right' onClick={nextPage}></i>}
-            </div>
         </>
     )
 }

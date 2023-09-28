@@ -2,9 +2,10 @@ import { useEffect, useState } from "react"
 import { FETCH_ALL_TICKETS, GET_TICKET_BY_ID, UPDATE_TICKET_BY_ID } from "../../Service/TicketServices"
 import Modal from "../../Components/UI/Modal/Modal";
 import ViewTicket from "../ViewTicket/ViewTicket";
-import './ListTickets.css';
 import { useNavigate } from "react-router";
 import Table from "../../Components/Table/Table";
+import classes from "./ListTickets.module.css"
+import InputElement from "../../Components/UI/InputElement/InputElement";
 
 
 export default function ListTickets(props) {
@@ -18,12 +19,11 @@ export default function ListTickets(props) {
         page: 0,
         myTickets: null,
         status: null,
-        // departmentTickets: null
     })
 
-    const headings= ["Ticket Id", "Title", "Ticket Type", "Department", "Raised By", "Status", "Last Updated", "Actions"]
-    
-    const columns = ["ticketId", "title","ticketType", "department", "employee", "status", "lastUpdated"]
+    const headings = ["Ticket Id", "Title", "Ticket Type", "Department", "Raised By", "Status", "Last Updated", "Actions"]
+
+    const columns = ["ticketId", "title", "ticketType", "department", "employee", "status", "lastUpdated"]
 
     const [ticketUpdate, setTicketUpdate] = useState({
         status: null,
@@ -37,16 +37,11 @@ export default function ListTickets(props) {
             navigate('/logout')
             return
         } else {
-            let values = JSON.parse(localStorage.getItem('userDetails'))
-            console.log(values.firstTimeUser)
-            if (values.firstTimeUser) {
-                navigate('/changePassword')
-                return
-            }
+            console.log(localStorage)
         }
 
-        FETCH_ALL_TICKETS(config).
-            then(res => {
+        FETCH_ALL_TICKETS(config)
+            .then(res => {
                 if (res.data.length < 10) {
                     setDisableNext(true)
                 } else {
@@ -167,40 +162,42 @@ export default function ListTickets(props) {
             })
     }
 
+
     return (
         <>
             {showTicket ? <Modal component={ViewTicket({ ticket, closeModal, updateStatus, updateComment, updateTicket })} /> : null}
             <div className="list_main_container">
-                <div className="menu_bar">
-                    <div id="menu">
-                        <button class="menu_button" id={config.myTickets ? '' : 'active'} onClick={() => AllTickets()}>All Tickets</button>
-                        <button class="menu_button" id={config.myTickets ? 'active' : ''} onClick={() => MyTickets()}>MyTickets</button>
+                <div>
+                    <div className={classes.menu_bar}>
+                        <div id={classes.menu}>
+                            <button class={classes.menu_button} id={config.myTickets ? '' : classes.active} onClick={() => AllTickets()}>All Tickets</button>
+                            <button class={classes.menu_button} id={config.myTickets ? classes.active : ''} onClick={() => MyTickets()}>MyTickets</button>
+                        </div>
+                        <h2 className={classes.heading}>All Tickets</h2>
+                        <div className={classes.status_dropdown}>
+                            {/* <p style={}>Status :</p> */}
+                            <InputElement
+                            label = 'Status'
+                            elementType = 'select'
+                            options= {[ 'ALL TICKETS','OPEN', 'BEING_ADDRESSED', 'RESOLVED']}
+                            default = 'ALL TICKETS'
+                            changed = {e => setStatus(e)}
+                            />
+                        </div>
                     </div>
-                    <div className="status_dropdown">
-                        <p>Status :</p>
-                        <select onChange={(e) => setStatus(e)}>
-                            <option value=''>ALL TICKETS</option>
-                            <option value='OPEN'> OPEN </option>
-                            <option value='BEING_ADDRESSED'> BEING ADDRESSED </option>
-                            <option value='RESOLVED'> RESOLVED </option>
-                        </select>
-                    </div>
-                </div>
-                <Table
-                    values={tickets}
-                    headings={headings}
-                    view={viewSelectedTicket}
-                    columns={columns}
-                    id="ticketId"/>
-            </div >
-            <div id="actions_arrow">
-                {disablePrevious ?
-                    <i id="disable_action_icon" class='fas fa-arrow-alt-circle-left'></i>
-                    : <i id="action_icon" class='fas fa-arrow-alt-circle-left' onClick={previousPage}></i>}
 
-                {disableNext ? <i id="disable_action_icon" class='fas fa-arrow-alt-circle-right'></i> :
-                    <i id="action_icon" class='fas fa-arrow-alt-circle-right' onClick={nextPage}></i>}
-            </div>
+                     <Table
+                     values={tickets}
+                     headings={headings}
+                     view={viewSelectedTicket}
+                     columns={columns}
+                     previousPage={previousPage}
+                     nextPage={nextPage}
+                     disablePrevious={disablePrevious}
+                     disableNext={disableNext}
+                     id="ticketId" /> 
+                </div>
+            </div >
         </>
     )
 }

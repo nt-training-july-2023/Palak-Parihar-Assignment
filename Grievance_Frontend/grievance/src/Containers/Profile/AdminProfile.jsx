@@ -1,7 +1,8 @@
 import { Outlet, useNavigate } from 'react-router';
 import classes from './Profile.module.css';
-import { Link, NavLink } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { CHANGE_PASSWORD_PATH, PROFILE_EMPLOYEE_REGISTRATION_PATH, GMS_LIST_DEPARTMENTS_PATH, GMS_LIST_EMPLOYEES_PATH } from '../../API/PathConstant';
 
 export default function AdminProfile(props) {
 
@@ -17,7 +18,7 @@ export default function AdminProfile(props) {
             let values = JSON.parse(localStorage.getItem('userDetails'))
             console.log(values.firstTimeUser)
             if (values.firstTimeUser) {
-                navigate('/changePassword')
+                navigate(CHANGE_PASSWORD_PATH)
                 return
             }
         }
@@ -29,19 +30,19 @@ export default function AdminProfile(props) {
     }, [])
 
     const menuItem = <>
-        <Link to='/profile/departments'>
-            <div className={classes.menuItems + ' ' + (currentPath === "/profile/departments" ? classes.active : '')}>
+        <Link to={GMS_LIST_DEPARTMENTS_PATH}>
+            <div className={classes.menuItems + ' ' + (currentPath === GMS_LIST_DEPARTMENTS_PATH ? classes.active : '')}>
                 Departments
 
             </div>
         </Link>
-        <Link to='/profile/employees'>
-            <div className={classes.menuItems + ' ' + (currentPath === "/profile/employees" ? classes.active : '')}>
+        <Link to={GMS_LIST_EMPLOYEES_PATH}>
+            <div className={classes.menuItems + ' ' + (currentPath === GMS_LIST_EMPLOYEES_PATH ? classes.active : '')}>
                 Employees
             </div>
         </Link>
-        <Link to='/profile/employeeRegistration'>
-            <div className={classes.menuItems + ' ' + (currentPath === "/profile/employeeRegistration" ? classes.active : '')}>
+        <Link to={PROFILE_EMPLOYEE_REGISTRATION_PATH}>
+            <div className={classes.menuItems + ' ' + (currentPath === PROFILE_EMPLOYEE_REGISTRATION_PATH ? classes.active : '')}>
                 Add New Employee
             </div>
         </Link>
@@ -52,14 +53,9 @@ export default function AdminProfile(props) {
                 <div className={classes.sideBar}>
 
                     {isAdmin && menuItem}
-                    <Link to='/profile/changePassword'>
-                        <div className={classes.menuItems + ' ' + (currentPath === "/profile/changePassword" ? classes.active : '')}>
+                    <Link to={GMS_LIST_DEPARTMENTS_PATH}>
+                        <div className={classes.menuItems + ' ' + (currentPath === GMS_LIST_DEPARTMENTS_PATH ? classes.active : '')}>
                             Change Password
-                        </div>
-                    </Link>
-                    <Link to='/logout'>
-                        <div className={classes.menuItems + ' ' + (currentPath === "/logout" ? classes.active : '')}>
-                            Logout
                         </div>
                     </Link>
                 </div>

@@ -67,6 +67,7 @@ public class TicketController {
       Optional<List<TicketOutWOComment>> response =
           ticketService.listAllTickets(email, page, status,
               myTickets);
+      System.out.println(response.get());
       return new ResponseEntity<>(response.get(), HttpStatus.ACCEPTED);
   }
 

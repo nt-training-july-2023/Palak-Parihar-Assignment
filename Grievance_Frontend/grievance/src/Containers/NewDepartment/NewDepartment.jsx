@@ -1,9 +1,10 @@
-import { useState } from 'react'
-import Button from '../../Components/UI/Button/Button'
+import { useEffect, useState } from 'react'
+import Form from '../../Components/Form/Form';
 import classes from './NewDepartment.module.css'
 import InputElement from '../../Components/UI/InputElement/InputElement';
-import {GENERATE_NEW_DEPARTMENT } from '../../Service/DepartmentService';
+import { GENERATE_NEW_DEPARTMENT } from '../../Service/DepartmentService';
 import Modal from '../../Components/UI/Modal/Modal';
+import { inputValidity } from '../../Validation/Validation';
 
 export default function NewDepartment(props) {
 
@@ -11,14 +12,14 @@ export default function NewDepartment(props) {
         elementType: 'input',
         elementConfig: {
             type: 'text',
-            placeholder: 'Title'
+            placeholder: 'Department Name'
         },
-        options: null,
         value: '',
         validation: {
             required: true,
-            isUserName: true
+            textOnly : true
         },
+        error: '',
         valid: false,
         touched: false,
         label: "Department Name"
@@ -26,15 +27,35 @@ export default function NewDepartment(props) {
 
 
     const [controls, setControls] = useState(departmentName);
+    const [enableBtn, setEnableBtn] = useState(false)
+    const heading = (
+        <>Add Department
+            <div id={classes.icon_close}>
+                <i class="fa fa-window-close" onClick={props.closeModal}></i>
+            </div>
+        </>)
     const [modal, setModal] = useState();
 
     const inputChangeHandler = (e) => {
+        let message = inputValidity(e.target.value, controls.validation)
+        console.log(message)
         const updatedControls = {
             ...controls,
-            value: e.target.value
+            value: e.target.value,
+            error: message,
+            valid: message === ''
         }
         setControls(updatedControls)
     }
+
+    useEffect(()=>{
+        if(controls.valid){
+            setEnableBtn(true)
+        }else{
+            setEnableBtn(false)
+        }
+        console.log(controls.value)
+    }, [controls])
 
     const closeModal = (e) => {
         setModal(() => <></>)
@@ -48,7 +69,7 @@ export default function NewDepartment(props) {
         const savedDepartment = GENERATE_NEW_DEPARTMENT(departmentData)
             .then(response => {
                 console.log(response)
-                setModal(() => <Modal message="Department successfully created" onClick={closeModal} />)
+                setModal(() => <Modal message="Department successfully created" onClick={props.closeModal} />)
                 return response.data;
             }).catch(error => {
                 setModal(() => <Modal message={error.data.response.data.message} onClick={closeModal} />)
@@ -65,6 +86,8 @@ export default function NewDepartment(props) {
         shouldValidate={controls.validation}
         touched={controls.touched}
         changed={(e) => inputChangeHandler(e)}
+        headLabel={controls.label}
+        error={controls.error}
     />);
 
     return (
@@ -73,17 +96,13 @@ export default function NewDepartment(props) {
                 {modal}
             </div>
             <div className="reg-container">
-                <div className={classes.heading}>
-                    Generate New Department
-                    <div id={classes.icon_close}>
-                        <i class="fa fa-window-close" onClick={props.closeModal}></i>
-                    </div>
-                </div>
-                <div className={classes.outerDiv}>
-                    <form onSubmit={submithandler}>
-                        {formElement}
-                        <Button type='submit' content='submit' enable={true}/>
-                    </form>
+                <div style={{ width: '70%' }}>
+                    <Form
+                        content={formElement}
+                        onSubmit={submithandler}
+                        enable={enableBtn}
+                        heading={heading}
+                    />
                 </div>
             </div >
         </>

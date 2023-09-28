@@ -7,23 +7,11 @@ import com.grievance.entity.Status;
 import com.grievance.entity.TicketType;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 
 public class TicketOutDto {
-  /**
-   * minimumLength final integer.
-   */
-  private final int minimumLength = 1;
-  /**
-   * maximumLengthOfTitle final integer.
-   */
-  private final int maximumLengthOfTitle = 50;
-  /**
-   * maximumLengthOfDescription final integer.
-   */
-  private final int maximumLengthOfDescription = 500;
-
   /**
    * Integer ticketId of Ticket.
    */
@@ -32,9 +20,6 @@ public class TicketOutDto {
   /**
    * The title of the ticket.
    */
-  @NotEmpty
-  @Size(min = minimumLength, max = maximumLengthOfTitle,
-  message = "Title too long (max 50 characters)")
   private String title;
 
   /**
@@ -53,9 +38,6 @@ public class TicketOutDto {
   /**
    * The description of the ticket.
    */
-  @NotEmpty
-  @Size(min = minimumLength, max = maximumLengthOfDescription,
-  message = "Description too long (max 500 characters)")
   private String description;
 
   /**
@@ -67,7 +49,7 @@ public class TicketOutDto {
   /**
    * The date when the ticket was last updated.
    */
-  @JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss aa", timezone = "Asia/Kolkata")
+  @JsonFormat(pattern = "dd-MM-yyyy hh:mm aa", timezone = "Asia/Kolkata")
   private Date lastUpdated;
 
   /**
@@ -207,4 +189,38 @@ public class TicketOutDto {
     this.employeeOutDto = employeeField;
   }
 
+  /**
+   * hashcode of ticketOutDto.
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(comments, department, description,
+        employeeOutDto, status, ticketId, ticketType,
+        title);
+  }
+
+  /**
+   * method to compare ticketOutDto to object.
+   */
+  @Override
+  public boolean equals(final Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    TicketOutDto other = (TicketOutDto) obj;
+    return Objects.equals(comments, other.comments)
+        && Objects.equals(department, other.department)
+        && Objects.equals(description, other.description)
+        && Objects.equals(employeeOutDto, other.employeeOutDto)
+        && status == other.status
+        && Objects.equals(ticketId, other.ticketId)
+        && ticketType == other.ticketType
+        && Objects.equals(title, other.title);
+  }
 }

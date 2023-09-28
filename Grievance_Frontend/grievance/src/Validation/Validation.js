@@ -1,12 +1,14 @@
 
 
 export const inputValidity = (value, rules) => {
+    console.log(rules)
     let isValid = true;
     if (!rules) {
         return '';
     }
 
     if (rules.required) {
+        console.log('required')
         isValid = value.trim() !== '' && isValid;
         if (!isValid) {
             return 'Field can not be empty'
@@ -42,6 +44,14 @@ export const inputValidity = (value, rules) => {
         isValid = pattern.test(value) && isValid
         if (!isValid) {
             return 'Password must include atleast a uppercase, a lowercase and a special character'
+        }
+    }
+
+    if(rules.textOnly){
+        const pattern = /^[A-Za-z]+$/
+        isValid = pattern.test(value) && isValid
+        if(!isValid){
+            return "Please provide text only"
         }
     }
     return '';

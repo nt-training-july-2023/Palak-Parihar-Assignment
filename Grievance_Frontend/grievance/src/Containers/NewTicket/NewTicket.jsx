@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import InputElement from "../../Components/UI/InputElement/InputElement";
-import Button from "../../Components/UI/Button/Button";
 import { useNavigate } from "react-router";
 import { GENERATE_NEW_TICKET } from "../../Service/TicketServices";
 import { FETCH_ALL_DEPARTMENTS } from "../../Service/DepartmentService";
 import Modal from "../../Components/UI/Modal/Modal";
 import { headers } from "../../API/Headers";
+import { inputValidity } from "../../Validation/Validation";
+import Form from "../../Components/Form/Form";
 
 export default function NewTicket(props) {
 
@@ -25,6 +26,7 @@ export default function NewTicket(props) {
                     required: true
                 },
                 value: '',
+                error: '',
                 valid: false,
                 label: 'Ticket Type'
             },
@@ -40,6 +42,7 @@ export default function NewTicket(props) {
                     required: true,
                     isUserName: true
                 },
+                error: '',
                 valid: false,
                 touched: false,
                 label: "Title"
@@ -54,8 +57,8 @@ export default function NewTicket(props) {
                 value: '',
                 validation: {
                     required: true,
-                    isEmail: true
                 },
+                error: '',
                 valid: false,
                 touched: false,
                 label: "Description"
@@ -70,6 +73,7 @@ export default function NewTicket(props) {
                 validation: {
                     required: true
                 },
+                error: '',
                 options: [],
                 valid: false,
                 label: 'Department'
@@ -80,15 +84,11 @@ export default function NewTicket(props) {
                     type: 'input',
                     placeholder: 'Open'
                 },
-                options: null,
                 value: 'OPEN',
-                validation: {
-                    required: true,
-                    minLength: 6,
-                    disabled: 'disabled'
-                },
-                valid: false,
-                touched: false,
+                // validation: {
+                //     disabled: 'disabled'
+                // },
+                valid: true,
                 disabled: true,
                 label: "Status"
             },
@@ -99,6 +99,7 @@ export default function NewTicket(props) {
     const [controls, setControls] = useState(cont.controls);
     const navigate = useNavigate()
     const [userValues, setUserValues] = useState()
+    const [enableBtn, setEnableBtn] = useState(false)
     const [modal, setModal] = useState();
 
     const formElementsArray = [];
@@ -112,7 +113,6 @@ export default function NewTicket(props) {
     const completeForm = formElementsArray.map(formElement => {
         return (<>
             <div className='form-container'>
-                <p className='input-label'>{formElement.config.label}</p>
                 <div className='input-content'>
                     <InputElement
                         key={formElement.id}
@@ -125,18 +125,26 @@ export default function NewTicket(props) {
                         changed={(e) => inputChangeHandler(e, formElement.id)}
                         options={formElement.config.options}
                         disabled={formElement.config.disabled}
+                        error={formElement.config.error}
+                        label={formElement.config.label}
                     />
                 </div>
             </div>
         </>)
     })
 
+    const checkValidity = (value, rules) => inputValidity(value, rules)
+
     const inputChangeHandler = (e, controlName) => {
+        const message = checkValidity(e.target.value, controls[controlName].validation)
+        console.log(message)
         const updatedControls = {
             ...controls,
             [controlName]: {
                 ...controls[controlName],
                 value: e.target.value,
+                error: message,
+                valid: message === '',
                 touched: true
             }
         }
@@ -146,6 +154,21 @@ export default function NewTicket(props) {
 
     const submithandler = (e) => {
         e.preventDefault();
+
+        let count = 0;
+        for (let key in controls) {
+            if (!controls[key].valid) {
+                console.log(controls[key].valid)
+                count += 1
+            }
+        }
+        if (count > 0) {
+            setModal(() => <Modal message="Mandatory fields can't be empty" onClick={closeModal} />)
+            setTimeout(() => {
+                setModal(<></>)
+            }, 2000)
+            return
+        }
         let ticketValues = {
             title: controls.title.value,
             department: {
@@ -166,8 +189,8 @@ export default function NewTicket(props) {
             console.log(res.data)
             return res.data;
         }).catch(err => {
-            console.log(err.data)
-            // setModal(() => <Modal message={err.data.response.data} onClick={closeModal} />)
+            console.log(err)
+            setModal(() => <Modal message={err.data.response.data.message} onClick={closeModal} />)
             return err.data
         })
     }
@@ -192,6 +215,18 @@ export default function NewTicket(props) {
             }
         }
 
+        let count = 0
+        for (let key in controls) {
+            if (!controls[key].valid) {
+                count += 1
+            }
+        }
+        if (count > 0) {
+            setEnableBtn(false)
+        } else {
+            setEnableBtn(true)
+        }
+
         FETCH_ALL_DEPARTMENTS()
             .then(response => {
                 let updatedControls = {
@@ -208,18 +243,23 @@ export default function NewTicket(props) {
             })
     }, [])
 
+    let containerCss = {
+        display: 'flex',
+        'justify-content': 'center',
+        'align-items': 'center',
+        width: '65%'
+    }
+
     return (
         <>
-            <div className="modal-container">
-                {modal}
-            </div>
-            <div className="reg-container">
-                <h3 className='heading'>Generate New Ticket</h3>
-                <div className="reg-content">
-                    <form onSubmit={submithandler}>
-                        {completeForm}
-                        <Button type='submit' content='submit' enable={true}/>
-                    </form>
+            {modal}
+            <div className="container">
+                <div style={containerCss}>
+                    <Form
+                        content={completeForm}
+                        onSubmit={submithandler}
+                        enable={true}
+                        heading="Raise A Ticket" />
                 </div>
             </div>
         </>

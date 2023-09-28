@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
-import './EmployeeRegistration.css';
+import classes from './EmployeeRegistration.module.css';
 import InputElement from '../../Components/UI/InputElement/InputElement';
-import Button from '../../Components/UI/Button/Button';
 import { FETCH_ALL_DEPARTMENTS } from '../../Service/DepartmentService';
 import { SAVE_NEW_EMPLOYEE } from '../../Service/EmployeeServices';
 import Modal from '../../Components/UI/Modal/Modal';
 import { useNavigate } from 'react-router';
+import Form from '../../Components/Form/Form';
+import { inputValidity } from '../../Validation/Validation';
 
 
 export default function EmployeeRegistration(props) {
     let userTypeOptions = ['ADMIN', 'MEMBER']
 
-    const [message, setMessage] = useState();
-
     const [modal, setModal] = useState();
+    const [message, setMessage] = useState();
     const navigate = useNavigate()
 
     let cont = {
@@ -31,7 +31,7 @@ export default function EmployeeRegistration(props) {
                     required: true,
                     isUserName: true
                 },
-                options: null,
+                error: '',
                 valid: false,
                 touched: false,
                 label: "Full Name"
@@ -47,7 +47,8 @@ export default function EmployeeRegistration(props) {
                     required: true,
                     isEmail: true
                 },
-                options: null,
+                // options: null,
+                error: '',
                 valid: false,
                 touched: false,
                 label: "Email"
@@ -64,7 +65,8 @@ export default function EmployeeRegistration(props) {
                     minLength: 6,
                     isPassword: true
                 },
-                options: null,
+                // options: null,
+                error: '',
                 valid: false,
                 touched: false,
                 label: "Password"
@@ -80,6 +82,7 @@ export default function EmployeeRegistration(props) {
                     required: true,
                 },
                 options: userTypeOptions,
+                error: '',
                 valid: false,
                 touched: false,
                 label: 'User Type'
@@ -94,6 +97,7 @@ export default function EmployeeRegistration(props) {
                 validation: {
                     required: true
                 },
+                error: '',
                 options: [],
                 valid: false,
                 label: 'Department'
@@ -112,20 +116,20 @@ export default function EmployeeRegistration(props) {
     }
 
     useEffect(() => {
-        
-        if(localStorage.getItem('userDetails') === null){
+
+        if (localStorage.getItem('userDetails') === null) {
             navigate('/logout')
             return
-        }else{ 
+        } else {
             let values = JSON.parse(localStorage.getItem('userDetails'))
             console.log(values.firstTimeUser)
-            if(values.firstTimeUser){
+            if (values.firstTimeUser) {
                 navigate('/changePassword')
                 return
             }
         }
 
-        const departmentNames = async () => FETCH_ALL_DEPARTMENTS()
+        FETCH_ALL_DEPARTMENTS()
             .then(response => {
                 let updatedControls = {
                     ...controls,
@@ -139,15 +143,11 @@ export default function EmployeeRegistration(props) {
             }).catch(error => {
                 return error.data
             })
-
-
-        departmentNames();
     }, [])
 
     const completeForm = formElementsArray.map(formElement => {
         return (<>
             <div className='form-container'>
-                <p className='input-label'>{formElement.config.label}</p>
                 <div className='input-content'>
                     <InputElement
                         key={formElement.id}
@@ -158,6 +158,8 @@ export default function EmployeeRegistration(props) {
                         invalid={!formElement.config.valid}
                         shouldValidate={formElement.config.validation}
                         touched={formElement.config.touched}
+                        error={formElement.config.error}
+                        label={formElement.config.label}
                         changed={(e) => inputChangeHandler(e, formElement.id)}
                     />
                 </div>
@@ -165,57 +167,18 @@ export default function EmployeeRegistration(props) {
         </>)
     })
 
-    const checkValidity = (value, rules) => {
-        console.log("checkvalidity")
-        let isValid = true;
-        if (!rules) {
-            return true;
-        }
-
-        if (rules.required) {
-            isValid = value.trim() !== '' && isValid;
-        }
-
-        if (rules.minLength) {
-            isValid = value.length >= rules.minLength && isValid;
-            setMessage("Password doesn't match the min length of 6")
-        }
-
-        if (rules.maxLength) {
-            isValid = value.length >= rules.minLength && isValid;
-            setMessage("Password doesn't match the max length of 15")
-        }
-
-        if (rules.isEmail) {
-            const pattern = /^[A-Za-z0-9._%+-]+@nucleusteq\.com$/;
-            isValid = pattern.test(value) && isValid
-            if (isValid) {
-                //VALID
-                isValid = true
-            } else {
-                isValid = false
-            setMessage("Invalid email domain")
-            }
-        }
-
-        if (rules.isPassword) {
-            const pattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
-            isValid = pattern.test(value) && isValid
-            setMessage("Password doesn't match the requirements")
-        }
-        if (isValid) {
-            setMessage('')
-        }
-        return isValid;
-    }
+    const checkValidity = (value, rules) => inputValidity(value, rules)
 
     const inputChangeHandler = (e, controlName) => {
+        const message = checkValidity(e.target.value, controls[controlName].validation);
+        console.log(message);
         const updatedControls = {
             ...controls,
             [controlName]: {
                 ...controls[controlName],
                 value: e.target.value,
-                valid: checkValidity(e.target.value, controls[controlName].validation),
+                error: message,
+                valid: message === '',
                 touched: true
             }
         }
@@ -226,8 +189,18 @@ export default function EmployeeRegistration(props) {
     const submithandler = (e) => {
         e.preventDefault();
 
-        if (!(controls.email.valid && controls.password.valid)) {
-            setMessage("Credentials doesn't match the requirements")
+        let count = 0;
+        for (let key in controls) {
+            if (!controls[key].valid) {
+                count += 1
+            }
+        }
+        console.log(count)
+        if (count > 0) {
+            setModal(() => <Modal message="Mandatory fields can't be empty" onClick={closeModal} />)
+            setTimeout(() => {
+                setModal(<></>)
+            }, 2000)
             return
         }
 
@@ -244,18 +217,23 @@ export default function EmployeeRegistration(props) {
         console.log(data)
 
         SAVE_NEW_EMPLOYEE(data).then(res => {
-                console.log(res.data)
-                setModal(() => <Modal message="Employee successfully created" onClick={closeModal} />)
-                return res.data;
-            }).catch(err => {
-                console.log(err.data.response.data.message)
-                setModal(() => <Modal message={err.data.response.data.message} onClick={closeModal} />)
-                return err.data;
-            })
+            setModal(() => <Modal message="Employee successfully created" onClick={closeModal} />)
+            return res.data;
+        }).catch(err => {
+            console.log(err)
+            setModal(() => <Modal message={err.data.response.data.message} onClick={closeModal} />)
+            return err.data;
+        })
     }
 
     const closeModal = () => {
         setModal(() => <></>)
+    }
+    let containerCss = {
+        display: 'flex',
+        'justify-content': 'center',
+        'align-items': 'center',
+        width: '65%'
     }
 
     return (
@@ -263,16 +241,13 @@ export default function EmployeeRegistration(props) {
             <div className="modal-container">
                 {modal}
             </div>
-            <div className="reg-container">
-                <h3 className='heading'>Employee Registration</h3>
-                <div className="reg-content">
-                    <form onSubmit={submithandler}>
-                        {completeForm}
-                        <p className="message">
-                            {message}
-                        </p>
-                        <Button type='submit' content='submit' enable={true}/>
-                    </form>
+            <div className="container">
+                <div style={containerCss}>
+                    <Form
+                        content={completeForm}
+                        onSubmit={submithandler}
+                        enable={true}
+                        heading="Register Employee" />
                 </div>
             </div>
         </>

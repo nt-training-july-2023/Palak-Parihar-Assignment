@@ -6,16 +6,16 @@
 .sideBar {
     width: 20%;
     background-color: #b6b2b2;
-    min-height: 100vh;
+    min-height: 91vh;
 }
 
 .mainContainer {
     width: 80%;
-    overflow-y: scroll;
+    display: flex;
+    justify-content: center;
 }
 
 .menuItems {
-    width: 100%;
     padding: 10px;
     padding-left: 30px;
     text-align: left;
@@ -27,7 +27,7 @@
 }
 
 .menuItems.active {
-    background-color: white;
+    background-color: beige;
     color: black;
 }
 
@@ -35,4 +35,3 @@
     float: right;
     padding-top: 6px;
 }
-

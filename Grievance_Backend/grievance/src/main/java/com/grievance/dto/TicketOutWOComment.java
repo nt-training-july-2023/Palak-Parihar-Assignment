@@ -1,6 +1,7 @@
 package com.grievance.dto;
 
 import java.util.Date;
+import java.util.Objects;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -41,7 +42,7 @@ public class TicketOutWOComment {
   /**
    * The date when the ticket was last updated.
    */
-  @JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss aa", timezone = "Asia/Kolkata")
+  @JsonFormat(pattern = "dd-MM-yyyy hh:mm aa", timezone = "Asia/Kolkata")
   private Date lastUpdated;
 
   /**
@@ -148,4 +149,36 @@ public class TicketOutWOComment {
     this.employeeOutDto = employeeField;
   }
 
+  /**
+   * hashcode of this TicketOutWOComment.
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(department, employeeOutDto,
+        lastUpdated, status, ticketId, ticketType, title);
+  }
+
+  /**
+   * method to compare this object with other object.
+   */
+  @Override
+  public boolean equals(final Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    TicketOutWOComment other = (TicketOutWOComment) obj;
+    return Objects.equals(department, other.department)
+        && Objects.equals(employeeOutDto, other.employeeOutDto)
+        && Objects.equals(lastUpdated, other.lastUpdated)
+        && status == other.status
+        && Objects.equals(ticketId, other.ticketId)
+        && ticketType == other.ticketType
+        && Objects.equals(title, other.title);
+  }
 }

@@ -5,8 +5,9 @@ import InputElement from "../../Components/UI/InputElement/InputElement";
 import Modal from "../../Components/UI/Modal/Modal";
 import { LOGIN_USER } from "../../Service/EmployeeServices";
 import Spinner from "../../Components/UI/Spinner/Spinner";
-import { inputValidity} from "../../Validation/Validation";
+import { inputValidity } from "../../Validation/Validation";
 import Form from "../../Components/Form/Form";
+import {CHANGE_PASSWORD_PATH, LIST_TICKETS_PATH } from "../../API/PathConstant";
 
 export default function Login() {
     let cont = {
@@ -20,7 +21,7 @@ export default function Login() {
                     placeholder: 'Your Email'
                 },
                 value: '',
-                label: 'Your email',
+                label: 'Email',
                 validation: {
                     required: true,
                     isEmail: true
@@ -36,7 +37,7 @@ export default function Login() {
                     placeholder: 'Password'
                 },
                 value: '',
-                label: 'Your password',
+                label: 'Password',
                 validation: {
                     required: true,
                     minLength: 6,
@@ -80,6 +81,17 @@ export default function Login() {
     ))
 
     useEffect(() => {
+
+        const userDetails = JSON.parse(localStorage.getItem('userDetails'))
+        console.log(userDetails)
+
+        if (userDetails && userDetails.isLoggedIn) {
+            setModal(<Modal component={<Spinner />} />)
+            setTimeout(() => {
+                navigate(LIST_TICKETS_PATH)
+            }, 1000)
+        }
+
         if (controls.email.valid && controls.password.valid) {
             setEnableButton(true)
         }
@@ -122,17 +134,21 @@ export default function Login() {
                     userType: res.data.userType,
                     firstTimeUser: res.data.firstTimeUser,
                     department: res.data.department,
+                    isLoggedIn : true,
                     isAuthenticated: true
                 }
-                localStorage.setItem('userDetails', JSON.stringify(userValues));
+                
+                let userDetails = JSON.stringify(userValues);
+                localStorage.setItem('userDetails', userDetails);
+                console.log(JSON.parse(localStorage.getItem('userDetails')))
                 if (userValues.firstTimeUser) {
                     setTimeout(() => {
-                        navigate("/changePassword")
+                        navigate(CHANGE_PASSWORD_PATH)
                     }, 1000);
                     return res.data;
                 }
                 setTimeout(() => {
-                    navigate("/tickets")
+                    navigate(LIST_TICKETS_PATH)
                 }, 1000);
                 return res.data;
             }).catch(err => {
@@ -148,15 +164,24 @@ export default function Login() {
         setModal(() => <></>)
     }
 
+    let containerCss = {
+        display: 'flex',
+        'justify-content': 'center',
+        'align-items': 'center',
+        width: '50%'
+    }
+
     return (
         <>
             {modal}
             <h1 className="login-heading"><p>Grievance Management System</p></h1>
-            <div>
-                {/* <i class='fas fa-lock'></i> */}
-
-                <div className="container">
-                    <Form content={completeForm} onSubmit={submithandler} enable={enableButton} />
+            <div className="container">
+                <div style={containerCss}>
+                    <Form
+                        content={completeForm}
+                        onSubmit={submithandler}
+                        enable={enableButton}
+                        heading="Login" />
                 </div>
             </div>
         </>

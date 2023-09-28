@@ -2,40 +2,12 @@ import classes from './Table.module.css';
 
 export default function Table(props) {
 
-    console.log(props)
-
-    const generateRows = (value) => {
-        const row = []
-        console.log(value)
-        for (let i in value) {
-            if (i == 'firstTimeUser') {
-                continue;
-            }
-            row.push(<td>{value[i]}</td>)
-        }
-        return row;
-    }
+    console.log(props.values)
     return (
         <>
+            <p className={classes.heading}><u>{props.heading}</u></p>
             <div className={classes.table_container}>
                 <table className={classes.table}>
-                    {/* <tr>
-                        {
-                            props.headings.map(e => {
-                                return <th>{e}</th>
-                            })
-                        }
-                    </tr>
-                    {
-                        props.values.map((val, index) => (
-                            <tr key={index}>
-                                {generateRows(value)}
-                                {props.viewSelectedTicket && <p onClick={() =>props.viewSelectedTicket(value.ticketId)}>{props.view}</p>}
-                                {props.view} 
-
-                            </tr>
-                        ))
-                    } */}
                     <thead>
                         {
                             props.headings.map((column, index) => {
@@ -53,16 +25,25 @@ export default function Table(props) {
                                         ))
                                     }
                                     {props.view && <td>
-                                        <i id="icon" class='fas fa-edit' onClick={() => props.view(row[props.id])} />
+                                        <i id={classes.icon} class='fas fa-edit' onClick={() => props.view(row[props.id])} />
                                     </td>}
                                     {props.delete && <td>
-                                        <i id="icon" class='fas fa-trash-alt' onClick={() => props.delete(row[props.id])}></i>
+                                        <i id={classes.icon} class='fas fa-trash-alt' onClick={() => props.delete(row[props.id])}></i>
                                     </td>}
                                 </tr>
                             ))
                         }
                     </tbody>
                 </table>
+            </div>
+
+            <div id={classes.actions_arrow}>
+                {props.disablePrevious ?
+                    <i id={classes.disable_action_icon} class='fas fa-arrow-alt-circle-left'></i>
+                    : <i id={classes.action_icon} class='fas fa-arrow-alt-circle-left' onClick={props.previousPage}></i>}
+
+                {props.disableNext ? <i id={classes.disable_action_icon} class='fas fa-arrow-alt-circle-right'></i> :
+                    <i id={classes.action_icon} class='fas fa-arrow-alt-circle-right' onClick={props.nextPage}></i>}
             </div>
         </>
     )

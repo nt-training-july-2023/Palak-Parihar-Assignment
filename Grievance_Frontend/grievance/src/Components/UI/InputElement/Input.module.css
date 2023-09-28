@@ -1,35 +1,38 @@
-
 .InputElement {
     outline: none;
     border: 1px solid #ccc;
     border-radius: 4px;
-    margin: 13px 0px;
-    margin-bottom: 5px;
     background-color: white;
     font: inherit;
     padding: 8px 10px;
     display: block;
-    width: 100%;
     box-sizing: border-box;
     cursor: pointer;
+    text-align: left;
+    width: 100%
 }
 
 
-.label-container{
+.label-container {
     padding: 0px;
     margin-bottom: 0px;
 }
 
 .Input {
     width: 100%;
-    padding: 10px;
+    padding: 5px;
     box-sizing: border-box;
+    display: flex;
 }
 
 .Label {
+    display: flex;
+    text-align: left;
+    align-items: center;
     font-weight: bold;
-    display: block;
     margin-bottom: 8px;
+    width: 30%;
+    font-size: large;
 }
 
 
@@ -39,9 +42,29 @@
 }
 
 
-.errorMessage{
-    min-height: 15px;
+.errorMessage {
+    /* min-height: 10px; */
     color: rgb(197, 45, 45);
     margin-top: 0px;
     margin-bottom: 5px;
+    font-size: 15px;
+}
+
+.outerDiv{
+    text-align: right;
+}
+
+.mandatory{
+    color: red;
+    margin-right: 5px;
+}
+
+@media (max-width: 900px) {
+    .Input{
+        display: inline;
+    }
+
+    .Label{
+        width: 100%;
+    }
 }

@@ -1,4 +1,3 @@
-import axios from "axios";
 import { DELETE_DEPARTMENT_URL, FETCH_ALL_DEPARTMENTS_URL, GENERATE_NEW_DEPARTMENTS_URL } from "../API/Url";
 import { deleteMapping, getMapping, postMapping } from "../API/url-order";
 import { headers } from "../API/Headers";

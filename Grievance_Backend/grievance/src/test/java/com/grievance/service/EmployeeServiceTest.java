@@ -18,6 +18,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import com.grievance.dto.ChangePasswordInDto;
 import com.grievance.dto.EmployeeInDto;
@@ -57,7 +59,6 @@ class EmployeeServiceTest {
     employeeOutDto.setEmail("palak@nucleusteq.com");
     employeeOutDto.setFirstTimeUser(true);
     employeeOutDto.setFullName("Palak Parihar");
-    employeeOutDto.setTickets(null);
     employeeOutDto.setUserType(UserType.MEMBER);
 
     employee = new Employee();
@@ -129,9 +130,9 @@ class EmployeeServiceTest {
     List<Employee> employees = new ArrayList<Employee>();
     employees.add(employee);
 
-    when(employeeRepository.findAll()).thenReturn(employees);
+    when(employeeRepository.findAll(Mockito.any(PageRequest.class))).thenReturn(new PageImpl<Employee>(employees));
 
-    Optional<List<EmployeeOutDto>> employeeOutDtosReceived = employeeService.listAllEmployees();
+    Optional<List<EmployeeOutDto>> employeeOutDtosReceived = employeeService.listAllEmployees(0);
 
     for(int i=0; i<employees.size(); i++) {
       assertThat(employees.get(i).equals(employeeOutDtosReceived.get().get(i)));
