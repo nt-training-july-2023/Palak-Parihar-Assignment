@@ -19,7 +19,7 @@ public class CommentOutDto {
   /**
    * comment created on date.
    */
-  @JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss aa", timezone = "Asia/Kolkata")
+  @JsonFormat(pattern = "dd-MM-yyyy hh:mm aa", timezone = "Asia/Kolkata")
   private Date createdOn;
 
   /**

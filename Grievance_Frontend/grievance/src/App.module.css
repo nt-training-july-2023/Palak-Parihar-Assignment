@@ -27,3 +27,8 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #666664; 
 }
+
+p{
+  padding: 0px;
+  margin: 0px;
+}

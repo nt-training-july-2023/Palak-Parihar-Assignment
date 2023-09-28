@@ -14,6 +14,7 @@ export default function ListTickets(props) {
     const [showTicket, setShowTicket] = useState(false)
     const [disablePrevious, setDisablePrevious] = useState(true)
     const [disableNext, setDisableNext] = useState(true)
+    const [canUpdateTicket, setCanUpdateTicket] = useState(true)
     const navigate = useNavigate()
     const [config, setConfig] = useState({
         page: 0,
@@ -52,13 +53,21 @@ export default function ListTickets(props) {
             }).catch(err => {
                 return err.data
             })
-    }, [config, ticketUpdate])
+    }, [config])
 
     const viewSelectedTicket = (ticketId) => {
         console.log(ticketId)
+        let values = JSON.parse(localStorage.getItem('userDetails'))
+
         const response = GET_TICKET_BY_ID(ticketId)
             .then(res => {
                 const ticket = res.data
+                console.log()
+                if(values.department === ticket.department){
+                    setCanUpdateTicket(false)
+                }else{
+                    setCanUpdateTicket(true)
+                }
                 setTicket(ticket)
                 setShowTicket(true)
                 return res.data;
@@ -157,6 +166,11 @@ export default function ListTickets(props) {
             .then(res => {
                 console.log(res.data)
                 setTicket(res.data)
+                // setTicketUpdate({
+                //     ...ticketUpdate,
+                //     status:null,
+                //     description:null
+                // })
             }).catch(err => {
                 console.log(err)
             })
@@ -165,7 +179,7 @@ export default function ListTickets(props) {
 
     return (
         <>
-            {showTicket ? <Modal component={ViewTicket({ ticket, closeModal, updateStatus, updateComment, updateTicket })} /> : null}
+            {showTicket ? <Modal component={ViewTicket({ ticket, closeModal, updateStatus, updateComment, updateTicket, canUpdateTicket })} /> : null}
             <div className="list_main_container">
                 <div>
                     <div className={classes.menu_bar}>
@@ -175,7 +189,6 @@ export default function ListTickets(props) {
                         </div>
                         <h2 className={classes.heading}>All Tickets</h2>
                         <div className={classes.status_dropdown}>
-                            {/* <p style={}>Status :</p> */}
                             <InputElement
                             label = 'Status'
                             elementType = 'select'

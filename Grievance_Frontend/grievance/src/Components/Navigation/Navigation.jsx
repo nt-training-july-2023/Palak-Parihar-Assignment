@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import classes from './Navigation.module.css';
 import { Outlet, useLocation } from 'react-router';
-import { CHANGE_PASSWORD_PATH, LOGIN_PATH, LIST_TICKETS_PATH, NEW_TICKET_PATH, PROFILE_EMPLOYEE_REGISTRATION_PATH, GMS_LIST_DEPARTMENTS_PATH, GMS_LIST_EMPLOYEES_PATH, PROFILE_PATH, GMS_CHANGE_PASSWORD_PATH } from '../../API/PathConstant';
+import { CHANGE_PASSWORD_PATH, LOGIN_PATH, LIST_TICKETS_PATH, NEW_TICKET_PATH, PROFILE_EMPLOYEE_REGISTRATION_PATH, GMS_LIST_DEPARTMENTS_PATH, GMS_LIST_EMPLOYEES_PATH, GMS_CHANGE_PASSWORD_PATH } from '../../API/PathConstant';
 import { Link } from 'react-router-dom';
 
 export default function Navigation(props) {
@@ -19,7 +19,7 @@ export default function Navigation(props) {
             }
             setShow(true)
         }
-    })
+    }, [currentPath])
 
     console.log(currentPath)
 
@@ -38,7 +38,7 @@ export default function Navigation(props) {
             </Link>
             <ul className={classes.dropdownContent}>
                 <li><Link to={GMS_LIST_DEPARTMENTS_PATH}>Departments</Link></li>
-                <li><Link to={GMS_LIST_DEPARTMENTS_PATH}>Add Departments</Link></li>
+                <li><Link to={GMS_LIST_DEPARTMENTS_PATH}>Add Department</Link></li>
             </ul>
         </li>
         <li className={classes.dropdown}>
@@ -76,8 +76,11 @@ export default function Navigation(props) {
                             </ul>
                         </li>
                         <li className={classes.dropdown}>
-                            <a href="#"><div className={currentPath.pathname.startsWith(GMS_CHANGE_PASSWORD_PATH) ? classes.active : ''}>
-                                Profile <i class="fa fa-caret-down"></i></div></a>
+                            <Link to={GMS_CHANGE_PASSWORD_PATH}>
+                                <div className={currentPath.pathname.startsWith(GMS_CHANGE_PASSWORD_PATH) ? classes.active : ''}>
+                                    Profile <i class="fa fa-caret-down"></i>
+                                </div>
+                            </Link>
                             <ul className={classes.dropdownContent}>
                                 <li><Link to={GMS_CHANGE_PASSWORD_PATH}>Change Password</Link></li>
                                 <li><Link to="/logout">Logout</Link></li>

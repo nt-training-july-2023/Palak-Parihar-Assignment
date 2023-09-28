@@ -70,6 +70,7 @@ export default function ChangePassword(props) {
         display: 'flex',
         'justify-content': 'center',
         'align-items': 'center',
+        width : '57%'
     }
     const [controls, setControls] = useState(cont.controls);
     const [message, setMessage] = useState('');

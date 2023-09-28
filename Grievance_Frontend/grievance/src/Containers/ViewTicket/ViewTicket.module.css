@@ -1,9 +1,6 @@
 .ticketContent {
-
-    /* position: relative; */
     height: 80%;
     padding: 0px 40px;
-    width: 100%;
     overflow-y: scroll;
 }
 
@@ -15,7 +12,7 @@
 .mainContainer {
     display: flex;
     flex-direction: row;
-    padding: 10px 20px;
+    padding: 0px 20px;
     width: 100%;
     overflow: hidden;
     height: 100%;
@@ -28,7 +25,7 @@
 
 .commentsContainer {
     position: relative;
-    width: 50%;
+    width: 43%;
     height: 80%;
     justify-content: baseline;
     align-items: flex-end;
@@ -36,19 +33,22 @@
     padding-left: 50px;
     padding-right: 10px;
     border-left: 1px solid rgb(226, 223, 223);
+    background-color: #F0F0F0;
 }
 
 .commentContent{
     display: inline-block;
-    background-color: #e2dddd;
+    background-color: #fff;
     border : 1px solid black;
     border-radius: 10px 10px 0px 10px;
     padding: 10px;
-    margin: 12px 0px;
+    margin: 12px 0px 12px 20px;
     align-self: flex-end;
-    width: 100%;
+    width: 85%;
     word-break: break-all;
+    border: 1px solid #e2dddd;
 }
+
 
 .outerDiv {
     display: flex;
@@ -64,9 +64,10 @@
     display: flex;
     min-height: 50px;
     width: 100%;
-    background-color: #737374;
+    background-color: #266183;
     border-radius: 10px 10px 0px 0px;
     align-items: center;
+    justify-content: space-between;
     text-align: right;
     color: #fff;
 }
@@ -79,12 +80,15 @@ label{
 
 .ticketData{
     display: flex;
+    /* justify-content: space-between; */
+    padding: 10px;
+    width: 100%;
 }
 
 .commentBox{
     position: fixed;
     bottom: 0;
-    width: 40%;
+    width: 37%;
     margin-bottom: 5%;
 }
 
@@ -95,14 +99,6 @@ label{
     padding: 10px;
 }
 
-h3{
-    width: 60%;
-}
-
-p{
-    margin: 0px;
-}
-
 .date{
     font-size: 13px;
     opacity: 0.8;
@@ -111,9 +107,9 @@ p{
 }
 
 .userName{
+    color: #266183;
     padding: 0px;
-    font-weight: bolder;
-    /* font-size: larger; */
+    font-weight: 500;
 }
 
 .description{
