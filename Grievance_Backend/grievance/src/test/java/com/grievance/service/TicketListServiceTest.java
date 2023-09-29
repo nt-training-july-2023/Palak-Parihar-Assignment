@@ -48,6 +48,9 @@ public class TicketListServiceTest {
   @InjectMocks
   private TicketServiceImpl ticketService;
 
+  @Mock
+  private TicketService service;
+
   private TicketOutWOComment ticketOutWOComment;
 
   private Ticket ticket;
@@ -69,7 +72,7 @@ public class TicketListServiceTest {
         employee);
 
     tickets = new ArrayList<Ticket>();
-    
+
     lenient().when(modelMapper.map(ticket, TicketOutWOComment.class)).thenReturn(ticketOutWOComment);
 
   }
@@ -209,6 +212,85 @@ public class TicketListServiceTest {
 
     assertThat(result).isNotNull();
 
+    assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
+      assertThat(ticketOutWOComments).hasSize(tickets.size());
+    });
+  }
+
+  @Test
+  void list_all_tickets_return_list_ticket_by_status() {
+    when(employeeRepository.existsByEmailAndUserType(Mockito.anyString(), Mockito.any(UserType.class))).thenReturn(true);
+
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, Status.OPEN,null);
+    assertThat(result).isNotNull();
+    
+    assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
+      assertThat(ticketOutWOComments).hasSize(tickets.size());
+    });
+  }
+
+  @Test
+  void list_all_tickets_return_list_of_all_tickets() {
+    when(employeeRepository.existsByEmailAndUserType(Mockito.anyString(), Mockito.any(UserType.class))).thenReturn(true);
+    tickets.add(ticket);
+    Page<Ticket> page = new PageImpl<Ticket>(tickets);
+    when(ticketRepository.findAll(Mockito.any(PageRequest.class))).thenReturn(page);
+
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, null,null);
+    assertThat(result).isNotNull();
+    
+    assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
+      assertThat(ticketOutWOComments).hasSize(tickets.size());
+    });
+  }
+
+  @Test
+  void list_all_tickets_if_not_admin_when_status_is_null() {
+    when(employeeRepository.existsByEmailAndUserType(Mockito.anyString(), Mockito.any(UserType.class))).thenReturn(false);
+    when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, null,null);
+    
+    assertThat(result).isNotNull();
+    
+    assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
+      assertThat(ticketOutWOComments).hasSize(tickets.size());
+    });
+  }
+  
+  @Test
+  void list_all_tickets_if_not_admin_when_status_is_not_null() {
+    when(employeeRepository.existsByEmailAndUserType(Mockito.anyString(), Mockito.any(UserType.class))).thenReturn(false);
+    when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, Status.OPEN,null);
+    
+    assertThat(result).isNotNull();
+    
+    assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
+      assertThat(ticketOutWOComments).hasSize(tickets.size());
+    });
+  }
+  
+  @Test
+  void list_all_tickets_return_raised_by_user() {
+    when(employeeRepository.existsByEmailAndUserType(Mockito.anyString(), Mockito.any(UserType.class))).thenReturn(false);
+    when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, null,true);
+    
+    assertThat(result).isNotNull();
+    
+    assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
+      assertThat(ticketOutWOComments).hasSize(tickets.size());
+    });
+  }
+  
+  @Test
+  void list_all_tickets_return_raised_by_user_status() {
+    when(employeeRepository.existsByEmailAndUserType(Mockito.anyString(), Mockito.any(UserType.class))).thenReturn(false);
+    when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, Status.BEING_ADDRESSED,true);
+    
+    assertThat(result).isNotNull();
+    
     assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
       assertThat(ticketOutWOComments).hasSize(tickets.size());
     });

@@ -5,6 +5,9 @@ import NewDepartment from "../NewDepartment/NewDepartment"
 import { useNavigate } from "react-router"
 import Table from "../../Components/Table/Table"
 import classes from './ListDepartment.module.css';
+import { CHANGE_PASSWORD_PATH } from "../../API/PathConstant"
+import { headers } from "../../API/Headers"
+import ConfirmationDialog from "../../Components/Confirmation/ConfirmationDialog"
 
 
 export default function ListDepartments(props) {
@@ -27,7 +30,7 @@ export default function ListDepartments(props) {
             let values = JSON.parse(localStorage.getItem('userDetails'))
             console.log(values.firstTimeUser)
             if (values.firstTimeUser) {
-                navigate('/changePassword')
+                navigate(CHANGE_PASSWORD_PATH)
                 return
             }
         }
@@ -68,7 +71,22 @@ export default function ListDepartments(props) {
         setDisablePrevious(false)
     }
 
-    const deleteDepartment = (deptId) => {
+    const deleteDepartmentHandler = (department) => {
+        if (department.departmentName === headers().department) {
+            setModal(<Modal message="You can not delete your department " onClick={closeModal} />)
+            return
+        }
+        let params = {
+            enable: true,
+            content: 'Delete Department',
+            delete : () => deleteDepartment(department.departmentId),
+            close : () => closeModal()
+        }
+        setModal(<Modal component={ConfirmationDialog(params)} />)
+    }
+
+    const deleteDepartment = (deptId) =>{
+        console.log(deptId)
         DELETE_DEPARTMENT(deptId)
             .then(res => {
                 console.log(res)
@@ -77,6 +95,7 @@ export default function ListDepartments(props) {
                 setModal(<Modal message={err.data.response.data} onClick={closeModal} />)
             })
     }
+
 
     return (
         <>
@@ -90,12 +109,12 @@ export default function ListDepartments(props) {
                         headings={headings}
                         values={departments}
                         columns={columns}
-                        delete={deleteDepartment}
-                        id="departmentId" 
+                        delete={deleteDepartmentHandler}
+                        id="departmentId"
                         previousPage={previousPage}
                         nextPage={nextPage}
                         disablePrevious={disablePrevious}
-                        disableNext={disableNext}/>
+                        disableNext={disableNext} />
                 </div>
             </div>
         </>

@@ -54,7 +54,7 @@ function InputElement(props) {
 
         case ('select'):
             inputElement = (<>
-                <select className={classes.InputElement} onChange={props.changed} >
+                <select className={classes.InputElement} onChange={props.changed} disabled={props.disabled}>
                     <option value='' selected disabled hidden>{props.default === undefined? 'Choose here' : props.default}</option>
                     {props.options.map(option => (
                         <option key={option} value={option === 'ALL TICKETS' ? '' : option}>

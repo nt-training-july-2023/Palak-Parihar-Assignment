@@ -8,10 +8,10 @@ export default function Modal({ component, message, onClick }) {
             <div className={classes.outerDiv}>
                 {onClick ?
                     <div className={classes.content}>
-                        <p>{message}</p>
+                        <h3 style={{margin:'3px', marginBottom:'7px'}}>{message}</h3>
 
                         <div className={classes.close}>
-                            {onClick && <Button type='button' content='close' onClick={onClick} enable={true} />}
+                            {onClick && <Button type='button' content='Close' onClick={onClick} enable={true} />}
                         </div>
                     </div> : component
                 }

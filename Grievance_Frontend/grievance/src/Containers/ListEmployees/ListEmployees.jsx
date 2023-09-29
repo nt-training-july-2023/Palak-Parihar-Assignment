@@ -3,19 +3,17 @@ import { DELETE_EMPLOYEE, FETCH_ALL_USERS } from "../../Service/EmployeeServices
 import './ListEmployees.css';
 import { useNavigate } from "react-router";
 import Table from "../../Components/Table/Table";
+import { headers } from "../../API/Headers";
+import Modal from "../../Components/UI/Modal/Modal";
+import ConfirmationDialog from "../../Components/Confirmation/ConfirmationDialog";
 
 export default function ListEmployees(props) {
 
     const [employees, setEmployees] = useState([]);
-    const actions = (
-        <td>
-            <i id="icon" class='fas fa-edit' />
-            <i id="icon" class='fas fa-trash-alt'></i>
-        </td>
-    )
 
     const headings = ['Full Name', 'Email', 'Department', 'UserType', 'Actions']
     const columns = ["fullName", "email", "department", "userType"]
+    const [modal, setModal] = useState()
     const [disablePrevious, setDisablePrevious] = useState(true)
     const [disableNext, setDisableNext] = useState(true)
     const [page, setPage] = useState(0);
@@ -47,7 +45,7 @@ export default function ListEmployees(props) {
             .catch(err => {
                 console.log(err.data)
             })
-    }, [])
+    }, [modal])
 
     const previousPage = () => {
         if (page === 0) {
@@ -62,21 +60,50 @@ export default function ListEmployees(props) {
         setDisablePrevious(false)
     }
 
+    const deleteEmployeeHandler = (employee) => {
+        console.log(employee.email === headers().email)
+        if (employee.email === headers().email) {
+            setModal(<Modal message="User can not delete itself" onClick={closeModal} />)
+            return
+        }
+        let params = {
+            enable: true,
+            content: 'Delete Employee',
+            delete: () => deleteEmployee(employee.email),
+            close: () => closeModal()
+        }
+        setModal(<Modal component={ConfirmationDialog(params)} />)
+        // DELETE_EMPLOYEE(empId.email)
+        //     .then(res => {
+        //         console.log(res.status == 204)
+        //         setModal(<Modal message="Employee Successfully deleted" onClick={closeModal}/>)
+        //     }).catch(err => {
+        //         console.log(err.data.message)
+        //         setModal(<Modal message={err.data.message} onClick={closeModal}/>)
+        //     })
+    }
+
     const deleteEmployee = (empId) => {
         DELETE_EMPLOYEE(empId)
             .then(res => {
-                console.log(res)
+                setModal(<Modal message="Employee Successfully deleted" onClick={closeModal} />)
             }).catch(err => {
-                console.log(err)
+                console.log(err.data.message)
+                setModal(<Modal message={err.data.message} onClick={closeModal} />)
             })
+    }
+
+    const closeModal = () => {
+        setModal(<></>)
     }
 
     return (
         <>
+            {modal}
             <div className="list_main_container">
                 <Table values={employees}
                     headings={headings}
-                    delete={deleteEmployee}
+                    delete={deleteEmployeeHandler}
                     columns={columns}
                     heading=" Employees "
                     id="email"

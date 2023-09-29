@@ -28,7 +28,7 @@ export default function Table(props) {
                                         <i id={classes.icon} class='fas fa-edit' onClick={() => props.view(row[props.id])} />
                                     </td>}
                                     {props.delete && <td>
-                                        <i id={classes.icon} class='fas fa-trash-alt' onClick={() => props.delete(row[props.id])}></i>
+                                        <i id={classes.icon} class='fas fa-trash-alt' onClick={() => props.delete(row)}></i>
                                     </td>}
                                 </tr>
                             ))

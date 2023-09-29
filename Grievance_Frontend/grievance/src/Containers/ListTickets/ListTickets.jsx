@@ -53,7 +53,7 @@ export default function ListTickets(props) {
             }).catch(err => {
                 return err.data
             })
-    }, [config])
+    }, [config, navigate])
 
     const viewSelectedTicket = (ticketId) => {
         console.log(ticketId)
@@ -166,11 +166,11 @@ export default function ListTickets(props) {
             .then(res => {
                 console.log(res.data)
                 setTicket(res.data)
-                // setTicketUpdate({
-                //     ...ticketUpdate,
-                //     status:null,
-                //     description:null
-                // })
+                let ticketUpdatedSuccessfully = {
+                    status : null,
+                    description : null
+                }
+                setTicketUpdate(ticketUpdatedSuccessfully)
             }).catch(err => {
                 console.log(err)
             })

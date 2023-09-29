@@ -7,6 +7,23 @@ export default function Button(props) {
         inputClasses = classes.btnContainer
     }
 
+    if(props.delete){
+        inputClasses = classes.deleteBtn
+    }
+
+    if(props.delete){
+        return(
+            <div className={classes.btnDiv}>
+            <button
+                className={inputClasses}
+                onClick={props.onClick}
+                disabled={!props.enable} >
+                Delete
+            </button>
+        </div>
+        )
+    }
+
     return (
         <div className={classes.btnDiv}>
             <button

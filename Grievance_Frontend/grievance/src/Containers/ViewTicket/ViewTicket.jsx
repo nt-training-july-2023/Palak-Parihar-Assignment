@@ -71,10 +71,9 @@ export default function ViewTicket(props) {
                                     options={['OPEN', 'BEING_ADDRESSED', 'RESOLVED']}
                                     value={props.ticket.status}
                                     changed={props.updateStatus}
+                                    disabled={!props.canUpdateTicket}
                                 />
                             </div>
-
-
                         </div>
                         {props.canUpdateTicket ? updateBtn : ''}
 

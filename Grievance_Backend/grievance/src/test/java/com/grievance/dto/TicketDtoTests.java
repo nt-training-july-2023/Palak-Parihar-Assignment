@@ -198,8 +198,8 @@ public class TicketDtoTests {
     ticketOutWOComment3.setStatus(Status.BEING_ADDRESSED);
     ticketOutWOComment3.setTicketId(101);
     
-    assertNotEquals(ticketOutWOComment, ticketOutWOComment2);
-    assertEquals(ticketOutWOComment, ticketOutWOComment3);
+    assertNotEquals(ticketOutWOComment.hashCode(), ticketOutWOComment2.hashCode());
+    assertEquals(ticketOutWOComment.hashCode(), ticketOutWOComment3.hashCode());
   }
   
   @Test

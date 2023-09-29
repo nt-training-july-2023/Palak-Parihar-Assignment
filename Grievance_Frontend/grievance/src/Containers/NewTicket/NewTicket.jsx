@@ -7,6 +7,7 @@ import Modal from "../../Components/UI/Modal/Modal";
 import { headers } from "../../API/Headers";
 import { inputValidity } from "../../Validation/Validation";
 import Form from "../../Components/Form/Form";
+import { LIST_TICKETS_PATH } from "../../API/PathConstant";
 
 export default function NewTicket(props) {
 
@@ -99,7 +100,6 @@ export default function NewTicket(props) {
     const [controls, setControls] = useState(cont.controls);
     const navigate = useNavigate()
     const [userValues, setUserValues] = useState()
-    const [enableBtn, setEnableBtn] = useState(false)
     const [modal, setModal] = useState();
 
     const formElementsArray = [];
@@ -187,11 +187,12 @@ export default function NewTicket(props) {
         GENERATE_NEW_TICKET(ticketValues).then(res => {
             setModal(() => <Modal message="Ticket successfully created" onClick={closeModal} />)
             console.log(res.data)
-            return res.data;
+            setTimeout(()=>{
+                navigate(LIST_TICKETS_PATH)
+            }, 2000)
         }).catch(err => {
             console.log(err)
             setModal(() => <Modal message={err.data.response.data.message} onClick={closeModal} />)
-            return err.data
         })
     }
 
@@ -214,19 +215,6 @@ export default function NewTicket(props) {
                 return
             }
         }
-
-        let count = 0
-        for (let key in controls) {
-            if (!controls[key].valid) {
-                count += 1
-            }
-        }
-        if (count > 0) {
-            setEnableBtn(false)
-        } else {
-            setEnableBtn(true)
-        }
-
         FETCH_ALL_DEPARTMENTS()
             .then(response => {
                 let updatedControls = {

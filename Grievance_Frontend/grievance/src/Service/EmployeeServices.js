@@ -85,16 +85,17 @@ export const DELETE_EMPLOYEE = (empId) => {
         email: userValues.email,
         password: userValues.password
     }
-    new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         deleteMapping(DELETE_EMPLOYEE_URL, {
             headers: headersRequired,
             params: {
                 email: empId
             }
         }).then(res => {
+            console.log(res)
             resolve({ data: res })
         }).catch(err => {
-            reject({ data: err })
+            reject({ data: err.response.data })
         })
     })
 }
