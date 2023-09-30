@@ -10,9 +10,9 @@ dialog::backdrop {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.7);
-    z-index: 1;
     align-items: center;
     justify-content: center;
+    z-index: 1;
 }
 
 .close {
@@ -30,7 +30,7 @@ dialog::backdrop {
     height: fit-content;
     padding: 15px 20px 3px 20px;
     border-radius: 3px;
-
+    z-index: 100;
 }
 
 .modal-container {

@@ -3,15 +3,35 @@ import InputElement from "../../Components/UI/InputElement/InputElement";
 import classes from './ViewTicket.module.css';
 
 export default function ViewTicket(props) {
-
+    const statusOptions = [
+        {
+            option: 'Open',
+            value: 'OPEN'
+        }, {
+            option: 'Being Addressed',
+            value: 'BEING_ADDRESSED'
+        }, {
+            option: 'Resolved',
+            value: 'RESOLVED'
+        }
+    ]
     console.log(props)
+
+    const scrollToBottom = () => {
+        const commentBody = document.getElementById("commentBody")
+        commentBody.scrollTop = commentBody.scrollHeight;
+    }
 
     const commentBox = (
         <div className={classes.commentBox}>
+            <div className={classes.scrollBtn} onClick={scrollToBottom}>
+                Scroll to bottom <i style={{fontSize:'20px', color:'#266183'}} class='fas fa-arrow-alt-circle-down'></i>
+            </div>
             <InputElement
                 elementType='textarea'
                 placeholder='Comment Box'
                 changed={props.updateComment}
+                value={props.ticketUpdate.description}
             />
         </div>
     )
@@ -68,17 +88,23 @@ export default function ViewTicket(props) {
                                 <InputElement
                                     elementType='select'
                                     default={props.ticket.status}
-                                    options={['OPEN', 'BEING_ADDRESSED', 'RESOLVED']}
+                                    options={statusOptions}
+                                    selectValue='value'
+                                    selectOption='option'
                                     value={props.ticket.status}
                                     changed={props.updateStatus}
                                     disabled={!props.canUpdateTicket}
                                 />
                             </div>
                         </div>
-                        {props.canUpdateTicket ? updateBtn : ''}
-
+                        <div style={{ display: 'flex' }}>
+                            {props.canUpdateTicket ? updateBtn : ''}
+                        </div>
                     </div>
                     <div className={classes.commentsContainer} id="commentBody" >
+                        {props.ticket.comments.length === 0 ?
+                            (<h2 style={{ opacity: '0.3', textAlign: 'center' }}>No comments yet</h2>)
+                            : null}
                         {
                             props.ticket.comments.map(e => {
                                 return <>
@@ -90,7 +116,6 @@ export default function ViewTicket(props) {
                                 </>
                             })
                         }
-
                         {props.canUpdateTicket ? commentBox : ''}
                     </div>
                 </div>

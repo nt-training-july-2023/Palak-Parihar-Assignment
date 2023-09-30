@@ -20,6 +20,7 @@ import com.grievance.repository.EmployeeRepository;
 import com.grievance.repository.TicketRepository;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -145,6 +146,8 @@ public class TicketServiceImpl implements TicketService {
         }
         ticket.get().setStatus(ticketUpdateDto.getStatus());
       }
+      Date date = new Date();
+      ticket.get().setLastUpdated(date);
       Comment comment =
           new Comment(ticketUpdateDto.getDescription(), email, ticket.get());
       ticket.get().getComments().add(comment);

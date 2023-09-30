@@ -22,18 +22,6 @@
     color: red;
 }
 
-@media (max-width: 900px) {
-    .outerDiv {
-        width: 50%;
-    }
-}
-
-@media (max-width: 400px) {
-    .outerDiv {
-        width: 80%;
-    }
-}
-
 form {
     width: 100%;
 }

@@ -3,7 +3,15 @@ import classes from './Table.module.css';
 export default function Table(props) {
 
     console.log(props.values)
-    return (
+
+    const noDataFound = (
+        <>
+            <img className={classes.noData} src='/NotFound.png' alt='Not Found' />
+            <h2 style={{ textAlign: 'center' }}>No Data Found, Please go back</h2>
+        </>
+    )
+
+    const tableData = (
         <>
             <p className={classes.heading}><u>{props.heading}</u></p>
             <div className={classes.table_container}>
@@ -36,7 +44,11 @@ export default function Table(props) {
                     </tbody>
                 </table>
             </div>
-
+        </>
+    )
+    return (
+        <>
+            {props.values.length !== 0 ? tableData : noDataFound}
             <div id={classes.actions_arrow}>
                 {props.disablePrevious ?
                     <i id={classes.disable_action_icon} class='fas fa-arrow-alt-circle-left'></i>

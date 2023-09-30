@@ -11,7 +11,15 @@ import { LIST_TICKETS_PATH } from "../../API/PathConstant";
 
 export default function NewTicket(props) {
 
-    let ticketTypeOptions = ['GRIEVANCE', 'FEEDBACK']
+    let ticketTypeOptions = [
+        {
+            value: 'GRIEVANCE',
+            option: 'Grievance'
+        }, {
+            value: 'FEEDBACK',
+            option: 'Feedback'
+        }
+    ]
     let cont = {
         isValid: false,
         submit: false,
@@ -26,6 +34,8 @@ export default function NewTicket(props) {
                 validation: {
                     required: true
                 },
+                selectValue: 'value',
+                selectOption: 'option',
                 value: '',
                 error: '',
                 valid: false,
@@ -65,7 +75,7 @@ export default function NewTicket(props) {
                 label: "Description"
             },
             department: {
-                elementType: 'department',
+                elementType: 'select',
                 elementConfig: {
                     type: 'select',
                     placeholder: 'department'
@@ -76,6 +86,8 @@ export default function NewTicket(props) {
                 },
                 error: '',
                 options: [],
+                selectValue: 'departmentId',
+                selectOption: 'departmentName',
                 valid: false,
                 label: 'Department'
             },
@@ -124,6 +136,8 @@ export default function NewTicket(props) {
                         touched={formElement.config.touched}
                         changed={(e) => inputChangeHandler(e, formElement.id)}
                         options={formElement.config.options}
+                        selectOption={formElement.config.selectOption}
+                        selectValue={formElement.config.selectValue}
                         disabled={formElement.config.disabled}
                         error={formElement.config.error}
                         label={formElement.config.label}
@@ -187,7 +201,7 @@ export default function NewTicket(props) {
         GENERATE_NEW_TICKET(ticketValues).then(res => {
             setModal(() => <Modal message="Ticket successfully created" onClick={closeModal} />)
             console.log(res.data)
-            setTimeout(()=>{
+            setTimeout(() => {
                 navigate(LIST_TICKETS_PATH)
             }, 2000)
         }).catch(err => {

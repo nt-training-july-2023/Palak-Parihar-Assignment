@@ -9,6 +9,19 @@ import InputElement from "../../Components/UI/InputElement/InputElement";
 
 
 export default function ListTickets(props) {
+    const statusOptions = [{
+        value: '',
+        option: 'All Tickets'
+    }, {
+        value: 'OPEN',
+        option: 'Open'
+    }, {
+        value: 'BEING_ADDRESSED',
+        option: 'Being Addressed'
+    }, {
+        value: 'RESOLVED',
+        option: 'Resolved'
+    }]
     const [tickets, setTickets] = useState([]);
     const [ticket, setTicket] = useState()
     const [showTicket, setShowTicket] = useState(false)
@@ -30,6 +43,7 @@ export default function ListTickets(props) {
         status: null,
         description: null
     })
+    const [modal, setModal] = useState();
 
 
     useEffect(() => {
@@ -53,7 +67,7 @@ export default function ListTickets(props) {
             }).catch(err => {
                 return err.data
             })
-    }, [config, navigate])
+    }, [config, navigate, ticketUpdate, ticket, showTicket])
 
     const viewSelectedTicket = (ticketId) => {
         console.log(ticketId)
@@ -63,9 +77,9 @@ export default function ListTickets(props) {
             .then(res => {
                 const ticket = res.data
                 console.log()
-                if(values.department === ticket.department){
+                if (values.department === ticket.department) {
                     setCanUpdateTicket(false)
-                }else{
+                } else {
                     setCanUpdateTicket(true)
                 }
                 setTicket(ticket)
@@ -79,8 +93,12 @@ export default function ListTickets(props) {
         console.log(response)
     }
 
-    const closeModal = () => {
+    const closeTicketModal = () => {
         setShowTicket(false)
+    }
+
+    const closeModal = () => {
+        setModal(<></>)
     }
 
     const MyTickets = () => {
@@ -160,15 +178,20 @@ export default function ListTickets(props) {
     }
 
     const updateTicket = (Id) => {
-        console.log(ticketUpdate)
+        console.log(ticketUpdate.description === null)
+
+        if (ticketUpdate.description === null || ticketUpdate.description.trim().length === 0) {
+            setModal(<Modal message="Please leave a comment to update ticket" onClick={closeModal} />)
+            return
+        }
 
         UPDATE_TICKET_BY_ID(Id, ticketUpdate)
             .then(res => {
                 console.log(res.data)
                 setTicket(res.data)
                 let ticketUpdatedSuccessfully = {
-                    status : null,
-                    description : null
+                    status: null,
+                    description: ''
                 }
                 setTicketUpdate(ticketUpdatedSuccessfully)
             }).catch(err => {
@@ -176,10 +199,20 @@ export default function ListTickets(props) {
             })
     }
 
-
+    const viewTicketparams = {
+        ticket,
+        closeTicketModal,
+        updateStatus,
+        updateTicket,
+        updateComment,
+        canUpdateTicket,
+        'closeModal': closeTicketModal,
+        ticketUpdate
+    }
     return (
         <>
-            {showTicket ? <Modal component={ViewTicket({ ticket, closeModal, updateStatus, updateComment, updateTicket, canUpdateTicket })} /> : null}
+            {showTicket ? <Modal component={ViewTicket(viewTicketparams)} /> : null}
+            {modal}
             <div className="list_main_container">
                 <div>
                     <div className={classes.menu_bar}>
@@ -190,25 +223,27 @@ export default function ListTickets(props) {
                         <h2 className={classes.heading}>All Tickets</h2>
                         <div className={classes.status_dropdown}>
                             <InputElement
-                            label = 'Status'
-                            elementType = 'select'
-                            options= {[ 'ALL TICKETS','OPEN', 'BEING_ADDRESSED', 'RESOLVED']}
-                            default = 'ALL TICKETS'
-                            changed = {e => setStatus(e)}
+                                label='Status'
+                                elementType='select'
+                                options={statusOptions}
+                                selectValue='value'
+                                selectOption='option'
+                                default='ALL TICKETS'
+                                changed={e => setStatus(e)}
                             />
                         </div>
                     </div>
 
-                     <Table
-                     values={tickets}
-                     headings={headings}
-                     view={viewSelectedTicket}
-                     columns={columns}
-                     previousPage={previousPage}
-                     nextPage={nextPage}
-                     disablePrevious={disablePrevious}
-                     disableNext={disableNext}
-                     id="ticketId" /> 
+                    <Table
+                        values={tickets}
+                        headings={headings}
+                        view={viewSelectedTicket}
+                        columns={columns}
+                        previousPage={previousPage}
+                        nextPage={nextPage}
+                        disablePrevious={disablePrevious}
+                        disableNext={disableNext}
+                        id="ticketId" />
                 </div>
             </div >
         </>

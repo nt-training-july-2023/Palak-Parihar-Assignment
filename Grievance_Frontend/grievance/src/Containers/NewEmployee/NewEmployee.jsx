@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import classes from './EmployeeRegistration.module.css';
 import InputElement from '../../Components/UI/InputElement/InputElement';
 import { FETCH_ALL_DEPARTMENTS } from '../../Service/DepartmentService';
 import { SAVE_NEW_EMPLOYEE } from '../../Service/EmployeeServices';
@@ -9,11 +8,18 @@ import Form from '../../Components/Form/Form';
 import { inputValidity } from '../../Validation/Validation';
 
 
-export default function EmployeeRegistration(props) {
-    let userTypeOptions = ['ADMIN', 'MEMBER']
+export default function NewEmployee(props) {
+    let userTypeOptions = [
+        {
+            value: 'ADMIN',
+            option: 'Admin'
+        }, {
+            value: 'MEMBER',
+            option: 'Member'
+        }
+    ]
 
     const [modal, setModal] = useState();
-    const [message, setMessage] = useState();
     const navigate = useNavigate()
 
     let cont = {
@@ -83,12 +89,14 @@ export default function EmployeeRegistration(props) {
                 },
                 options: userTypeOptions,
                 error: '',
+                selectValue: 'value',
+                selectOption: 'option',
                 valid: false,
                 touched: false,
                 label: 'User Type'
             },
             department: {
-                elementType: 'department',
+                elementType: 'select',
                 elementConfig: {
                     type: 'select',
                     placeholder: 'department'
@@ -99,6 +107,8 @@ export default function EmployeeRegistration(props) {
                 },
                 error: '',
                 options: [],
+                selectValue: 'departmentId',
+                selectOption: 'departmentName',
                 valid: false,
                 label: 'Department'
             }
@@ -160,6 +170,8 @@ export default function EmployeeRegistration(props) {
                         touched={formElement.config.touched}
                         error={formElement.config.error}
                         label={formElement.config.label}
+                        selectOption={formElement.config.selectOption}
+                        selectValue={formElement.config.selectValue}
                         changed={(e) => inputChangeHandler(e, formElement.id)}
                     />
                 </div>
@@ -238,9 +250,7 @@ export default function EmployeeRegistration(props) {
 
     return (
         <>
-            <div className="modal-container">
-                {modal}
-            </div>
+            {modal}
             <div className="container">
                 <div style={containerCss}>
                     <Form

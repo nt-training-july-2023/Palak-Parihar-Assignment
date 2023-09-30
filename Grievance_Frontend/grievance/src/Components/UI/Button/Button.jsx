@@ -18,7 +18,7 @@ export default function Button(props) {
                 className={inputClasses}
                 onClick={props.onClick}
                 disabled={!props.enable} >
-                Delete
+                Yes
             </button>
         </div>
         )

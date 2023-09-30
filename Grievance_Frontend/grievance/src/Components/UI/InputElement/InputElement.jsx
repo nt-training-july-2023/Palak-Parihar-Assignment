@@ -7,19 +7,8 @@ function InputElement(props) {
     if (props.invalid && props.shouldValidate && props.touched) {
         inputClasses.push(classes.Invalid);
     }
-    const fetchOptions = (options) => {
-        const selectOptions = [];
-        Object.keys(options).forEach(key => {
-            let id = options[key].departmentId;
-            selectOptions.push(
-                <option className={inputClasses} key={options[key].departmentId} value={id}>
-                    {options[key].departmentName}
-                </option>
-            )
-        })
-        return selectOptions
-    }
 
+    console.log(props)
     switch (props.elementType) {
         case ('input'):
             inputElement = <>
@@ -42,7 +31,6 @@ function InputElement(props) {
             inputElement = <div style={{ width: '100%' }}>
                 <textarea
                     className={inputClasses.join(' ')}
-                    {...props.elementConfig}
                     value={props.value}
                     onChange={props.changed}
                     disabled={props.disabled}
@@ -57,19 +45,10 @@ function InputElement(props) {
                 <select className={classes.InputElement} onChange={props.changed} disabled={props.disabled}>
                     <option value='' selected disabled hidden>{props.default === undefined? 'Choose here' : props.default}</option>
                     {props.options.map(option => (
-                        <option key={option} value={option === 'ALL TICKETS' ? '' : option}>
-                            {option}
+                        <option key={option[props.selectValue]} value={option[props.selectValue]}>
+                            {option[props.selectOption]}
                         </option>
                     ))}
-                </select>
-            </>)
-            break;
-
-        case ('department'):
-            inputElement = (<>
-                <select className={inputClasses.join(' ')} onChange={props.changed}>
-                    <option className={classes.OptionElement} value="" selected disabled hidden>Choose here</option>
-                    {fetchOptions(props.options)}
                 </select>
             </>)
             break;

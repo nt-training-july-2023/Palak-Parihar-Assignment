@@ -2,7 +2,6 @@ import Button from '../Button/Button';
 import classes from './Modal.module.css'
 
 export default function Modal({ component, message, onClick }) {
-    console.log(component)
     return (
         <>
             <div className={classes.outerDiv}>

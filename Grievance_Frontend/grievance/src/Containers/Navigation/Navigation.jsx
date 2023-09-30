@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
 import classes from './Navigation.module.css';
-import { Outlet, useLocation } from 'react-router';
+import { Outlet, useLocation, useNavigate } from 'react-router';
+import Modal from "../../Components/UI/Modal/Modal"
 import { CHANGE_PASSWORD_PATH, LOGIN_PATH, LIST_TICKETS_PATH, NEW_TICKET_PATH, PROFILE_EMPLOYEE_REGISTRATION_PATH, GMS_LIST_DEPARTMENTS_PATH, GMS_LIST_EMPLOYEES_PATH, GMS_CHANGE_PASSWORD_PATH } from '../../API/PathConstant';
 import { Link } from 'react-router-dom';
+import ConfirmationDialog from '../../Components/Confirmation/ConfirmationDialog';
 
 export default function Navigation(props) {
 
     const [show, setShow] = useState(false);
     const [showMenu, setshowMenu] = useState(false)
+    const [modal, setModal] = useState(false)
+    const navigate = useNavigate()
     const currentPath = useLocation()
     useEffect(() => {
         console.log(currentPath)
@@ -33,13 +37,9 @@ export default function Navigation(props) {
                 <div
                     className={classes.menuItems + ' '
                         + (currentPath.pathname.startsWith(GMS_LIST_DEPARTMENTS_PATH) ? classes.activeMenu : '')}>
-                    Departments <i class="fa fa-caret-down"></i>
+                    Departments
                 </div>
             </Link>
-            <ul className={classes.dropdownContent}>
-                <li><Link to={GMS_LIST_DEPARTMENTS_PATH}>Departments</Link></li>
-                <li><Link to={GMS_LIST_DEPARTMENTS_PATH}>Add Department</Link></li>
-            </ul>
         </li>
         <li className={classes.dropdown}>
             <Link to={GMS_LIST_EMPLOYEES_PATH}>
@@ -56,11 +56,27 @@ export default function Navigation(props) {
         </li>
     </>
 
+    const logoutHandler = () => {
+        setModal(<Modal component={ConfirmationDialog({ 'delete': logout, 'close': closeModal, 'content' : 'Log out' })} />)
+    }
+
+    const logout = () => {
+        setTimeout(() => {
+            navigate('/logout')
+        }, 100)
+    }
+
+    const closeModal = () => {
+        setModal(<></>)
+    }
+
     const NavContent = (
         <>
             <div className={classes.container}>
                 <div>
-                    <h1 className={classes.heading}>NucleusTeq</h1>
+                    <Link to={LIST_TICKETS_PATH} style={{ textDecoration: 'none' }}>
+                        <h1 className={classes.heading}>GMS</h1>
+                    </Link>
                 </div>
                 <div>
                     <ul className={classes.navItems}>
@@ -83,7 +99,8 @@ export default function Navigation(props) {
                             </Link>
                             <ul className={classes.dropdownContent}>
                                 <li><Link to={GMS_CHANGE_PASSWORD_PATH}>Change Password</Link></li>
-                                <li><Link to="/logout">Logout</Link></li>
+                                <li onClick={logoutHandler}><Link>Logout</Link></li>
+                                
                             </ul>
                         </li>
                     </ul>
@@ -95,6 +112,7 @@ export default function Navigation(props) {
 
     return (
         <>
+            {modal}
             {show ? NavContent : null}
             <Outlet></Outlet>
         </>

@@ -5,7 +5,7 @@
     height: 57px;
     width: 100%;
     background-color: #3c8dbc;
-    justify-content: center;
+    justify-content: space-between;
     color: #fff;
     box-shadow: 8px 5px 5px rgba(128, 128, 128, 0.6);
 }
@@ -40,10 +40,9 @@ li a:hover {
 }
 
 .heading {
-    position: absolute;
-    left: 0px;
-    padding: 12px 0 0 0;
-    margin: 0px;
+    color: white;
+    text-decoration: none;
+    margin: 5px 0px 0px 20px;
 }
 
 

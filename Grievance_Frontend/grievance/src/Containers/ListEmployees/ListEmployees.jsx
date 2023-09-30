@@ -6,6 +6,7 @@ import Table from "../../Components/Table/Table";
 import { headers } from "../../API/Headers";
 import Modal from "../../Components/UI/Modal/Modal";
 import ConfirmationDialog from "../../Components/Confirmation/ConfirmationDialog";
+import { CHANGE_PASSWORD_PATH } from "../../API/PathConstant";
 
 export default function ListEmployees(props) {
 
@@ -27,7 +28,7 @@ export default function ListEmployees(props) {
             let values = JSON.parse(localStorage.getItem('userDetails'))
             console.log(values.firstTimeUser)
             if (values.firstTimeUser) {
-                navigate('/changePassword')
+                navigate(CHANGE_PASSWORD_PATH)
                 return
             }
         }
@@ -45,7 +46,7 @@ export default function ListEmployees(props) {
             .catch(err => {
                 console.log(err.data)
             })
-    }, [modal])
+    }, [modal, page, navigate])
 
     const previousPage = () => {
         if (page === 0) {

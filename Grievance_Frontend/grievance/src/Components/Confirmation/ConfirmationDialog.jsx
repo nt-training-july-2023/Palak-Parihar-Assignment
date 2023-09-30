@@ -11,10 +11,10 @@ export default function ConfirmationDialog(props) {
                          <p style={{textAlign:'center'}}> Are you sure ?</p>
                     <div className={classes.btnContainer}>
                         <div style={{ width: '50%' }}>
-                            <Button enable={true} onClick={props.delete}/>
+                            <Button delete={true} enable={true} onClick={props.delete}/>
                         </div>
                         <div style={{ width: '50%' }}>
-                            <Button enable={true} content='Close' onClick={props.close}/>
+                            <Button enable={true} content='No' onClick={props.close}/>
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { DELETE_DEPARTMENT, FETCH_ALL_DEPARTMENTS, GENERATE_NEW_DEPARTMENT } from "../../Service/DepartmentService"
+import { DELETE_DEPARTMENT, FETCH_ALL_DEPARTMENTS } from "../../Service/DepartmentService"
 import Modal from "../../Components/UI/Modal/Modal"
 import NewDepartment from "../NewDepartment/NewDepartment"
 import { useNavigate } from "react-router"
@@ -22,7 +22,6 @@ export default function ListDepartments(props) {
     const navigate = useNavigate()
 
     useEffect(() => {
-
         if (localStorage.getItem('userDetails') === null) {
             navigate('/logout')
             return
@@ -33,6 +32,10 @@ export default function ListDepartments(props) {
                 navigate(CHANGE_PASSWORD_PATH)
                 return
             }
+        }
+
+        if(page === 0){
+            setDisablePrevious(true)
         }
 
         FETCH_ALL_DEPARTMENTS(page)
@@ -48,7 +51,7 @@ export default function ListDepartments(props) {
             .catch(err => {
                 setModal(() => <Modal message={err.data.response.data} onClick={closeModal} />)
             })
-    }, [modal, page])
+    }, [modal, page, navigate])
 
     const closeModal = () => {
         setModal(() => <></>)
@@ -59,11 +62,9 @@ export default function ListDepartments(props) {
     }
 
     const previousPage = () => {
-        if (page === 0) {
-            setDisablePrevious(true)
-            return
+        if(page > 0){
+            setPage((page) => page-1)
         }
-        setPage((page) => page - 1)
     }
 
     const nextPage = () => {
@@ -79,13 +80,13 @@ export default function ListDepartments(props) {
         let params = {
             enable: true,
             content: 'Delete Department',
-            delete : () => deleteDepartment(department.departmentId),
-            close : () => closeModal()
+            delete: () => deleteDepartment(department.departmentId),
+            close: () => closeModal()
         }
         setModal(<Modal component={ConfirmationDialog(params)} />)
     }
 
-    const deleteDepartment = (deptId) =>{
+    const deleteDepartment = (deptId) => {
         console.log(deptId)
         DELETE_DEPARTMENT(deptId)
             .then(res => {

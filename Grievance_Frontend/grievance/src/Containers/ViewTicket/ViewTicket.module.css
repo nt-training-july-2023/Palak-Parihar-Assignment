@@ -34,6 +34,7 @@
     padding-right: 10px;
     border-left: 1px solid rgb(226, 223, 223);
     background-color: #F0F0F0;
+    scroll-behavior: smooth;
 }
 
 .commentContent{
@@ -58,6 +59,7 @@
     background-color: #fff;
     justify-content: space-between;
     border-radius: 10px;
+    z-index: 1;
 }
 
 .heading {
@@ -107,11 +109,29 @@ label{
 }
 
 .userName{
-    color: #266183;
+    color: #205675;
     padding: 0px;
     font-weight: 500;
 }
 
 .description{
     padding: 0px;
+}
+
+.scrollBtn{
+    float: right;
+    cursor: pointer;
+}
+
+@media (max-width: 1200px) {
+   .ticketContainer{
+    /* width: 45%; */
+   }
+   .mainContainer{
+    width: 95%;
+   }
+
+   .commentBox{
+    margin-bottom: '6%';
+   }
 }

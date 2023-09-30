@@ -88,6 +88,13 @@
     bottom: 6px;
 }
 
+.noData{
+    height: 300px;
+    width: 300px;
+    margin-left: 40%;
+    border-radius: 50%;
+}
+
 @media (max-width: 1300px) {
     .table td {
         padding: 9px 6px 3px 3px;
@@ -95,16 +102,14 @@
     }
 
     .table {
-        width: 100%;
+        width: 90%;
     }
 }
 
 @media (max-width: 1100px) {
-    #action_arrows {
-        position: sticky;
-        bottom: 2%;
+    #actions_arrow{
+        bottom: 2px;
     }
-
     .table {
         width: 100%;
     }
@@ -113,10 +118,10 @@
 @media (max-width: 970px) {
     #action_arrows {
         position: relative;
-        float: inline-end;
     }
 
     .table {
-        width: 100%;
+        width: 95%;
+        overflow-x: scroll;
     }
 }
