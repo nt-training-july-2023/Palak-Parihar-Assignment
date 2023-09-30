@@ -1,5 +1,6 @@
 package com.grievance.controller;
 
+import com.grievance.constants.ControllerURLS;
 import com.grievance.dto.TicketInDto;
 import com.grievance.dto.TicketOutDto;
 import com.grievance.dto.TicketOutWOComment;
@@ -29,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/ticket")
+@RequestMapping(path = ControllerURLS.TICKET_BASE_URL)
 public class TicketController {
   /**
    *
@@ -43,7 +44,7 @@ public class TicketController {
    * @param ticketInDto
    * @return Responseentity with optional of TicketOut DTO.
    */
-  @PostMapping("/addTicket")
+  @PostMapping(path = ControllerURLS.SAVE_DATA)
   public ResponseEntity<?> saveTicket(
             @RequestBody final TicketInDto ticketInDto) {
             ticketService.saveTicket(ticketInDto);
@@ -60,7 +61,7 @@ public class TicketController {
    * @param status
    * @return ResponseEntity with optional of list of all tickets.
    */
-  @GetMapping("/listAllTickets")
+  @GetMapping(path = ControllerURLS.GET_ALL_DATA)
   public ResponseEntity<List<TicketOutWOComment>> listAllTickets(
     @RequestHeader final String email,
     @RequestParam final Integer page,
@@ -81,7 +82,7 @@ public class TicketController {
    * @param email
    * @return Responseentity with optional of updated TicketOut DTO.
    */
-  @PutMapping("/update")
+  @PutMapping(path = ControllerURLS.UPDATE_DATA_BY_ID)
   public ResponseEntity<TicketOutDto> updateTickets(
           @RequestHeader final String email,
           @RequestParam final Integer ticketId,
@@ -96,7 +97,7 @@ public class TicketController {
    * @param ticketId
    * @return Responseentity with optional of TicketOut DTO.
    */
-  @GetMapping("/getTicket")
+  @GetMapping(path = ControllerURLS.GET_DATA_BY_ID)
   public ResponseEntity<TicketOutDto> getTicketById(
       @RequestParam final Integer ticketId) {
         Optional<TicketOutDto> ticketOut = ticketService

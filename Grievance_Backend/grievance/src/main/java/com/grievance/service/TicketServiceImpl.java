@@ -3,6 +3,7 @@
  */
 package com.grievance.service;
 
+import com.grievance.constants.ErrorConstants;
 import com.grievance.dto.TicketInDto;
 import com.grievance.dto.TicketOutDto;
 import com.grievance.dto.TicketOutWOComment;
@@ -12,9 +13,7 @@ import com.grievance.entity.Employee;
 import com.grievance.entity.Status;
 import com.grievance.entity.Ticket;
 import com.grievance.entity.UserType;
-import com.grievance.exception.CommentNotFoundException;
-import com.grievance.exception.EmployeeNotFoundException;
-import com.grievance.exception.TicketNotFoundException;
+import com.grievance.exception.ResourceNotFoundException;
 import com.grievance.exception.UnauthorisedUserException;
 import com.grievance.repository.EmployeeRepository;
 import com.grievance.repository.TicketRepository;
@@ -101,7 +100,7 @@ public class TicketServiceImpl implements TicketService {
       final Integer page) {
     Employee employee = employeeRepository.findByEmail(email);
     if (Objects.isNull(employee)) {
-      throw new EmployeeNotFoundException(email);
+      throw new ResourceNotFoundException(email);
     }
     List<TicketOutWOComment> ticketOutDtos =
         new ArrayList<TicketOutWOComment>();
@@ -126,7 +125,7 @@ public class TicketServiceImpl implements TicketService {
       final String email) {
     Employee employee = employeeRepository.findByEmail(email);
     if (Objects.isNull(employee)) {
-      throw new EmployeeNotFoundException(email);
+      throw new ResourceNotFoundException(email);
     } else {
       Optional<Ticket> ticket = ticketRepository.findById(ticketId);
       if (ticket.isPresent()) {
@@ -141,7 +140,8 @@ public class TicketServiceImpl implements TicketService {
         if (ticketUpdateDto.getStatus() == Status.RESOLVED
             & Objects.isNull(ticketUpdateDto.getDescription())) {
           if (ticket.get().getComments().isEmpty()) {
-            throw new CommentNotFoundException();
+            throw new ResourceNotFoundException(
+                ErrorConstants.COMMENT_NOT_FOUND);
           }
         }
         ticket.get().setStatus(ticketUpdateDto.getStatus());
@@ -154,7 +154,7 @@ public class TicketServiceImpl implements TicketService {
       Ticket updatedTicket = ticketRepository.save(ticket.get());
       return Optional.ofNullable(convertToDto(updatedTicket));
     }
-    throw new TicketNotFoundException(ticketId);
+    throw new ResourceNotFoundException(ErrorConstants.TICKET_NOT_FOUND);
     }
   }
 
@@ -169,7 +169,7 @@ public class TicketServiceImpl implements TicketService {
       final String email) {
     Employee employee = employeeRepository.findByEmail(email);
     if (Objects.isNull(employee)) {
-      throw new EmployeeNotFoundException(email);
+      throw new ResourceNotFoundException(email);
     } else {
       List<TicketOutWOComment> ticketOutDtos =
           new ArrayList<TicketOutWOComment>();
@@ -195,7 +195,7 @@ public class TicketServiceImpl implements TicketService {
           Optional.ofNullable(convertToDto(ticket.get()));
       return optionalTicketOut;
     }
-    throw new TicketNotFoundException(ticketId);
+    throw new ResourceNotFoundException(ErrorConstants.TICKET_NOT_FOUND);
   }
 
   /**
@@ -211,7 +211,7 @@ public class TicketServiceImpl implements TicketService {
       final String email) {
     Employee employee = employeeRepository.findByEmail(email);
     if (Objects.isNull(employee)) {
-      throw new EmployeeNotFoundException(email);
+      throw new ResourceNotFoundException(email);
     }
     List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
     if (!Objects.isNull(employee)) {
@@ -257,7 +257,7 @@ public class TicketServiceImpl implements TicketService {
       final Integer page) {
     Employee employee = employeeRepository.findByEmail(email);
     if (Objects.isNull(employee)) {
-      throw new EmployeeNotFoundException(email);
+      throw new ResourceNotFoundException(email);
       }
     List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
     ticketRepository.findByDepartmentAndStatusAndEmployee(

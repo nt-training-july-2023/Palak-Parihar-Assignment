@@ -28,6 +28,8 @@ public class TicketTest {
     assertThat(!ticket1.equals(null));
     
     assertThat(!ticket1.equals(Employee.class));
+    
+    assertThat(ticket1.equals(ticket1));
   }
   
   @Test

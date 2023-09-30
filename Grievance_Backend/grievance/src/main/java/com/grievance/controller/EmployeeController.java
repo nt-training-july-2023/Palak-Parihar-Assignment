@@ -4,6 +4,7 @@
 
 package com.grievance.controller;
 
+import com.grievance.constants.ControllerURLS;
 import com.grievance.dto.ChangePasswordInDto;
 import com.grievance.dto.EmployeeInDto;
 import com.grievance.dto.EmployeeLoginDto;
@@ -34,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/employee")
+@RequestMapping(path = ControllerURLS.EMPLOYEE_BASE_URL)
 public class EmployeeController {
   /**
    * Autowiring Service.
@@ -46,9 +47,9 @@ public class EmployeeController {
    *
    * @param employeeLoginDto for EmployeeLoginDto.
    * @return ResponseEntity.
-   * @throws EmployeeNotFoundException
+   * @throws ResourceNotFoundException
    */
-  @PostMapping("/login")
+  @PostMapping(path = ControllerURLS.EMPLOYEE_LOGIN)
   public ResponseEntity<?> loginUser(
       @Valid @RequestBody final EmployeeLoginDto employeeLoginDto) {
       Optional<EmployeeOutDto> employeeDtoOptional =
@@ -65,7 +66,7 @@ public class EmployeeController {
    * @param page
    * @return ResponseEntity with list of All Employees.
    */
-  @GetMapping(value = "/listAllEmployees")
+  @GetMapping(path = ControllerURLS.GET_ALL_DATA)
   public ResponseEntity<?> listAllEmployees(
       @RequestHeader final String email,
       @RequestHeader final String password,
@@ -82,7 +83,7 @@ public class EmployeeController {
    * @param employeeInDto
    * @return Response
    */
-  @PostMapping("/saveEmployee")
+  @PostMapping(path = ControllerURLS.SAVE_DATA)
   public ResponseEntity<?> saveEmployee(
       @RequestHeader final String email,
       @RequestHeader final String password,
@@ -98,7 +99,7 @@ public class EmployeeController {
    * @param changePasswordInDto
    * @return ResponseEntity
    */
-  @PutMapping("/changePassword")
+  @PutMapping(path = ControllerURLS.EMPLOYEE_CHANGE_PASSWORD)
   public ResponseEntity<?> changePassword(
       @RequestHeader final String email,
       @RequestBody final ChangePasswordInDto changePasswordInDto) {
@@ -111,7 +112,7 @@ public class EmployeeController {
    * @param email
    * @return Responseentity.
    */
-  @DeleteMapping("/delete")
+  @DeleteMapping(path = ControllerURLS.DELETE_DATA_BY_ID)
   public ResponseEntity<?> deleteEmployee(
       @RequestParam final String email) {
     employeeService.deleteEmployeeById(email);

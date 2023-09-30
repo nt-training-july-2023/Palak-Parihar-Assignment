@@ -7,10 +7,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.grievance.constants.ControllerURLS;
 import com.grievance.dto.DepartmentInDto;
 import com.grievance.dto.DepartmentOutDto;
-import com.grievance.exception.DepartmentAlreadyExistsException;
-import com.grievance.exception.DepartmentNotFound;
+import com.grievance.exception.RecordAlreadyExistException;
+import com.grievance.exception.ResourceNotFoundException;
 import com.grievance.service.DepartmentService;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,8 @@ public class DepartmentControllerTests {
   private DepartmentInDto departmentInDto;
   private DepartmentOutDto departmentOutDto;
 
+  private String baseURL = ControllerURLS.DEPARTMENT_BASE_URL;
+
   @BeforeEach
   void setUp() {
     objectMapper = new ObjectMapper();
@@ -65,7 +68,7 @@ public class DepartmentControllerTests {
     mockMvc
       .perform(
         MockMvcRequestBuilders
-          .post("/department/save")
+          .post(baseURL+ControllerURLS.SAVE_DATA)
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(departmentInDto))
           .header("email", "ayushi@gmail.com")
@@ -80,12 +83,12 @@ public class DepartmentControllerTests {
     throws JsonProcessingException, Exception {
 
     when(departmentService.saveDepartment(Mockito.any(DepartmentInDto.class)))
-      .thenThrow(DepartmentAlreadyExistsException.class);
+      .thenThrow(RecordAlreadyExistException.class);
 
     mockMvc
       .perform(
         MockMvcRequestBuilders
-          .post("/department/save")
+          .post(baseURL+ControllerURLS.SAVE_DATA)
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(departmentInDto))
           .header("email", "ayushi@gmail.com")
@@ -105,7 +108,7 @@ public class DepartmentControllerTests {
     mockMvc
         .perform(
             MockMvcRequestBuilders
-                .get("/department/listDepartments")
+                .get(baseURL+ControllerURLS.GET_ALL_DATA)
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("page", "0")
                 .header("email", "ayushi@gmail.com")
@@ -121,7 +124,7 @@ public class DepartmentControllerTests {
     mockMvc
         .perform(
             MockMvcRequestBuilders
-                .delete("/department/delete")
+                .delete(baseURL+ControllerURLS.DELETE_DATA_BY_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("departmentId", "101")
                 .header("email", "ayushi@gmail.com")
@@ -129,15 +132,16 @@ public class DepartmentControllerTests {
         .andExpect(status().isNoContent())
         .andDo(MockMvcResultHandlers.print());
   }
-  
+
   @Test
   void when_delete_department_fails() throws Exception {
 
-    doThrow(DepartmentNotFound.class).when(departmentService).deleteDepartment(Mockito.anyInt());;
+    doThrow(ResourceNotFoundException.class).when(departmentService).deleteDepartment(Mockito.anyInt());
+    ;
     mockMvc
         .perform(
             MockMvcRequestBuilders
-                .delete("/department/delete")
+                .delete(baseURL+ControllerURLS.DELETE_DATA_BY_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("departmentId", "101")
                 .header("email", "ayushi@gmail.com")

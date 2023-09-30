@@ -3,6 +3,7 @@ package com.grievance.controller;
 import com.grievance.dto.DepartmentInDto;
 import com.grievance.dto.DepartmentOutDto;
 import com.grievance.service.DepartmentService;
+import com.grievance.constants.ControllerURLS;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/department")
+@RequestMapping(ControllerURLS.DEPARTMENT_BASE_URL)
 public class DepartmentController {
   /**
    * Autowiring departmentService.
@@ -39,7 +40,7 @@ public class DepartmentController {
    * @param departmentInDto
    * @return department saved.
    */
-  @PostMapping("/save")
+  @PostMapping(path = ControllerURLS.SAVE_DATA)
   public ResponseEntity<?> saveDepartment(
       @RequestBody final DepartmentInDto departmentInDto) {
     Optional<DepartmentOutDto> optional =
@@ -54,7 +55,7 @@ public class DepartmentController {
    * @return ResponseEntity with list of All Departments.
    *
    */
-  @GetMapping("/listDepartments")
+  @GetMapping(path = ControllerURLS.GET_ALL_DATA)
   public ResponseEntity<?> listDepartments(
       @RequestParam(required = false) final Integer page) {
     Optional<List<DepartmentOutDto>> departmentOutDtos =
@@ -66,7 +67,7 @@ public class DepartmentController {
    * @param departmentId
    * @return responseentity.
    */
-  @DeleteMapping("/delete")
+  @DeleteMapping(path = ControllerURLS.DELETE_DATA_BY_ID)
   public ResponseEntity<?> deleteDepartmentById(
       @RequestParam final Integer departmentId) {
     departmentService.deleteDepartment(departmentId);

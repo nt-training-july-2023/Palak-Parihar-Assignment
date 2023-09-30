@@ -23,13 +23,14 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.grievance.constants.ControllerURLS;
 import com.grievance.dto.TicketInDto;
 import com.grievance.dto.TicketOutDto;
 import com.grievance.dto.TicketOutWOComment;
 import com.grievance.dto.TicketUpdateDto;
 import com.grievance.entity.Status;
 import com.grievance.entity.TicketType;
-import com.grievance.exception.TicketNotFoundException;
+import com.grievance.exception.ResourceNotFoundException;
 import com.grievance.service.TicketService;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,6 +49,7 @@ public class TicketControllerTest {
 
   private TicketInDto ticketInDto;
   private TicketOutDto ticketOutDto;
+  private String baseURL = ControllerURLS.TICKET_BASE_URL;
 
   @BeforeEach
   void setUp() {
@@ -74,7 +76,7 @@ public class TicketControllerTest {
 	public void when_save_ticket_return_saved_ticket() throws JsonProcessingException, Exception {
 		when(ticketService.saveTicket(Mockito.any(TicketInDto.class))).thenReturn(Optional.ofNullable(ticketOutDto));
 		
-		mockMvc.perform(MockMvcRequestBuilders.post("/ticket/addTicket")
+		mockMvc.perform(MockMvcRequestBuilders.post(baseURL+ControllerURLS.SAVE_DATA)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsBytes(ticketInDto))
 				).andExpect(status().isCreated()).andDo(MockMvcResultHandlers.print());
@@ -88,7 +90,7 @@ public class TicketControllerTest {
         Mockito.anyInt(), Mockito.any(Status.class), Mockito.anyBoolean()))
         .thenReturn(Optional.of(ticketOutDtos));
 
-    mockMvc.perform(MockMvcRequestBuilders.get("/ticket/listAllTickets")
+    mockMvc.perform(MockMvcRequestBuilders.get(baseURL + ControllerURLS.GET_ALL_DATA)
         .contentType(MediaType.APPLICATION_JSON)
         .header("email", "ayushi@nucleusteq.com")
         .header("password", "Ayushi#123")
@@ -103,7 +105,7 @@ public class TicketControllerTest {
 		
 		when(ticketService.updateTicket(Mockito.any(TicketUpdateDto.class), Mockito.anyInt(), Mockito.anyString())).thenReturn(Optional.of(ticketOutDto));
 		
-    mockMvc.perform(MockMvcRequestBuilders.put("/ticket/update")
+    mockMvc.perform(MockMvcRequestBuilders.put(baseURL+ControllerURLS.UPDATE_DATA_BY_ID)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(ticketInDto))
 				.header("email", "ayushi@nucleusteq.com")
@@ -115,8 +117,8 @@ public class TicketControllerTest {
 @Test
 	public void update_ticket_failed() throws Exception {
 		
-		when(ticketService.updateTicket(Mockito.any(TicketUpdateDto.class), Mockito.anyInt(), Mockito.anyString())).thenThrow(TicketNotFoundException.class);
-		mockMvc.perform(MockMvcRequestBuilders.put("/ticket/update")
+		when(ticketService.updateTicket(Mockito.any(TicketUpdateDto.class), Mockito.anyInt(), Mockito.anyString())).thenThrow(ResourceNotFoundException.class);
+		mockMvc.perform(MockMvcRequestBuilders.put(baseURL+ControllerURLS.UPDATE_DATA_BY_ID)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(ticketInDto))
 				.header("email", "ayushi@nucleusteq.com")
@@ -129,7 +131,7 @@ public class TicketControllerTest {
 	public void get_ticket_by_id_success() throws Exception {
 		when(ticketService.findTicketByTicketId(Mockito.anyInt())).thenReturn(Optional.of(ticketOutDto));
 		
-		mockMvc.perform(MockMvcRequestBuilders.get("/ticket/getTicket")
+		mockMvc.perform(MockMvcRequestBuilders.get(baseURL+ControllerURLS.GET_DATA_BY_ID)
 				.contentType(MediaType.APPLICATION_JSON)
 				.header("email", "ayushi@nucleusteq.com")
 				.header("password", "Ayushi#123")
@@ -139,9 +141,9 @@ public class TicketControllerTest {
 
 @Test
 	public void get_ticket_by_id_fails() throws Exception {
-		when(ticketService.findTicketByTicketId(Mockito.anyInt())).thenThrow(TicketNotFoundException.class);
+		when(ticketService.findTicketByTicketId(Mockito.anyInt())).thenThrow(ResourceNotFoundException.class);
 		
-		mockMvc.perform(MockMvcRequestBuilders.get("/ticket/getTicket")
+		mockMvc.perform(MockMvcRequestBuilders.get(baseURL+ControllerURLS.GET_DATA_BY_ID)
 				.contentType(MediaType.APPLICATION_JSON)
 				.header("email", "ayushi@nucleusteq.com")
 				.header("password", "Ayushi#123")

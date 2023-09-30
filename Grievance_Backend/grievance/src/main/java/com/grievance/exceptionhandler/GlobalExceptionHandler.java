@@ -1,18 +1,13 @@
 package com.grievance.exceptionhandler;
 
-import com.grievance.exception.CommentNotFoundException;
-import com.grievance.exception.DepartmentAlreadyExistsException;
-import com.grievance.exception.DepartmentNotFound;
-import com.grievance.exception.EmployeeAlreadyExistException;
-import com.grievance.exception.EmployeeNotFoundException;
+import com.grievance.constants.ErrorConstants;
+import com.grievance.exception.RecordAlreadyExistException;
+import com.grievance.exception.ResourceNotFoundException;
 import com.grievance.exception.PasswordMatchException;
-import com.grievance.exception.TicketNotFoundException;
 import com.grievance.exception.UnauthorisedUserException;
 import com.grievance.response.ErrorResponse;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -61,36 +56,6 @@ public class GlobalExceptionHandler {
   /**
    *
    * @param ex
-   * @return response
-   */
-  @ExceptionHandler(TicketNotFoundException.class)
-  public ResponseEntity<ErrorResponse> handleTicketNotFoundException(
-      final TicketNotFoundException ex) {
-    ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(),
-        HttpStatus.NOT_FOUND.value(), null);
-    return new ResponseEntity<>(
-        errorResponse,
-        HttpStatus.NOT_FOUND);
-  }
-
-  /**
-  *
-  * @param ex
-  * @return response
-  */
- @ExceptionHandler(CommentNotFoundException.class)
- public ResponseEntity<ErrorResponse> handleCommentNotFoundException(
-     final CommentNotFoundException ex) {
-   ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(),
-       HttpStatus.NOT_FOUND.value(), null);
-   return new ResponseEntity<>(
-       errorResponse,
-       HttpStatus.NOT_FOUND);
- }
-
-  /**
-   *
-   * @param ex
    * @return respons
    */
   @ExceptionHandler(UnauthorisedUserException.class)
@@ -123,9 +88,9 @@ public class GlobalExceptionHandler {
    * @param ex
    * @return responseEntity.
    */
-  @ExceptionHandler(EmployeeAlreadyExistException.class)
+  @ExceptionHandler(RecordAlreadyExistException.class)
   public ResponseEntity<ErrorResponse> handleEmployeeAlreadyExistsException(
-      final EmployeeAlreadyExistException ex) {
+      final RecordAlreadyExistException ex) {
     ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(),
         HttpStatus.CONFLICT.value(), null);
     return new ResponseEntity<>(
@@ -138,24 +103,9 @@ public class GlobalExceptionHandler {
    * @param ex
    * @return responseEntity.
    */
-  @ExceptionHandler(DepartmentAlreadyExistsException.class)
-  public ResponseEntity<ErrorResponse> handleDepartmentAlreadyExistsException(
-      final DepartmentAlreadyExistsException ex) {
-    ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(),
-        HttpStatus.CONFLICT.value(), null);
-    return new ResponseEntity<>(
-        errorResponse,
-        HttpStatus.CONFLICT);
-  }
-
-  /**
-   *
-   * @param ex
-   * @return responseEntity.
-   */
-  @ExceptionHandler(EmployeeNotFoundException.class)
-  public ResponseEntity<ErrorResponse> handleEmployeeNotFoundException(
-      final EmployeeNotFoundException ex) {
+  @ExceptionHandler(ResourceNotFoundException.class)
+  public ResponseEntity<ErrorResponse> handleResourceNotFoundException(
+      final ResourceNotFoundException ex) {
     ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(),
         HttpStatus.NOT_FOUND.value(), null);
     return new ResponseEntity<>(
@@ -181,37 +131,25 @@ public class GlobalExceptionHandler {
   /**
    *
    * @param ex
-   * @return responseEntity.
-   */
-  @ExceptionHandler(DepartmentNotFound.class)
-  public ResponseEntity<ErrorResponse> handleEmptyResultDataAccessException(
-      final DepartmentNotFound ex) {
-    ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(),
-        HttpStatus.NOT_FOUND.value(), null);
-    return new ResponseEntity<>(
-        errorResponse,
-        HttpStatus.NOT_FOUND);
-  }
-
-  /**
-   *
-   * @param ex
    * @return responseentity.
    */
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<?> methodArgumentNotValid(
+  public ResponseEntity<ErrorResponse> handlerMethodArgumentNotValid(
       final MethodArgumentNotValidException ex) {
-    Map<String, String> errors = new HashMap<String, String>();
+    Set<String> validationErrors = new HashSet<String>();
+
     ex
-        .getBindingResult()
         .getAllErrors()
         .forEach(
-          error -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-          }
-        );
-    return new ResponseEntity(errors, HttpStatus.BAD_REQUEST);
+            error -> {
+              String fieldName = ((FieldError) error).getField();
+              String errorMessage = error.getDefaultMessage();
+              validationErrors.add(fieldName + " : " + errorMessage);
+            });
+
+    ErrorResponse errorResponse = new ErrorResponse(
+        ErrorConstants.METHOD_ARGUMENT_NOT_VALID,
+        HttpStatus.BAD_REQUEST.value(), validationErrors);
+    return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
   }
 }

@@ -1,12 +1,13 @@
 package com.grievance.service;
 
+import com.grievance.constants.ErrorConstants;
 import com.grievance.dto.ChangePasswordInDto;
 import com.grievance.dto.EmployeeInDto;
 import com.grievance.dto.EmployeeLoginDto;
 import com.grievance.dto.EmployeeOutDto;
 import com.grievance.entity.Employee;
-import com.grievance.exception.EmployeeAlreadyExistException;
-import com.grievance.exception.EmployeeNotFoundException;
+import com.grievance.exception.RecordAlreadyExistException;
+import com.grievance.exception.ResourceNotFoundException;
 import com.grievance.exception.PasswordMatchException;
 import com.grievance.repository.EmployeeRepository;
 import java.util.ArrayList;
@@ -66,7 +67,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         EmployeeOutDto employeeOutDto = convertToDto(employee);
         return Optional.of(employeeOutDto);
     }
-    throw new EmployeeAlreadyExistException();
+    throw new RecordAlreadyExistException(
+        ErrorConstants.EMPLOYEE_ALREADY_EXIST);
   }
 
   /**
@@ -119,7 +121,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     if (!Objects.isNull(employee)) {
       return Optional.ofNullable(convertToDto(employee));
     }
-    throw new EmployeeNotFoundException(employeeLoginDto.getEmail());
+    throw new ResourceNotFoundException(employeeLoginDto.getEmail());
   }
 
   /**
@@ -134,7 +136,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                                    email,
                                    changePasswordInDto.getOldPassword());
        if (Objects.isNull(employee)) {
-           throw new EmployeeNotFoundException(email);
+           throw new ResourceNotFoundException(email);
        }
 
        if (!employee.getPassword().equals(
@@ -155,7 +157,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   public void deleteEmployeeById(final String email) {
     Employee employee = employeeRepository.findByEmail(email);
     if (Objects.isNull(employee)) {
-      throw new EmployeeNotFoundException(email);
+      throw new ResourceNotFoundException(email);
     }
     employeeRepository.delete(employee);
   }

@@ -36,8 +36,7 @@ import com.grievance.entity.Status;
 import com.grievance.entity.Ticket;
 import com.grievance.entity.TicketType;
 import com.grievance.entity.UserType;
-import com.grievance.exception.EmployeeNotFoundException;
-import com.grievance.exception.TicketNotFoundException;
+import com.grievance.exception.ResourceNotFoundException;
 import com.grievance.repository.DepartmentRepository;
 import com.grievance.repository.EmployeeRepository;
 import com.grievance.repository.TicketRepository;
@@ -206,7 +205,7 @@ assertThat(dto.equals(ticket));
 
     when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(null);
 
-    assertThrows(EmployeeNotFoundException.class, () -> {
+    assertThrows(ResourceNotFoundException.class, () -> {
       ticketService.updateTicket(ticketUpdateDto, 66, "ayushi@gmail.com");
     });
   }
@@ -219,7 +218,7 @@ assertThat(dto.equals(ticket));
 
     when(ticketRepository.findById(Mockito.anyInt())).thenReturn(Optional.empty());
 
-    assertThrows(TicketNotFoundException.class, () -> {
+    assertThrows(ResourceNotFoundException.class, () -> {
       ticketService.updateTicket(ticketUpdateDto, 66, "ayushi@gmail.com");
     });
   }
@@ -239,7 +238,7 @@ assertThat(dto.equals(ticket));
   void when_find_ticket_by_id_fails() {
     when(ticketRepository.findById(Mockito.anyInt())).thenReturn(Optional.empty());
 
-    assertThrows(TicketNotFoundException.class, () -> {
+    assertThrows(ResourceNotFoundException.class, () -> {
       ticketService.findTicketByTicketId(1);
     });
   }

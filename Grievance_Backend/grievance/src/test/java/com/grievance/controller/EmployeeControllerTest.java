@@ -8,14 +8,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.grievance.authentication.AuthenticatingUser;
+import com.grievance.constants.ControllerURLS;
 import com.grievance.dto.ChangePasswordInDto;
 import com.grievance.dto.EmployeeInDto;
 import com.grievance.dto.EmployeeLoginDto;
 import com.grievance.dto.EmployeeOutDto;
 import com.grievance.entity.Employee;
 import com.grievance.entity.UserType;
-import com.grievance.exception.EmployeeAlreadyExistException;
-import com.grievance.exception.EmployeeNotFoundException;
+import com.grievance.exception.RecordAlreadyExistException;
+import com.grievance.exception.ResourceNotFoundException;
 import com.grievance.exception.PasswordMatchException;
 import com.grievance.service.EmployeeService;
 
@@ -95,7 +96,8 @@ class EmployeeControllerTest {
 
     when(employeeService.listAllEmployees(Mockito.anyInt())).thenReturn(Optional.of(employeeOutDtos));
 
-    mockMvc.perform(MockMvcRequestBuilders.get("/employee/listAllEmployees")
+    String url = ControllerURLS.EMPLOYEE_BASE_URL + ControllerURLS.GET_ALL_DATA;
+    mockMvc.perform(MockMvcRequestBuilders.get(url)
         .contentType(MediaType.APPLICATION_JSON)
         .header("email", "ayushi@nucleusteq.com")
         .param("page", "0")
@@ -106,7 +108,8 @@ class EmployeeControllerTest {
     void when_successfully_login_return_employee() throws JsonProcessingException, Exception {
 	  when(employeeService.loginEmployee(Mockito.any(EmployeeLoginDto.class))).thenReturn(Optional.of(employeeOutDto));
 	  
-	  mockMvc.perform(MockMvcRequestBuilders.post("/employee/login")
+	  String url = ControllerURLS.EMPLOYEE_BASE_URL + ControllerURLS.EMPLOYEE_LOGIN;
+	  mockMvc.perform(MockMvcRequestBuilders.post(url)
 			  .contentType(MediaType.APPLICATION_JSON)
 			  .content(objectMapper.writeValueAsString(employeeLoginDto))
 			  ).andExpect(status().isAccepted()).andDo(MockMvcResultHandlers.print());
@@ -115,9 +118,10 @@ class EmployeeControllerTest {
   @Test
   void when_login_failed() throws JsonProcessingException, Exception {
     employeeLoginDto.setPassword("Example#123");
-    when(employeeService.loginEmployee(Mockito.any(EmployeeLoginDto.class))).thenThrow(EmployeeNotFoundException.class);
+    when(employeeService.loginEmployee(Mockito.any(EmployeeLoginDto.class))).thenThrow(ResourceNotFoundException.class);
 
-    mockMvc.perform(MockMvcRequestBuilders.post("/employee/login")
+    String url = ControllerURLS.EMPLOYEE_BASE_URL + ControllerURLS.EMPLOYEE_LOGIN;
+    mockMvc.perform(MockMvcRequestBuilders.post(url)
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(employeeLoginDto))).andExpect(status().isNotFound())
         .andDo(MockMvcResultHandlers.print());
@@ -128,8 +132,9 @@ class EmployeeControllerTest {
     void when_save_employee_by_user_sucesses_return_saved_employee() throws JsonProcessingException, Exception {
     	
     	when(employeeService.saveEmployee(Mockito.any(EmployeeInDto.class))).thenReturn(Optional.ofNullable(employeeOutDto));
-    	
-    	mockMvc.perform(MockMvcRequestBuilders.post("/employee/saveEmployee")
+    
+    String url = ControllerURLS.EMPLOYEE_BASE_URL + ControllerURLS.SAVE_DATA;
+    	mockMvc.perform(MockMvcRequestBuilders.post(url)
     			.contentType(MediaType.APPLICATION_JSON)
     			.content(objectMapper.writeValueAsString(employeeInDto))
     			.header("email", "ayushi@nucleusteq.com")
@@ -140,9 +145,10 @@ class EmployeeControllerTest {
   @Test
     void when_save_employee_by_user_fails() throws JsonProcessingException, Exception {
     	
-    	when(employeeService.saveEmployee(Mockito.any(EmployeeInDto.class))).thenThrow(new EmployeeAlreadyExistException());
-    	
-    	mockMvc.perform(MockMvcRequestBuilders.post("/employee/saveEmployee")
+    	when(employeeService.saveEmployee(Mockito.any(EmployeeInDto.class))).thenThrow(RecordAlreadyExistException.class);
+    
+    String url = ControllerURLS.EMPLOYEE_BASE_URL + ControllerURLS.SAVE_DATA;
+    	mockMvc.perform(MockMvcRequestBuilders.post(url)
     			.contentType(MediaType.APPLICATION_JSON)
     			.content(objectMapper.writeValueAsString(employeeInDto))
     			.header("email", "ayushi@nucleusteq.com")
@@ -159,7 +165,8 @@ class EmployeeControllerTest {
     changePasswordInDto.setOldPassword("Ayushi#123");
     changePasswordInDto.setNewPassword("Ayushi#125");
 
-    mockMvc.perform(MockMvcRequestBuilders.put("/employee/changePassword")
+    String url = ControllerURLS.EMPLOYEE_BASE_URL + ControllerURLS.EMPLOYEE_CHANGE_PASSWORD;
+    mockMvc.perform(MockMvcRequestBuilders.put(url)
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(changePasswordInDto))
         .header("email", "ayushi@nucleusteq.com")
@@ -174,8 +181,9 @@ class EmployeeControllerTest {
     	ChangePasswordInDto changePasswordInDto = new ChangePasswordInDto();
     	changePasswordInDto.setOldPassword("Ayushi#123");
     	changePasswordInDto.setNewPassword("Ayushi#123");
-    	
-    	mockMvc.perform(MockMvcRequestBuilders.put("/employee/changePassword")
+    
+    String url = ControllerURLS.EMPLOYEE_BASE_URL + ControllerURLS.EMPLOYEE_CHANGE_PASSWORD;
+    	mockMvc.perform(MockMvcRequestBuilders.put(url)
     			.contentType(MediaType.APPLICATION_JSON)
     			.content(objectMapper.writeValueAsString(changePasswordInDto))
     			.header("email", "ayushi@nucleusteq.com")
@@ -188,7 +196,8 @@ class EmployeeControllerTest {
     
     doNothing().when(employeeService).deleteEmployeeById(Mockito.anyString());
     
-    mockMvc.perform(MockMvcRequestBuilders.delete("/employee/delete")
+    String url = ControllerURLS.EMPLOYEE_BASE_URL + ControllerURLS.DELETE_DATA_BY_ID;
+    mockMvc.perform(MockMvcRequestBuilders.delete(url)
         .contentType(MediaType.APPLICATION_JSON)
         .header("email", "ayushi@nucleusteq.com")
         .header("password", "Ayushi#123")
@@ -200,8 +209,10 @@ class EmployeeControllerTest {
   
   void when_delete_employee_fails() throws Exception {
     
-    doThrow(EmployeeNotFoundException.class).when(employeeService).deleteEmployeeById(Mockito.anyString());
-    mockMvc.perform(MockMvcRequestBuilders.delete("/employee/delete")
+    doThrow(ResourceNotFoundException.class).when(employeeService).deleteEmployeeById(Mockito.anyString());
+    
+    String url = ControllerURLS.EMPLOYEE_BASE_URL + ControllerURLS.DELETE_DATA_BY_ID;
+    mockMvc.perform(MockMvcRequestBuilders.delete(url)
         .contentType(MediaType.APPLICATION_JSON)
         .header("email", "ayushi@nucleusteq.com")
         .header("password", "Ayushi#123")

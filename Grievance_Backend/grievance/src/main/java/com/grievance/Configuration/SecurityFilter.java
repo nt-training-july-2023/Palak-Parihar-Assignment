@@ -2,6 +2,7 @@ package com.grievance.Configuration;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -62,7 +63,7 @@ public class SecurityFilter implements Filter {
       adminUrls.add("/employee/listAllEmployees");
       adminUrls.add("/department/save");
       adminUrls.add("/department/deleteDepartment");
-      adminUrls.add("/employee/saveEmployee");
+      adminUrls.add("/employee/save");
    }
 
   /**
@@ -96,7 +97,9 @@ public class SecurityFilter implements Filter {
           final ServletResponse response,
           final FilterChain chain)
           throws IOException, ServletException {
-      System.out.println("Request received at: " + System.currentTimeMillis());
+    LOGGER.info("Request received at: {}",
+        new Date(System.currentTimeMillis()));
+
 
       HttpServletRequest httpServletRequest = (HttpServletRequest) request;
       HttpServletResponse httpServletResponse = (HttpServletResponse) response;
@@ -140,6 +143,8 @@ public class SecurityFilter implements Filter {
               }
           }
       }
+      LOGGER.info("Response sent at: {}",
+          new Date(System.currentTimeMillis()));
   }
 
   /**

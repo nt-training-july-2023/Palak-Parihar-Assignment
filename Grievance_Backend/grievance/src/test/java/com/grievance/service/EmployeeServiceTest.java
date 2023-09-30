@@ -27,8 +27,8 @@ import com.grievance.dto.EmployeeLoginDto;
 import com.grievance.dto.EmployeeOutDto;
 import com.grievance.entity.Employee;
 import com.grievance.entity.UserType;
-import com.grievance.exception.EmployeeAlreadyExistException;
-import com.grievance.exception.EmployeeNotFoundException;
+import com.grievance.exception.RecordAlreadyExistException;
+import com.grievance.exception.ResourceNotFoundException;
 import com.grievance.exception.PasswordMatchException;
 import com.grievance.repository.EmployeeRepository;
 
@@ -100,7 +100,7 @@ class EmployeeServiceTest {
     void when_save_employee_fails_return_exception() {
     	
     	when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);	
-		    assertThrows(EmployeeAlreadyExistException.class, ()->{
+		    assertThrows(RecordAlreadyExistException.class, ()->{
 			         employeeService.saveEmployee(employeeInDto);
 		     });
     }
@@ -119,7 +119,7 @@ class EmployeeServiceTest {
   void when_login_failed_throws_exception() {
     employee.setPassword("QXl1c2hpIzEyNA==");
     
-    assertThrows(EmployeeNotFoundException.class, () -> {
+    assertThrows(ResourceNotFoundException.class, () -> {
       employeeService.loginEmployee(employeeLoginDto);
     });
   }
@@ -163,7 +163,7 @@ class EmployeeServiceTest {
     employee.setPassword("Ayushi#124");
     ChangePasswordInDto changePasswordInDto = new ChangePasswordInDto();
 
-    assertThrows(EmployeeNotFoundException.class, () -> {
+    assertThrows(ResourceNotFoundException.class, () -> {
       employeeService.changePassword(changePasswordInDto, "ayushi@nucleusteq.com");
     });
   }
@@ -195,7 +195,7 @@ class EmployeeServiceTest {
   
   @Test
   void delete_employee_fails() {
-    assertThrows(EmployeeNotFoundException.class, ()->{
+    assertThrows(ResourceNotFoundException.class, ()->{
       employeeService.deleteEmployeeById("ayushi@nucleusteq.com");
     });
   }

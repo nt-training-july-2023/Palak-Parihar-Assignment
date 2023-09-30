@@ -11,7 +11,7 @@
 
 	<groupId>com.grievance.exceptionHandler</groupId>
 	<artifactId>grievance</artifactId>
-	<version>1.0.0SNAPSHOT</version>
+	<version>1.0.1SNAPSHOT</version>
 	<name>grievance</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>

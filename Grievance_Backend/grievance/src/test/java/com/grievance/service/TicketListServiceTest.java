@@ -28,7 +28,7 @@ import com.grievance.entity.Status;
 import com.grievance.entity.Ticket;
 import com.grievance.entity.TicketType;
 import com.grievance.entity.UserType;
-import com.grievance.exception.EmployeeNotFoundException;
+import com.grievance.exception.ResourceNotFoundException;
 import com.grievance.repository.DepartmentRepository;
 import com.grievance.repository.EmployeeRepository;
 import com.grievance.repository.TicketRepository;
@@ -111,7 +111,7 @@ public class TicketListServiceTest {
 
   @Test
   void list_tickets_raised_by_fails() {
-    assertThrows(EmployeeNotFoundException.class, () -> {
+    assertThrows(ResourceNotFoundException.class, () -> {
       ticketService.listTicketsRaisedByUser(1, "ayushi@nucleusteq.com");
     });
   }
@@ -137,7 +137,7 @@ public class TicketListServiceTest {
 
   @Test
   void list_tickets_department_name_fails() {
-    assertThrows(EmployeeNotFoundException.class, () -> {
+    assertThrows(ResourceNotFoundException.class, () -> {
       ticketService.listOfAllTicketsByEmployeeDepartment("ayushi@nucleusteq.com", 1);
     });
   }
@@ -166,7 +166,7 @@ public class TicketListServiceTest {
 
   @Test
   void list_tickets_by_department_and_status_fails() {
-    assertThrows(EmployeeNotFoundException.class, () -> {
+    assertThrows(ResourceNotFoundException.class, () -> {
       ticketService.listTicketsRaisedByDepartmentAndStatus("ayushi@nucleusteq.com", Status.BEING_ADDRESSED, 1);
     });
   }
@@ -195,7 +195,7 @@ public class TicketListServiceTest {
 
   @Test
   void list_tickets_by_department_and_fails() {
-    assertThrows(EmployeeNotFoundException.class, () -> {
+    assertThrows(ResourceNotFoundException.class, () -> {
       ticketService
           .listTicketByStatusAndEmployee(1, Status.BEING_ADDRESSED, "ayushi@nucleusteq.com");
     });

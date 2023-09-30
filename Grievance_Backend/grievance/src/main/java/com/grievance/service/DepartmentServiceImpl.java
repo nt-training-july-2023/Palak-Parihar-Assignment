@@ -1,10 +1,11 @@
 package com.grievance.service;
 
+import com.grievance.constants.ErrorConstants;
 import com.grievance.dto.DepartmentInDto;
 import com.grievance.dto.DepartmentOutDto;
 import com.grievance.entity.Department;
-import com.grievance.exception.DepartmentAlreadyExistsException;
-import com.grievance.exception.DepartmentNotFound;
+import com.grievance.exception.RecordAlreadyExistException;
+import com.grievance.exception.ResourceNotFoundException;
 import com.grievance.repository.DepartmentRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +61,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     departmentInDto.getDepartmentName().toUpperCase());
 
     if (savedDepartment != null) {
-       throw new DepartmentAlreadyExistsException();
+       throw new RecordAlreadyExistException(
+           ErrorConstants.DEPARTMENT_ALREADY_EXIST);
     }
     department2.setDepartmentName(
         department2.getDepartmentName().toUpperCase());
@@ -102,7 +104,7 @@ public class DepartmentServiceImpl implements DepartmentService {
   public void deleteDepartment(final Integer departmentId) {
     Optional<Department> dept = departmentRepository.findById(departmentId);
     if (!dept.isPresent()) {
-      throw new DepartmentNotFound();
+      throw new ResourceNotFoundException(ErrorConstants.DEPARTMENT_NOT_FOUND);
     }
     departmentRepository.deleteById(departmentId);
   }

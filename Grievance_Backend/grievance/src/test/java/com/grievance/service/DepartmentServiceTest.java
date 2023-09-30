@@ -26,8 +26,8 @@ import org.springframework.data.domain.PageRequest;
 import com.grievance.dto.DepartmentInDto;
 import com.grievance.dto.DepartmentOutDto;
 import com.grievance.entity.Department;
-import com.grievance.exception.DepartmentAlreadyExistsException;
-import com.grievance.exception.DepartmentNotFound;
+import com.grievance.exception.RecordAlreadyExistException;
+import com.grievance.exception.ResourceNotFoundException;
 import com.grievance.repository.DepartmentRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -83,7 +83,7 @@ class DepartmentServiceTest {
 				
 		try {
 			departmentService.saveDepartment(departmentInDto);
-		}catch (DepartmentAlreadyExistsException e) {
+		}catch (RecordAlreadyExistException e) {
 			assertThat(e.getMessage().equals("Department Already Exist Exception with email=HR"));
         }	
 	}
@@ -118,7 +118,7 @@ class DepartmentServiceTest {
 
   @Test
   public void delete_department_fails() {
-    assertThrows(DepartmentNotFound.class, () -> {
+    assertThrows(ResourceNotFoundException.class, () -> {
       departmentService.deleteDepartment(101);
     });
 
