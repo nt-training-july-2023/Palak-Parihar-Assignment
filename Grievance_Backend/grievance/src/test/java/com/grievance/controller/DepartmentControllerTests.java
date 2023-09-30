@@ -137,16 +137,15 @@ public class DepartmentControllerTests {
   void when_delete_department_fails() throws Exception {
 
     doThrow(ResourceNotFoundException.class).when(departmentService).deleteDepartment(Mockito.anyInt());
-    ;
     mockMvc
-        .perform(
-            MockMvcRequestBuilders
-                .delete(baseURL+ControllerURLS.DELETE_DATA_BY_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .param("departmentId", "101")
-                .header("email", "ayushi@gmail.com")
-                .header("password", "Ayushi#123"))
-        .andExpect(status().isNotFound())
-        .andDo(MockMvcResultHandlers.print());
+    .perform(
+        MockMvcRequestBuilders
+            .delete(baseURL+ControllerURLS.DELETE_DATA_BY_ID)
+            .contentType(MediaType.APPLICATION_JSON)
+            .param("departmentId", "101")
+            .header("email", "ayushi@gmail.com")
+            .header("password", "Ayushi#123"))
+    .andExpect(status().isNotFound())
+    .andDo(MockMvcResultHandlers.print());
   }
 }

@@ -24,6 +24,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.grievance.constants.ControllerURLS;
+import com.grievance.dto.DepartmentInDto;
+import com.grievance.dto.EmployeeInDto;
 import com.grievance.dto.TicketInDto;
 import com.grievance.dto.TicketOutDto;
 import com.grievance.dto.TicketOutWOComment;
@@ -54,11 +56,12 @@ public class TicketControllerTest {
   @BeforeEach
   void setUp() {
     ticketInDto = new TicketInDto();
-    ticketInDto.setDepartment(null);
+    ticketInDto.setDepartment(new DepartmentInDto());
     ticketInDto.setDescription("Malfunction");
-    ticketInDto.setEmployeeInDto(null);
+    ticketInDto.setEmployeeInDto(new EmployeeInDto());
     ticketInDto.setStatus(Status.BEING_ADDRESSED);
     ticketInDto.setTicketType(TicketType.GRIEVANCE);
+    ticketInDto.setTitle("Title");
 
     ticketOutDto = new TicketOutDto();
     ticketOutDto.setDepartment(null);
@@ -90,14 +93,18 @@ public class TicketControllerTest {
         Mockito.anyInt(), Mockito.any(Status.class), Mockito.anyBoolean()))
         .thenReturn(Optional.of(ticketOutDtos));
 
-    mockMvc.perform(MockMvcRequestBuilders.get(baseURL + ControllerURLS.GET_ALL_DATA)
-        .contentType(MediaType.APPLICATION_JSON)
-        .header("email", "ayushi@nucleusteq.com")
-        .header("password", "Ayushi#123")
-        .param("myTickets", "true")
-        .param("departmentTickets", "true")
-        .param("status", "OPEN")
-        .param("page", "0")).andExpect(status().isAccepted()).andDo(MockMvcResultHandlers.print());
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(baseURL + ControllerURLS.GET_ALL_DATA)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("email", "ayushi@nucleusteq.com")
+            .header("password", "Ayushi#123")
+            .param("myTickets", "true")
+            .param("departmentTickets", "true")
+            .param("status", "OPEN")
+            .param("page", "0"))
+        .andExpect(status().isAccepted())
+        .andDo(MockMvcResultHandlers.print());
   }
 
 @Test

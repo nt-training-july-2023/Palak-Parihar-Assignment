@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -34,6 +36,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TicketServiceImpl implements TicketService {
+  /**
+   * Intance to create loggers.
+   */
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(DepartmentServiceImpl.class);
   /**
    * The employeeRepository instance provide data access method for interacting
    * with database.
@@ -65,22 +72,27 @@ public class TicketServiceImpl implements TicketService {
    */
   @Override
   public Optional<TicketOutDto> saveTicket(final TicketInDto ticketInDto) {
+    LOGGER.info("Saving ticket : {}", ticketInDto.getTitle());
     Ticket ticket = convertToEntity(ticketInDto);
     ticket = ticketRepository.save(ticket);
     TicketOutDto ticketOutDto = convertToDto(ticket);
+    LOGGER.info("Ticket saved successfully");
     return Optional.ofNullable(ticketOutDto);
   }
 
   /**
    * return list of All tickets present in database.
+   *
    * @return optional of list of ticketOut DTO.
    */
   @Override
   public Optional<List<TicketOutWOComment>> listOfAllTickets(
       final Integer page) {
+    LOGGER.info("Listing all tickets");
     List<TicketOutWOComment> tickets = new ArrayList<TicketOutWOComment>();
     ticketRepository
-        .findAll(PageRequest.of(page, pageSize).withSort(Sort.by("status")))
+        .findAll(
+            PageRequest.of(page, pageSize).withSort(Sort.by("status")))
         .forEach(
             e -> {
               tickets.add(convertToWOCommentDto(e));
@@ -90,6 +102,7 @@ public class TicketServiceImpl implements TicketService {
 
   /**
    * method to access rickets by their department Name.
+   *
    * @param email
    * @return list of ticket out DTO
    */
@@ -98,6 +111,7 @@ public class TicketServiceImpl implements TicketService {
   listOfAllTicketsByEmployeeDepartment(
       final String email,
       final Integer page) {
+    LOGGER.info("Listing all tickets by user {}'s department", email);
     Employee employee = employeeRepository.findByEmail(email);
     if (Objects.isNull(employee)) {
       throw new ResourceNotFoundException(email);
@@ -116,6 +130,7 @@ public class TicketServiceImpl implements TicketService {
 
   /**
    * method to update ticket.
+   *
    * @param ticketUpdateDto
    * @return updated ticket.
    */
@@ -123,38 +138,43 @@ public class TicketServiceImpl implements TicketService {
   public Optional<TicketOutDto> updateTicket(
       final TicketUpdateDto ticketUpdateDto, final Integer ticketId,
       final String email) {
+    LOGGER.info("Updating ticket with Ticket Id {} : ", ticketId);
     Employee employee = employeeRepository.findByEmail(email);
     if (Objects.isNull(employee)) {
+      LOGGER.info("Employee with email {} not found for ticket update");
       throw new ResourceNotFoundException(email);
     } else {
       Optional<Ticket> ticket = ticketRepository.findById(ticketId);
       if (ticket.isPresent()) {
-        Boolean belongsToUser = ticket.get().getEmployee().equals(employee);
+        Boolean belongsToUser = ticket.get().getEmployee()
+            .equals(employee);
         Boolean belongstoUserDepartment = employee.getDepartment()
             .equals(ticket.get().getDepartment());
         if (!belongsToUser && !belongstoUserDepartment) {
+          LOGGER.info(
+              "Ticket with ticketId {},"
+              + "doesn't belong to Employee with email {} ",
+              ticketId, email);
           throw new UnauthorisedUserException(email);
         }
 
-      if (!Objects.isNull(ticketUpdateDto.getStatus())) {
-        if (ticketUpdateDto.getStatus() == Status.RESOLVED
-            & Objects.isNull(ticketUpdateDto.getDescription())) {
-          if (ticket.get().getComments().isEmpty()) {
-            throw new ResourceNotFoundException(
-                ErrorConstants.COMMENT_NOT_FOUND);
-          }
+        if (!Objects.isNull(ticketUpdateDto.getStatus())) {
+          LOGGER.info("Updating status {}, of Ticket with Ticket Id {} ",
+              ticketUpdateDto.getStatus(),
+              ticketId);
+          ticket.get().setStatus(ticketUpdateDto.getStatus());
         }
-        ticket.get().setStatus(ticketUpdateDto.getStatus());
+        Date date = new Date();
+        ticket.get().setLastUpdated(date);
+        Comment comment = new Comment(ticketUpdateDto.getDescription(),
+            email, ticket.get());
+        ticket.get().getComments().add(comment);
+        Ticket updatedTicket = ticketRepository.save(ticket.get());
+        LOGGER.info("Ticket with Ticket Id {},"
+            + "updated successfully with comment.", ticketId);
+        return Optional.ofNullable(convertToDto(updatedTicket));
       }
-      Date date = new Date();
-      ticket.get().setLastUpdated(date);
-      Comment comment =
-          new Comment(ticketUpdateDto.getDescription(), email, ticket.get());
-      ticket.get().getComments().add(comment);
-      Ticket updatedTicket = ticketRepository.save(ticket.get());
-      return Optional.ofNullable(convertToDto(updatedTicket));
-    }
-    throw new ResourceNotFoundException(ErrorConstants.TICKET_NOT_FOUND);
+      throw new ResourceNotFoundException(ErrorConstants.TICKET_NOT_FOUND);
     }
   }
 
@@ -167,8 +187,10 @@ public class TicketServiceImpl implements TicketService {
   public Optional<List<TicketOutWOComment>> listTicketsRaisedByUser(
       final Integer page,
       final String email) {
+    LOGGER.info("Listing all tickets raised by user {}", email);
     Employee employee = employeeRepository.findByEmail(email);
     if (Objects.isNull(employee)) {
+      LOGGER.info("Employee with email {} not found", email);
       throw new ResourceNotFoundException(email);
     } else {
       List<TicketOutWOComment> ticketOutDtos =
@@ -183,18 +205,21 @@ public class TicketServiceImpl implements TicketService {
   }
 
   /**
-   *
    * @param ticketId
    * @return ticket
    */
   @Override
-  public Optional<TicketOutDto> findTicketByTicketId(final Integer ticketId) {
+  public Optional<TicketOutDto> findTicketByTicketId(
+      final Integer ticketId) {
+    LOGGER.info("Finding ticket by Id {} ", ticketId);
     Optional<Ticket> ticket = ticketRepository.findById(ticketId);
     if (ticket.isPresent()) {
-      Optional<TicketOutDto> optionalTicketOut =
-          Optional.ofNullable(convertToDto(ticket.get()));
+      Optional<TicketOutDto> optionalTicketOut = Optional
+          .ofNullable(convertToDto(ticket.get()));
+      LOGGER.info("Found ticket by Id {} ", ticketId);
       return optionalTicketOut;
     }
+    LOGGER.info("Ticket not found by Id {} ", ticketId);
     throw new ResourceNotFoundException(ErrorConstants.TICKET_NOT_FOUND);
   }
 
@@ -209,6 +234,8 @@ public class TicketServiceImpl implements TicketService {
       final Integer page,
       final Status status,
       final String email) {
+    LOGGER.info("Listing tickets raised by user "
+        + "{} filtering by status {}", email, status);
     Employee employee = employeeRepository.findByEmail(email);
     if (Objects.isNull(employee)) {
       throw new ResourceNotFoundException(email);
@@ -233,6 +260,7 @@ public class TicketServiceImpl implements TicketService {
   public Optional<List<TicketOutWOComment>> listTicketsByStatus(
       final Status status,
       final Integer page) {
+    LOGGER.info("Liting tickets filtered by status {} ", status);
     List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
     ticketRepository.findByStatus(status,
         PageRequest.of(page, pageSize).withSort(Sort.by("status")))
@@ -243,7 +271,6 @@ public class TicketServiceImpl implements TicketService {
   }
 
   /**
-   *
    * @param email
    * @param status
    * @param page
@@ -251,18 +278,20 @@ public class TicketServiceImpl implements TicketService {
    */
   @Override
   public Optional<List<TicketOutWOComment>>
-  listTicketsRaisedByDepartmentAndStatus(
+  listTicketsByUserDepartmentAndStatus(
       final String email,
       final Status status,
       final Integer page) {
+    LOGGER.info("Listing tickets by "
+        + "user {} department and status {} ", email, status);
     Employee employee = employeeRepository.findByEmail(email);
     if (Objects.isNull(employee)) {
       throw new ResourceNotFoundException(email);
-      }
+    }
     List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
-    ticketRepository.findByDepartmentAndStatusAndEmployee(
+    ticketRepository.findByDepartmentAndStatus(
         employee.getDepartment(),
-        status, employee, PageRequest.of(page, pageSize))
+        status, PageRequest.of(page, pageSize))
         .forEach(e -> {
           list.add(convertToWOCommentDto(e));
         });
@@ -282,6 +311,7 @@ public class TicketServiceImpl implements TicketService {
       final Integer page,
       final Status status,
       final Boolean myTickets) {
+    LOGGER.info("Listing Tickets");
     Boolean isAdmin = employeeRepository.existsByEmailAndUserType(
         email, UserType.ADMIN);
     if (Objects.isNull(myTickets)) {
@@ -295,7 +325,8 @@ public class TicketServiceImpl implements TicketService {
         if (Objects.isNull(status)) {
           return listOfAllTicketsByEmployeeDepartment(email, page);
         } else {
-          return listTicketsRaisedByDepartmentAndStatus(email, status, page);
+          return listTicketsByUserDepartmentAndStatus(email, status,
+              page);
         }
       }
     } else {
@@ -315,7 +346,8 @@ public class TicketServiceImpl implements TicketService {
    * @return An TicketOutDto representing the employee's data.
    */
   public TicketOutDto convertToDto(final Ticket ticket) {
-    TicketOutDto ticketOutDto = modelMapper.map(ticket, TicketOutDto.class);
+    TicketOutDto ticketOutDto = modelMapper.map(ticket,
+        TicketOutDto.class);
     return ticketOutDto;
   }
 
@@ -338,8 +370,8 @@ public class TicketServiceImpl implements TicketService {
    * @return An TicketOutWOComment representing the employee's data.
    */
   public TicketOutWOComment convertToWOCommentDto(final Ticket ticket) {
-    TicketOutWOComment ticketOutWOComment =
-        modelMapper.map(ticket, TicketOutWOComment.class);
+    TicketOutWOComment ticketOutWOComment = modelMapper.map(ticket,
+        TicketOutWOComment.class);
     return ticketOutWOComment;
   }
 }

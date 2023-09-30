@@ -149,13 +149,12 @@ public class TicketListServiceTest {
 
     when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
 
-    when(ticketRepository.findByDepartmentAndStatusAndEmployee(Mockito.eq(department),
+    when(ticketRepository.findByDepartmentAndStatus(Mockito.eq(department),
         Mockito.any(Status.class),
-        Mockito.eq(employee),
         Mockito.any(PageRequest.class))).thenReturn(tickets);
 
     Optional<List<TicketOutWOComment>> result = ticketService
-        .listTicketsRaisedByDepartmentAndStatus("ayushi@nucleusteq.com", Status.BEING_ADDRESSED, 1);
+        .listTicketsByUserDepartmentAndStatus("ayushi@nucleusteq.com", Status.BEING_ADDRESSED, 1);
 
     assertThat(result).isNotNull();
 
@@ -167,7 +166,7 @@ public class TicketListServiceTest {
   @Test
   void list_tickets_by_department_and_status_fails() {
     assertThrows(ResourceNotFoundException.class, () -> {
-      ticketService.listTicketsRaisedByDepartmentAndStatus("ayushi@nucleusteq.com", Status.BEING_ADDRESSED, 1);
+      ticketService.listTicketsByUserDepartmentAndStatus("ayushi@nucleusteq.com", Status.BEING_ADDRESSED, 1);
     });
   }
 

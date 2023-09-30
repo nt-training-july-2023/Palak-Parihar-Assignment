@@ -97,7 +97,7 @@ public interface TicketService {
    * @param page
    * @return list of tickets by department and status.
    */
-  Optional<List<TicketOutWOComment>> listTicketsRaisedByDepartmentAndStatus(
+  Optional<List<TicketOutWOComment>> listTicketsByUserDepartmentAndStatus(
       String email,
       Status status,
       Integer page);

@@ -167,8 +167,9 @@ export default function ChangePassword(props) {
         const response = CHANGE_USER_PASSWORD(values)
             .then(res => {
                 setModal(() => <Modal message="Password changed successfully" onClick={closeModal} />)
+                let values = JSON.parse(localStorage.getItem('userDetails'))
                 const userDetails = {
-                    ...JSON.parse(localStorage.getItem('userDetails')),
+                    ...values,
                     firstTimeUser: false
                 }
                 localStorage.setItem('userDetails', userDetails);

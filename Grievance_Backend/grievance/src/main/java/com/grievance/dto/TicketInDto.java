@@ -9,9 +9,6 @@ import com.grievance.entity.TicketType;
 
 import java.util.Objects;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -31,13 +28,6 @@ public class TicketInDto {
    * maximumLengthOfDescription final integer.
    */
   private final int maximumLengthOfDescription = 500;
-
-  /**
-   * Integer ticketId of Ticket.
-   */
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer ticketId;
 
   /**
    * The title of the ticket.
@@ -69,7 +59,6 @@ public class TicketInDto {
   /**
    * The status of the ticket.
    */
-  @NotEmpty
   private Status status;
 
   /**
@@ -77,19 +66,6 @@ public class TicketInDto {
    */
   @JsonProperty("employee")
   private EmployeeInDto employeeInDto;
-  /**
-   * @return the ticketId
-   */
-  public Integer getTicketId() {
-    return ticketId;
-  }
-
-  /**
-   * @param ticketIdField the ticketId to set
-   */
-  public void setTicketId(final Integer ticketIdField) {
-    this.ticketId = ticketIdField;
-  }
 
   /**
    * @return the title

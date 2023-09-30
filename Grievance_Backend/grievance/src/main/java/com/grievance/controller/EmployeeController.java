@@ -10,12 +10,8 @@ import com.grievance.dto.EmployeeInDto;
 import com.grievance.dto.EmployeeLoginDto;
 import com.grievance.dto.EmployeeOutDto;
 import com.grievance.service.EmployeeService;
-
-import java.util.List;
-import java.util.Optional;
-
-import javax.validation.Valid;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +26,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
+
 /**
  * Rest Controller.
  */
@@ -38,12 +38,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = ControllerURLS.EMPLOYEE_BASE_URL)
 public class EmployeeController {
   /**
+   * Instance for creating loggers.
+   */
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(EmployeeController.class);
+
+  /**
    * Autowiring Service.
    */
   @Autowired
   private EmployeeService employeeService;
+
   /**
-   * Controller method for login in a Employee.
+   * Controller method for login in an Employee.
    *
    * @param employeeLoginDto for EmployeeLoginDto.
    * @return ResponseEntity.
@@ -52,10 +59,14 @@ public class EmployeeController {
   @PostMapping(path = ControllerURLS.EMPLOYEE_LOGIN)
   public ResponseEntity<?> loginUser(
       @Valid @RequestBody final EmployeeLoginDto employeeLoginDto) {
-      Optional<EmployeeOutDto> employeeDtoOptional =
-          employeeService.loginEmployee(employeeLoginDto);
-      return new ResponseEntity<>(employeeDtoOptional.get(),
-          HttpStatus.ACCEPTED);
+    LOGGER.info("Login request received for email: {}",
+        employeeLoginDto.getEmail());
+    Optional<EmployeeOutDto> employeeDtoOptional = employeeService
+        .loginEmployee(employeeLoginDto);
+    LOGGER.info("Login successful for email: {}",
+        employeeLoginDto.getEmail());
+    return new ResponseEntity<>(employeeDtoOptional.get(),
+        HttpStatus.ACCEPTED);
   }
 
   /**
@@ -71,13 +82,15 @@ public class EmployeeController {
       @RequestHeader final String email,
       @RequestHeader final String password,
       @RequestParam final Integer page) {
-    Optional<List<EmployeeOutDto>> listOfAllEmployees =
-        employeeService.listAllEmployees(page);
-    return new ResponseEntity<>(listOfAllEmployees.get(), HttpStatus.ACCEPTED);
+    LOGGER.info("Listing all employees for page: {}", page);
+    Optional<List<EmployeeOutDto>> listOfAllEmployees = employeeService
+        .listAllEmployees(page);
+    LOGGER.info("Listed all employees for page: {}", page);
+    return new ResponseEntity<>(listOfAllEmployees.get(),
+        HttpStatus.ACCEPTED);
   }
 
   /**
-   *
    * @param email
    * @param password
    * @param employeeInDto
@@ -88,13 +101,14 @@ public class EmployeeController {
       @RequestHeader final String email,
       @RequestHeader final String password,
       @RequestBody final EmployeeInDto employeeInDto) {
-    Optional<EmployeeOutDto> optional =
-        employeeService.saveEmployee(employeeInDto);
+    LOGGER.info("Saving employee for email: {}", email);
+    Optional<EmployeeOutDto> optional = employeeService
+        .saveEmployee(employeeInDto);
+    LOGGER.info("Saved employee for email: {}", email);
     return new ResponseEntity<>(optional.get(), HttpStatus.CREATED);
   }
 
   /**
-   *
    * @param email
    * @param changePasswordInDto
    * @return ResponseEntity
@@ -103,19 +117,23 @@ public class EmployeeController {
   public ResponseEntity<?> changePassword(
       @RequestHeader final String email,
       @RequestBody final ChangePasswordInDto changePasswordInDto) {
-      employeeService.changePassword(changePasswordInDto, email);
-      return new ResponseEntity<>("Password changes successfully",
-          HttpStatus.OK);
+    LOGGER.info("Changing password for email: {}", email);
+    employeeService.changePassword(changePasswordInDto, email);
+    LOGGER.info("Password changed successfully for email: {}", email);
+    return new ResponseEntity<>("Password changed successfully",
+        HttpStatus.OK);
   }
 
   /**
    * @param email
-   * @return Responseentity.
+   * @return ResponseEntity.
    */
   @DeleteMapping(path = ControllerURLS.DELETE_DATA_BY_ID)
   public ResponseEntity<?> deleteEmployee(
       @RequestParam final String email) {
+    LOGGER.info("Deleting employee for email: {}", email);
     employeeService.deleteEmployeeById(email);
+    LOGGER.info("Deleted employee successfully for email: {}", email);
     return new ResponseEntity<>("Employee deleted successfully",
         HttpStatus.NO_CONTENT);
   }

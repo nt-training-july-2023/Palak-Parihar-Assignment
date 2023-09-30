@@ -212,8 +212,6 @@ assertThat(dto.equals(ticket));
 
   @Test
   void ticket_updated_fails_when_ticket_not_exist() {
-    ticketInDto.setTicketId(66);
-
     when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
 
     when(ticketRepository.findById(Mockito.anyInt())).thenReturn(Optional.empty());
