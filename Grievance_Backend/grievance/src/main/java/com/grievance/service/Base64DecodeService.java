@@ -1,5 +1,6 @@
 package com.grievance.service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 /**
@@ -18,7 +19,8 @@ public final class Base64DecodeService {
   public static String decodeBase64ToString(
          final String base64EncodedPassword) {
     try {
-      return new String(Base64.getDecoder().decode(base64EncodedPassword));
+      return new String(Base64.getDecoder().decode(base64EncodedPassword),
+          StandardCharsets.UTF_8);
     } catch (IllegalArgumentException e) {
       throw new IllegalArgumentException("Invalid base64-encoded input", e);
     }

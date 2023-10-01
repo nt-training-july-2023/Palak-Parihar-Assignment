@@ -62,11 +62,6 @@ export default function ListEmployees(props) {
     }
 
     const deleteEmployeeHandler = (employee) => {
-        console.log(employee.email === headers().email)
-        if (employee.email === headers().email) {
-            setModal(<Modal message="User can not delete itself" onClick={closeModal} />)
-            return
-        }
         let params = {
             enable: true,
             content: 'Delete Employee',
@@ -74,20 +69,12 @@ export default function ListEmployees(props) {
             close: () => closeModal()
         }
         setModal(<Modal component={ConfirmationDialog(params)} />)
-        // DELETE_EMPLOYEE(empId.email)
-        //     .then(res => {
-        //         console.log(res.status == 204)
-        //         setModal(<Modal message="Employee Successfully deleted" onClick={closeModal}/>)
-        //     }).catch(err => {
-        //         console.log(err.data.message)
-        //         setModal(<Modal message={err.data.message} onClick={closeModal}/>)
-        //     })
     }
 
     const deleteEmployee = (empId) => {
         DELETE_EMPLOYEE(empId)
             .then(res => {
-                setModal(<Modal message="Employee Successfully deleted" onClick={closeModal} />)
+                setModal(<Modal message={res.data.message} onClick={closeModal} />)
             }).catch(err => {
                 console.log(err.data.message)
                 setModal(<Modal message={err.data.message} onClick={closeModal} />)

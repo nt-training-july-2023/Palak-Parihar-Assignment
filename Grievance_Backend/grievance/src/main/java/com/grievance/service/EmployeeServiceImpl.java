@@ -8,6 +8,7 @@ import com.grievance.dto.EmployeeOutDto;
 import com.grievance.entity.Employee;
 import com.grievance.exception.RecordAlreadyExistException;
 import com.grievance.exception.ResourceNotFoundException;
+import com.grievance.exception.SelfDeletionException;
 import com.grievance.exception.PasswordMatchException;
 import com.grievance.repository.EmployeeRepository;
 import org.modelmapper.ModelMapper;
@@ -138,7 +139,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
     LOGGER.error("Employee login failed for email: {}",
         employeeLoginDto.getEmail());
-    throw new ResourceNotFoundException(employeeLoginDto.getEmail());
+    throw new ResourceNotFoundException(ErrorConstants.EMPLOYEE_NOT_FOUND);
   }
 
   /**
@@ -156,7 +157,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     if (Objects.isNull(employee)) {
       LOGGER.error("Employee with email {} not found for password change.",
           email);
-      throw new ResourceNotFoundException(email);
+      throw new ResourceNotFoundException(ErrorConstants.EMPLOYEE_NOT_FOUND);
     }
 
     if (!employee.getPassword()
@@ -174,18 +175,24 @@ public class EmployeeServiceImpl implements EmployeeService {
   /**
    * delete employee by Id.
    * @param email
+   * @param deleteEmployee
    */
   @Override
-  public void deleteEmployeeById(final String email) {
+  public void deleteEmployeeById(
+      final String email, final String deleteEmployee) {
     LOGGER.info("Deleting employee with email: {}", email);
-    Employee employee = employeeRepository.findByEmail(email);
+    if (deleteEmployee.equals(email)) {
+      LOGGER.info("user can not delete itself {}", email);
+      throw new SelfDeletionException(ErrorConstants.EMPLOYEE_SELF_DELETE);
+    }
+    Employee employee = employeeRepository.findByEmail(deleteEmployee);
     if (Objects.isNull(employee)) {
       LOGGER.error("Employee with email {} not found for deletion.",
-          email);
-      throw new ResourceNotFoundException(email);
+          deleteEmployee);
+      throw new ResourceNotFoundException(deleteEmployee);
     }
     employeeRepository.delete(employee);
-    LOGGER.info("Employee with email {} deleted successfully.", email);
+    LOGGER.info("Employee with email {} deleted successfully.", deleteEmployee);
   }
 
   /**

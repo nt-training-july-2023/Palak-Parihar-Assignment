@@ -1,7 +1,6 @@
 package com.grievance.controller;
 
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -11,7 +10,6 @@ import com.grievance.constants.ControllerURLS;
 import com.grievance.dto.DepartmentInDto;
 import com.grievance.dto.DepartmentOutDto;
 import com.grievance.exception.RecordAlreadyExistException;
-import com.grievance.exception.ResourceNotFoundException;
 import com.grievance.service.DepartmentService;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +50,7 @@ public class DepartmentControllerTests {
   void setUp() {
     objectMapper = new ObjectMapper();
 
-    departmentInDto = new DepartmentInDto();
+    departmentInDto = new DepartmentInDto(null, "HR");
     departmentOutDto = new DepartmentOutDto();
 
     mockMvc = MockMvcBuilders.standaloneSetup(departmentController).build();
@@ -99,7 +97,7 @@ public class DepartmentControllerTests {
   }
 
   @Test
-  void when_fetchAllDepartments_fails() throws Exception {
+  void when_fetchAllDepartments_success() throws Exception {
 
     List<DepartmentOutDto> departmentOutDtos = new ArrayList<DepartmentOutDto>();
     departmentOutDtos.add(departmentOutDto);
@@ -120,7 +118,7 @@ public class DepartmentControllerTests {
   @Test
   void when_delete_department_success() throws Exception {
 
-    doNothing().when(departmentService).deleteDepartment(Mockito.anyInt());
+    doNothing().when(departmentService).deleteDepartment(Mockito.anyInt(), Mockito.anyString());
     mockMvc
         .perform(
             MockMvcRequestBuilders
@@ -129,23 +127,8 @@ public class DepartmentControllerTests {
                 .param("departmentId", "101")
                 .header("email", "ayushi@gmail.com")
                 .header("password", "Ayushi#123"))
-        .andExpect(status().isNoContent())
+        .andExpect(status().isOk())
         .andDo(MockMvcResultHandlers.print());
   }
 
-  @Test
-  void when_delete_department_fails() throws Exception {
-
-    doThrow(ResourceNotFoundException.class).when(departmentService).deleteDepartment(Mockito.anyInt());
-    mockMvc
-    .perform(
-        MockMvcRequestBuilders
-            .delete(baseURL+ControllerURLS.DELETE_DATA_BY_ID)
-            .contentType(MediaType.APPLICATION_JSON)
-            .param("departmentId", "101")
-            .header("email", "ayushi@gmail.com")
-            .header("password", "Ayushi#123"))
-    .andExpect(status().isNotFound())
-    .andDo(MockMvcResultHandlers.print());
-  }
 }

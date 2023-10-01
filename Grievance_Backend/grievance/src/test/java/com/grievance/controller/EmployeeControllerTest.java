@@ -101,7 +101,7 @@ class EmployeeControllerTest {
         .contentType(MediaType.APPLICATION_JSON)
         .header("email", "ayushi@nucleusteq.com")
         .param("page", "0")
-        .header("password", "Ayushi#123")).andExpect(status().isAccepted()).andDo(MockMvcResultHandlers.print());
+        .header("password", "Ayushi#123")).andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
   }
 
   @Test
@@ -112,7 +112,7 @@ class EmployeeControllerTest {
 	  mockMvc.perform(MockMvcRequestBuilders.post(url)
 			  .contentType(MediaType.APPLICATION_JSON)
 			  .content(objectMapper.writeValueAsString(employeeLoginDto))
-			  ).andExpect(status().isAccepted()).andDo(MockMvcResultHandlers.print());
+			  ).andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
   }
 
   @Test
@@ -194,29 +194,29 @@ class EmployeeControllerTest {
   @Test
   void when_delete_employee_success() throws Exception {
     
-    doNothing().when(employeeService).deleteEmployeeById(Mockito.anyString());
+    doNothing().when(employeeService).deleteEmployeeById(Mockito.anyString(), Mockito.anyString());
     
     String url = ControllerURLS.EMPLOYEE_BASE_URL + ControllerURLS.DELETE_DATA_BY_ID;
     mockMvc.perform(MockMvcRequestBuilders.delete(url)
         .contentType(MediaType.APPLICATION_JSON)
         .header("email", "ayushi@nucleusteq.com")
         .header("password", "Ayushi#123")
-        .param("email", "ayushi@nucleusteq.com")
-        ).andExpect(status().isNoContent()).andDo(MockMvcResultHandlers.print());
+        .param("deleteEmployee", "ayushi@nucleusteq.com")
+        ).andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
   }
   
   @Test
   
   void when_delete_employee_fails() throws Exception {
     
-    doThrow(ResourceNotFoundException.class).when(employeeService).deleteEmployeeById(Mockito.anyString());
+    doThrow(ResourceNotFoundException.class).when(employeeService).deleteEmployeeById(Mockito.anyString(), Mockito.anyString());
     
     String url = ControllerURLS.EMPLOYEE_BASE_URL + ControllerURLS.DELETE_DATA_BY_ID;
     mockMvc.perform(MockMvcRequestBuilders.delete(url)
         .contentType(MediaType.APPLICATION_JSON)
         .header("email", "ayushi@nucleusteq.com")
         .header("password", "Ayushi#123")
-        .param("email", "ayushi@nucleusteq.com")
+        .param("deleteEmployee", "ayushi@nucleusteq.com")
         ).andExpect(status().isNotFound()).andDo(MockMvcResultHandlers.print());
   }
 

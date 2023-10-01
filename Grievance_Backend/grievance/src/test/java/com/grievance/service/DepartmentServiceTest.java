@@ -26,9 +26,12 @@ import org.springframework.data.domain.PageRequest;
 import com.grievance.dto.DepartmentInDto;
 import com.grievance.dto.DepartmentOutDto;
 import com.grievance.entity.Department;
+import com.grievance.entity.Employee;
 import com.grievance.exception.RecordAlreadyExistException;
 import com.grievance.exception.ResourceNotFoundException;
+import com.grievance.exception.SelfDeletionException;
 import com.grievance.repository.DepartmentRepository;
+import com.grievance.repository.EmployeeRepository;
 
 @ExtendWith(MockitoExtension.class)
 class DepartmentServiceTest {
@@ -41,6 +44,9 @@ class DepartmentServiceTest {
 
   @Mock
   DepartmentRepository departmentRepository;
+  
+  @Mock
+  EmployeeRepository employeeRepository;
 
   @InjectMocks
   DepartmentServiceImpl departmentService;
@@ -51,6 +57,7 @@ class DepartmentServiceTest {
   @BeforeEach
   void setUp() {
     department = new Department();
+    department.setDepartmentId(101);
     department.setDepartmentName("HR");
 
     departmentInDto = new DepartmentInDto();
@@ -106,11 +113,17 @@ class DepartmentServiceTest {
 
   @Test
   public void delete_department_success() {
+    Employee employee = new Employee();
+    Department department = new Department();
+    department.setDepartmentId(102);
+    department.setDepartmentName("CRM");
+    employee.setDepartment(department);
     
-    when(departmentRepository.findById(Mockito.anyInt())).thenReturn(Optional.ofNullable(department));
+    when(departmentRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(this.department));
+    when(employeeRepository.findByEmail(Mockito.eq("ayushi@nucleusteq.com"))).thenReturn(employee);
     doNothing().when(departmentRepository).deleteById(Mockito.anyInt());
 
-    departmentService.deleteDepartment(101);
+    departmentService.deleteDepartment(101, "ayushi@nucleusteq.com");
 
     Mockito.verify(departmentRepository, Mockito.times(1)).deleteById(101);
     ;
@@ -119,7 +132,23 @@ class DepartmentServiceTest {
   @Test
   public void delete_department_fails() {
     assertThrows(ResourceNotFoundException.class, () -> {
-      departmentService.deleteDepartment(101);
+      departmentService.deleteDepartment(101, null);
+    });
+
+  }
+  
+  @Test
+  public void delete_department_fails_when_user_delete_their_department() {
+    Employee employee = new Employee();
+    Department department = new Department();
+    department.setDepartmentId(101);
+    department.setDepartmentName("HR");
+    employee.setDepartment(department);
+    
+    when(departmentRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(this.department));
+    when(employeeRepository.findByEmail(Mockito.eq("ayushi@nucleusteq.com"))).thenReturn(employee);
+    assertThrows(SelfDeletionException.class, () -> {
+      departmentService.deleteDepartment(101, "ayushi@nucleusteq.com");
     });
 
   }

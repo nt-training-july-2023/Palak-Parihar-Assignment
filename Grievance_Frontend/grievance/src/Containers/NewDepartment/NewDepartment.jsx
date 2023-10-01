@@ -66,16 +66,15 @@ export default function NewDepartment(props) {
         let departmentData = {
             departmentName: controls.value
         }
-        const savedDepartment = GENERATE_NEW_DEPARTMENT(departmentData)
+      GENERATE_NEW_DEPARTMENT(departmentData)
             .then(response => {
                 console.log(response)
-                setModal(() => <Modal message="Department successfully created" onClick={props.closeModal} />)
+                setModal(() => <Modal message={response.data.message} onClick={props.closeModal} />)
                 return response.data;
             }).catch(error => {
-                setModal(() => <Modal message={error.data.response.data.message} onClick={closeModal} />)
-                console.log(error.data.response.data)
+                setModal(() => <Modal message={error.data.message} onClick={closeModal} />)
+                console.log(error.data)
             })
-        console.log(savedDepartment)
     }
 
     const formElement = (<InputElement

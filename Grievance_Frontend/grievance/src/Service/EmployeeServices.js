@@ -12,7 +12,7 @@ export const LOGIN_USER = (userData) => {
         postMapping(LOGIN_USER_URL,
             userData,
         ).then(res => {
-            resolve({ data: res.data })
+            resolve({ data: res.data.data })
         }).catch(err => {
             reject({ data: err })
         })
@@ -30,9 +30,9 @@ export const CHANGE_USER_PASSWORD = (values) => {
             values,
             { headers: headersRequired })
             .then(res => {
-                resolve({ data: res })
+                resolve({ data: res.data })
             }).catch(err => {
-                reject({ data: err })
+                reject({ data: err.response.data })
             })
     })
 }
@@ -52,7 +52,7 @@ export const FETCH_ALL_USERS = (pageNo) => {
                     page: pageNo
                 }
             }).then(res => {
-                resolve({ data: res.data })
+                resolve({ data: res.data.data })
             }).catch(err => {
                 reject({ data: err })
             })
@@ -72,6 +72,7 @@ export const SAVE_NEW_EMPLOYEE = (employeeData) => {
             {
                 headers: headersRequired,
             }).then(res => {
+                console.log(res)
                 resolve({ data: res.data })
             }).catch(err => {
                 reject({ data: err})
@@ -89,11 +90,11 @@ export const DELETE_EMPLOYEE = (empId) => {
         deleteMapping(DELETE_EMPLOYEE_URL, {
             headers: headersRequired,
             params: {
-                email: empId
+                deleteEmployee: empId
             }
         }).then(res => {
             console.log(res)
-            resolve({ data: res })
+            resolve({ data: res.data.data })
         }).catch(err => {
             reject({ data: err.response.data })
         })

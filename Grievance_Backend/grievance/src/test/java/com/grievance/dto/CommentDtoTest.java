@@ -32,3 +32,4 @@ public class CommentDtoTest {
     assertNotEquals(commentOutDto1.hashCode(), commentOutDto.hashCode());
   }
 }
+

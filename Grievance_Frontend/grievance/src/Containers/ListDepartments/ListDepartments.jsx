@@ -89,9 +89,9 @@ export default function ListDepartments(props) {
     const deleteDepartment = (deptId) => {
         console.log(deptId)
         DELETE_DEPARTMENT(deptId)
-            .then(res => {
-                console.log(res)
-                setModal(<Modal message="Department deleted successfully" onClick={closeModal} />)
+            .then(response => {
+                console.log(response.data.message)
+                setModal(<Modal message={response.data.message} onClick={closeModal} />)
             }).catch(err => {
                 setModal(<Modal message={err.data.response.data} onClick={closeModal} />)
             })

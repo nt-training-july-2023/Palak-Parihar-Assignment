@@ -91,6 +91,16 @@ public class GlobalExceptionHandlerTest {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     assertThat(response.getBody()).isNotNull();
   }
+  
+  @Test
+  void handleSelfDeleteException() {
+    SelfDeletionException ex = mock(SelfDeletionException.class);
+
+    ResponseEntity<ErrorResponse> response = globalExceptionHandler.handleSelfDeleteException(ex);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    assertThat(response.getBody()).isNotNull();
+  }
 
   @Test
   void handleMethodArgumentNotValid() {

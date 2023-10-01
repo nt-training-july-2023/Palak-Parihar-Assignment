@@ -55,14 +55,14 @@ public class CommentOutDto {
    * @return the createdOn
    */
   public Date getCreatedOn() {
-    return createdOn;
+    return new Date(createdOn.getTime());
   }
 
   /**
    * @param createdOnField the createdOn to set
    */
   public void setCreatedOn(final Date createdOnField) {
-    this.createdOn = createdOnField;
+    this.createdOn = new Date(createdOnField.getTime());
   }
 
   /**
@@ -106,7 +106,7 @@ public class CommentOutDto {
     super();
     this.description = descriptionField;
     this.userName = userNameField;
-    this.createdOn = createdOnField;
+    this.createdOn = new Date(createdOnField.getTime());
   }
 
   /**

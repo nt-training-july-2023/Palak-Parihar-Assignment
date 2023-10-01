@@ -135,7 +135,6 @@ export default function Login() {
                     firstTimeUser: res.data.firstTimeUser,
                     department: res.data.department,
                     isLoggedIn : true,
-                    isAuthenticated: true
                 }
                 
                 let userDetails = JSON.stringify(userValues);

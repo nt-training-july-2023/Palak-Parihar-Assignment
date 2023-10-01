@@ -29,6 +29,7 @@ import com.grievance.entity.Employee;
 import com.grievance.entity.UserType;
 import com.grievance.exception.RecordAlreadyExistException;
 import com.grievance.exception.ResourceNotFoundException;
+import com.grievance.exception.SelfDeletionException;
 import com.grievance.exception.PasswordMatchException;
 import com.grievance.repository.EmployeeRepository;
 
@@ -188,7 +189,7 @@ class EmployeeServiceTest {
     when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
     doNothing().when(employeeRepository).delete(employee);
     
-    employeeService.deleteEmployeeById("ayushi@nucleusteq.com");
+    employeeService.deleteEmployeeById("ayushi@nucleusteq.com", "admin@nucleusteq.com");
     
     Mockito.verify(employeeRepository, Mockito.times(1)).delete(employee);
   }
@@ -196,7 +197,14 @@ class EmployeeServiceTest {
   @Test
   void delete_employee_fails() {
     assertThrows(ResourceNotFoundException.class, ()->{
-      employeeService.deleteEmployeeById("ayushi@nucleusteq.com");
+      employeeService.deleteEmployeeById("ayushi@nucleusteq.com", "admin@nucleusteq.com");
+    });
+  }
+  
+  @Test
+  void delete_employee_fails_when_admin_tries_to_delete_itself() {
+    assertThrows(SelfDeletionException.class, ()->{
+      employeeService.deleteEmployeeById("admin@nucleusteq.com", "admin@nucleusteq.com");
     });
   }
 }

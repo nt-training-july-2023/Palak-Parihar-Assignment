@@ -33,7 +33,8 @@ public interface DepartmentService {
   /**
    * method to delete department by Id.
    * @param departmentId
+   * @param email TODO
    */
-  void deleteDepartment(Integer departmentId);
+  void deleteDepartment(Integer departmentId, String email);
 
 }

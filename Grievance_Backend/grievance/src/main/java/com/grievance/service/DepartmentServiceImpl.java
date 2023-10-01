@@ -6,7 +6,10 @@ import com.grievance.dto.DepartmentOutDto;
 import com.grievance.entity.Department;
 import com.grievance.exception.RecordAlreadyExistException;
 import com.grievance.exception.ResourceNotFoundException;
+import com.grievance.exception.SelfDeletionException;
 import com.grievance.repository.DepartmentRepository;
+import com.grievance.repository.EmployeeRepository;
+
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,11 +43,17 @@ public class DepartmentServiceImpl implements DepartmentService {
 
   /**
    * The DepartmentRepository instance provides data access methods for
-   * interacting with the database to perform operations related to departments,
-   * such as retrieval and modification.
+   * interacting with the database to perform operations related to departments.
    */
   @Autowired
   private DepartmentRepository departmentRepository;
+
+  /**
+   * The EmployeeRepository instance provides data access methods for
+   * interacting with the database to perform operations related to employees.
+   */
+  @Autowired
+  private EmployeeRepository employeeRepository;
 
   /**
    * The ModelMapper instance used for mapping between
@@ -121,14 +130,21 @@ public class DepartmentServiceImpl implements DepartmentService {
    * method to delete department by Id.
    *
    * @param departmentId
+   * @param email
    */
-  public void deleteDepartment(final Integer departmentId) {
+  public void deleteDepartment(final Integer departmentId, final String email) {
     Optional<Department> dept = departmentRepository
         .findById(departmentId);
     if (!dept.isPresent()) {
       LOGGER.error("Department with ID {} not found.", departmentId);
       throw new ResourceNotFoundException(
           ErrorConstants.DEPARTMENT_NOT_FOUND);
+    }
+    Department userDepartment =
+        employeeRepository.findByEmail(email).getDepartment();
+    if (userDepartment.equals(dept.get())) {
+      LOGGER.info("User can not delete their own department");
+      throw new SelfDeletionException(ErrorConstants.DEPARTMENT_SELF_DELETE);
     }
     departmentRepository.deleteById(departmentId);
     LOGGER.info("Department with ID {} deleted successfully.",

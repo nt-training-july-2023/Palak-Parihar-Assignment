@@ -3,6 +3,7 @@ package com.grievance.exceptionhandler;
 import com.grievance.constants.ErrorConstants;
 import com.grievance.exception.RecordAlreadyExistException;
 import com.grievance.exception.ResourceNotFoundException;
+import com.grievance.exception.SelfDeletionException;
 import com.grievance.exception.PasswordMatchException;
 import com.grievance.exception.UnauthorisedUserException;
 import com.grievance.response.ErrorResponse;
@@ -127,6 +128,21 @@ public class GlobalExceptionHandler {
         errorResponse,
         HttpStatus.CONFLICT);
   }
+
+  /**
+  *
+  * @param ex
+  * @return responseEntity.
+  */
+ @ExceptionHandler(SelfDeletionException.class)
+ public ResponseEntity<ErrorResponse> handleSelfDeleteException(
+     final SelfDeletionException ex) {
+   ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(),
+       HttpStatus.FORBIDDEN.value(), null);
+   return new ResponseEntity<>(
+       errorResponse,
+       HttpStatus.FORBIDDEN);
+ }
 
   /**
    *

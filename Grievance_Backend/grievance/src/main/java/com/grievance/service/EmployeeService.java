@@ -53,7 +53,8 @@ public interface EmployeeService {
   /**
    * delete employee by Id.
    * @param email
+   * @param deleteEmployee
    */
-  void deleteEmployeeById(String email);
+  void deleteEmployeeById(String email, String deleteEmployee);
 
 }

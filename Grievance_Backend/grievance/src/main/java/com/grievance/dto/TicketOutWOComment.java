@@ -125,14 +125,14 @@ public class TicketOutWOComment {
    * @return the lastUpdated
    */
   public Date getLastUpdated() {
-    return lastUpdated;
+    return new Date(lastUpdated.getTime());
   }
 
   /**
    * @param lastUpdatedField the lastUpdated to set
    */
   public void setLastUpdated(final Date lastUpdatedField) {
-    this.lastUpdated = lastUpdatedField;
+    this.lastUpdated = new Date(lastUpdatedField.getTime());
   }
 
   /**

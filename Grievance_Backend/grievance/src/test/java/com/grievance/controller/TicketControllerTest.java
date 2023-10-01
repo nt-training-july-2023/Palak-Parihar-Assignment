@@ -4,6 +4,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,7 +68,7 @@ public class TicketControllerTest {
     ticketOutDto.setDepartment(null);
     ticketOutDto.setDescription("Malfunction");
     ticketOutDto.setEmployee("ayushi@nucleusteq.com");
-    ;
+    ticketOutDto.setLastUpdated(new Date());
     ticketOutDto.setStatus(Status.BEING_ADDRESSED);
     ticketOutDto.setTicketType(TicketType.GRIEVANCE);
 
@@ -103,7 +104,7 @@ public class TicketControllerTest {
             .param("departmentTickets", "true")
             .param("status", "OPEN")
             .param("page", "0"))
-        .andExpect(status().isAccepted())
+        .andExpect(status().isOk())
         .andDo(MockMvcResultHandlers.print());
   }
 

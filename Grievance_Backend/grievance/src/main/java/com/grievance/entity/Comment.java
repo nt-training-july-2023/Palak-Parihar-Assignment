@@ -117,7 +117,7 @@ public class Comment {
    * @return the createdOn date
    */
   public Date getCreatedOn() {
-    return createdOn;
+    return new Date(createdOn.getTime());
   }
 
   /**
@@ -126,7 +126,7 @@ public class Comment {
    * @param createdOnField the createdOn date to set
    */
   public void setCreatedOn(final Date createdOnField) {
-    this.createdOn = createdOnField;
+    this.createdOn = new Date(createdOnField.getTime());
   }
 
   /**

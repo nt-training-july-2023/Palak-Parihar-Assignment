@@ -17,7 +17,7 @@ public class EmployeeTest {
     
     assertThat(!employee1.equals(null));
     
-    assertThat(!employee1.equals(Department.class));
+    assertThat(!employee1.equals(new Department()));
     
     assertThat(employee1.equals(employee1));
   }

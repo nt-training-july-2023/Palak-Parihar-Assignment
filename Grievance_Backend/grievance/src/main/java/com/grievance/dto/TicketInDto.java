@@ -19,21 +19,21 @@ public class TicketInDto {
   /**
    * minimumLength final integer.
    */
-  private final int minimumLength = 1;
+  private static final int MINIMUM_LENGTH = 1;
   /**
    * maximumLengthOfTitle final integer.
    */
-  private final int maximumLengthOfTitle = 50;
+  private static final int MAXIMUM_LENGTH_OF_TITLE = 50;
   /**
    * maximumLengthOfDescription final integer.
    */
-  private final int maximumLengthOfDescription = 500;
+  private static final int MAXIMUMN_LENGTH_OF_DESCRIPTION = 500;
 
   /**
    * The title of the ticket.
    */
   @NotEmpty
-  @Size(min = minimumLength, max = maximumLengthOfTitle,
+  @Size(min = MINIMUM_LENGTH, max = MAXIMUM_LENGTH_OF_TITLE,
   message = "Title too long (max 50 characters)")
   private String title;
 
@@ -52,7 +52,7 @@ public class TicketInDto {
    * The description of the ticket.
    */
   @NotEmpty
-  @Size(min = minimumLength, max = maximumLengthOfDescription,
+  @Size(min = MINIMUM_LENGTH, max = MAXIMUMN_LENGTH_OF_DESCRIPTION,
   message = "Description too long (max 500 characters)")
   private String description;
 

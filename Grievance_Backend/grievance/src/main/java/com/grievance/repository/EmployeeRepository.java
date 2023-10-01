@@ -58,3 +58,4 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
   Boolean existsByEmailAndUserType(String email, UserType userType);
 
 }
+

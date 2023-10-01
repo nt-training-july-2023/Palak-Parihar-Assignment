@@ -124,14 +124,36 @@ label{
 }
 
 @media (max-width: 1200px) {
-   .ticketContainer{
-    /* width: 45%; */
-   }
    .mainContainer{
     width: 95%;
    }
 
+   .ticketContent{
+    padding: 10px 30px;
+   }
+
    .commentBox{
-    margin-bottom: '6%';
+    margin-bottom: 7%;
    }
 }
+
+@media (max-width: 900px) {
+ 
+    .commentBox{
+     margin-bottom: 9%;
+    }
+
+    .ticketContent{
+        padding: 10px 20px;
+    }
+ }
+
+ @media (max-width: 700px) {
+ 
+    .ticketContent{
+        padding: 10px
+    }
+    .commentBox{
+     margin-bottom: 10%;
+    }
+ }

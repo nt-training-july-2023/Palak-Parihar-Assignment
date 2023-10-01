@@ -96,7 +96,7 @@ export default function ChangePassword(props) {
         let count = 0;
         for (let key in controls) {
             console.log(controls[key].valid)
-            if (controls[key].valid) {
+            if (!controls[key].valid) {
                 count += 1;
             }
         }
@@ -106,7 +106,7 @@ export default function ChangePassword(props) {
         } else {
             setEnableButton(true)
         }
-    }, controls)
+    }, [controls])
 
 
     const completeForm = formElementsArray.map(formElement => {
@@ -166,13 +166,14 @@ export default function ChangePassword(props) {
         console.log(values)
         const response = CHANGE_USER_PASSWORD(values)
             .then(res => {
-                setModal(() => <Modal message="Password changed successfully" onClick={closeModal} />)
+                setModal(() => <Modal message={res.data.message} onClick={closeModal} />)
                 let values = JSON.parse(localStorage.getItem('userDetails'))
                 const userDetails = {
                     ...values,
+                    password : btoa(values.newPassword),
                     firstTimeUser: false
                 }
-                localStorage.setItem('userDetails', userDetails);
+                localStorage.setItem('userDetails', JSON.stringify(userDetails));
                 setTimeout(() => {
                     navigate(LIST_TICKETS_PATH)
                 }, 1000);
@@ -180,7 +181,7 @@ export default function ChangePassword(props) {
             })
             .catch(err => {
                 console.log(err)
-                setModal(() => <Modal message="error" onClick={closeModal} />)
+                setModal(() => <Modal message={err.data.message} onClick={closeModal} />)
                 return err.data
             })
         console.log(response)

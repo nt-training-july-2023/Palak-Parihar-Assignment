@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 import Table from "../../Components/Table/Table";
 import classes from "./ListTickets.module.css"
 import InputElement from "../../Components/UI/InputElement/InputElement";
+import { headers } from "../../API/Headers";
 
 
 export default function ListTickets(props) {
@@ -76,18 +77,18 @@ export default function ListTickets(props) {
         const response = GET_TICKET_BY_ID(ticketId)
             .then(res => {
                 const ticket = res.data
-                console.log()
-                if (values.department === ticket.department) {
-                    setCanUpdateTicket(false)
-                } else {
+                console.log(headers().email)
+                if (values.department === ticket.department || res.data.employee === headers().email) {
                     setCanUpdateTicket(true)
+                } else {
+                    setCanUpdateTicket(false)
                 }
                 setTicket(ticket)
                 setShowTicket(true)
                 return res.data;
             })
             .catch(err => {
-                console.error(err)
+                console.error(err.data.message)
                 return err.data
             })
         console.log(response)

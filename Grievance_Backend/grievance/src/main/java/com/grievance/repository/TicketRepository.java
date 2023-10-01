@@ -59,3 +59,4 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
       Department department, Status status,
       PageRequest pageRequest);
 }
+

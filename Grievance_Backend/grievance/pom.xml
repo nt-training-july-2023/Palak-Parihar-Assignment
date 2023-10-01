@@ -11,9 +11,9 @@
 
 	<groupId>com.grievance.exceptionHandler</groupId>
 	<artifactId>grievance</artifactId>
-	<version>1.0.1SNAPSHOT</version>
+	<version>1.0-SNAPSHOT</version>
 	<name>grievance</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Grievance Management System</description>
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>
@@ -59,23 +59,17 @@
 			<version>3.3.0</version>
 			<type>maven-plugin</type>
 		</dependency>
-		<!--
-		https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-pmd-plugin -->
+
 		<dependency>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-pmd-plugin</artifactId>
 			<version>3.21.0</version>
 		</dependency>
-
-		<!--
-		https://mvnrepository.com/artifact/org.codehaus.mojo/findbugs-maven-plugin -->
 		<dependency>
 			<groupId>org.codehaus.mojo</groupId>
 			<artifactId>findbugs-maven-plugin</artifactId>
 			<version>3.0.5</version>
 		</dependency>
-		<!--
-		https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
 		<dependency>
 			<groupId>jakarta.validation</groupId>
 			<artifactId>jakarta.validation-api</artifactId>
@@ -85,15 +79,13 @@
 			<artifactId>validation-api</artifactId>
 		</dependency>
 		<dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-    </dependency>
-
-    <!-- Logback (or your preferred logging implementation) -->
-    <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-classic</artifactId>
-    </dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
 
 	</dependencies>
 
@@ -111,28 +103,6 @@
 					</excludes>
 				</configuration>
 			</plugin>
-
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>3.0.4</version>
-				<configuration>
-					<effort>Max</effort>
-					<threshold>Low</threshold>
-					<xmlOutput>true</xmlOutput>
-					<findbugsXmlOutputDirectory>
-						${project.build.directory}/findbugs</findbugsXmlOutputDirectory>
-				</configuration>
-				<!-- <executions>
-					<execution>
-						<id>analyze-compile</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>-->
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
@@ -147,12 +117,39 @@
 					<execution>
 						<id>validate</id>
 						<phase>validate</phase>
-						<configuration>
-							<!-- You can specify other Checkstyle configurations
-							here -->
-						</configuration>
 						<goals>
 							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>3.0.4</version>
+				
+				<executions>
+					<execution>
+						<id>analyze-compile</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>3.21.0</version>
+				<configuration>
+					<failOnViolation>true</failOnViolation>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>pmd</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -177,6 +174,7 @@
 					</execution>
 				</executions>
 			</plugin>
+
 		</plugins>
 
 	</build>
@@ -196,8 +194,28 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-findbugs-plugin</artifactId>
+				<version>3.0.0</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>findbugs</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
 				<version>3.11.0</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>pmd</report>
+						</reports>
+					</reportSet>
+				</reportSets>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>

@@ -19,7 +19,7 @@ export const FETCH_ALL_DEPARTMENTS = (pageNo) => {
                 }
             }
         ).then(res => {
-            return resolve({ data: res.data })
+            return resolve({ data: res.data.data })
         }).catch(err => {
             return reject({ data: err })
         })
@@ -40,7 +40,8 @@ export const GENERATE_NEW_DEPARTMENT = (deptName) => {
             }).then(res => {
                 resolve({ data: res.data })
             }).catch(err => {
-                reject({ data: err })
+                console.log(err)
+                reject({ data: err.response.data })
             })
     });
 }

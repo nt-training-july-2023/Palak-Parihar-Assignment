@@ -14,10 +14,10 @@ export const FETCH_ALL_TICKETS = (parameters) => {
             headers: headersRequired,
             params: parameters
         }).then((res) => {
-            return resolve({ data: res.data })
+            return resolve({ data: res.data.data })
         }).catch((err) => {
             console.log(err)
-            return reject({ data: err })
+            return reject({ data: err.response })
         })
     })
 }
@@ -35,9 +35,9 @@ export const GENERATE_NEW_TICKET = (ticketData) => {
             {
                 headers: headersRequired
             }).then(res => {
-                resolve({ data: res.data })
+                resolve({ data: res.data.data })
             }).catch(err => {
-                reject({ data: err })
+                reject({ data: err.response.data })
             })
     });
 }
@@ -55,7 +55,7 @@ export const GET_TICKET_BY_ID = (Id) => {
                 ticketId: Id
             }
         }).then((res) => {
-            return resolve({ data: res.data })
+            return resolve({ data: res.data.data })
         }).catch((err) => {
             console.log(err)
             return reject({ data: err })
@@ -80,7 +80,7 @@ export const UPDATE_TICKET_BY_ID = (Id, ticketUpdate) => {
             }
         })
             .then(res => {
-                return resolve({ data: res.data })
+                return resolve({ data: res.data.data })
             }).catch(err => {
                 return reject({ data: err })
             })

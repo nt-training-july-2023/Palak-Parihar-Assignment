@@ -22,6 +22,6 @@ public class UnauthorisedUserException extends RuntimeException {
     * @param email The email address for which the employee was not found.
     */
    public UnauthorisedUserException(final String email) {
-      super("Unauthorized user=" + email);
+      super("Unauthorized user = " + email);
    }
 }

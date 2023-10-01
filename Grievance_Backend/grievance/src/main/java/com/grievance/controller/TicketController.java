@@ -1,11 +1,13 @@
 package com.grievance.controller;
 
 import com.grievance.constants.ControllerURLS;
+import com.grievance.constants.ResponseConstants;
 import com.grievance.dto.TicketInDto;
 import com.grievance.dto.TicketOutDto;
 import com.grievance.dto.TicketOutWOComment;
 import com.grievance.dto.TicketUpdateDto;
 import com.grievance.entity.Status;
+import com.grievance.response.Response;
 import com.grievance.service.TicketService;
 
 import org.slf4j.Logger;
@@ -53,13 +55,15 @@ public class TicketController {
    * @return ResponseEntity with optional of TicketOut DTO.
    */
   @PostMapping(path = ControllerURLS.SAVE_DATA)
-  public ResponseEntity<?> saveTicket(
+  public ResponseEntity<Response<Boolean>> saveTicket(
       @Valid @RequestBody final TicketInDto ticketInDto) {
     LOGGER.info("Received request to create a new ticket.");
     ticketService.saveTicket(ticketInDto);
+    String message = ResponseConstants.TICKET_CREATED;
+    Response<Boolean> response =
+        new Response<Boolean>(message, HttpStatus.CREATED.value(), true);
     LOGGER.info("Ticket created successfully.");
-    return new ResponseEntity<>("Ticket created successfully",
-        HttpStatus.CREATED);
+    return new ResponseEntity<Response<Boolean>>(response, HttpStatus.CREATED);
   }
 
   /**
@@ -73,16 +77,21 @@ public class TicketController {
    * @return ResponseEntity with optional of list of all tickets.
    */
   @GetMapping(path = ControllerURLS.GET_ALL_DATA)
-  public ResponseEntity<List<TicketOutWOComment>> listAllTickets(
+  public ResponseEntity<Response<List<TicketOutWOComment>>> listAllTickets(
       @RequestHeader final String email,
       @RequestParam final Integer page,
       @RequestParam(required = false) final Status status,
       @RequestParam(required = false) final Boolean myTickets) {
     LOGGER.info("Received request to list all tickets.");
-    Optional<List<TicketOutWOComment>> response = ticketService
+    Optional<List<TicketOutWOComment>> optionalTickets = ticketService
         .listAllTickets(email, page, status, myTickets);
+    String message = ResponseConstants.TICKET_RETRIEVED;
+    Response<List<TicketOutWOComment>> response =
+        new Response<List<TicketOutWOComment>>(message,
+            HttpStatus.OK.value(), optionalTickets.get());
     LOGGER.info("Listed all tickets successfully.");
-    return new ResponseEntity<>(response.get(), HttpStatus.ACCEPTED);
+    return new ResponseEntity<Response<List<TicketOutWOComment>>>(
+        response, HttpStatus.OK);
   }
 
   /**
@@ -94,7 +103,7 @@ public class TicketController {
    * @return ResponseEntity with optional of updated TicketOut DTO.
    */
   @PutMapping(path = ControllerURLS.UPDATE_DATA_BY_ID)
-  public ResponseEntity<TicketOutDto> updateTickets(
+  public ResponseEntity<Response<TicketOutDto>> updateTickets(
       @RequestHeader final String email,
       @RequestParam final Integer ticketId,
       @Valid @RequestBody final TicketUpdateDto ticketUpdateDto) {
@@ -103,8 +112,12 @@ public class TicketController {
     Optional<TicketOutDto> optionalTicketOutDto = ticketService
         .updateTicket(
             ticketUpdateDto, ticketId, email);
+    String message = ResponseConstants.TICKET_UPDATE;
+    Response<TicketOutDto> response =
+        new Response<TicketOutDto>(message,
+            HttpStatus.OK.value(), optionalTicketOutDto.get());
     LOGGER.info("Ticket with ID: {} updated successfully.", ticketId);
-    return new ResponseEntity<>(optionalTicketOutDto.get(), HttpStatus.OK);
+    return new ResponseEntity<Response<TicketOutDto>>(response, HttpStatus.OK);
   }
 
   /**
@@ -114,13 +127,18 @@ public class TicketController {
    * @return ResponseEntity with optional of TicketOut DTO.
    */
   @GetMapping(path = ControllerURLS.GET_DATA_BY_ID)
-  public ResponseEntity<TicketOutDto> getTicketById(
+  public ResponseEntity<Response<TicketOutDto>> getTicketById(
       @RequestParam final Integer ticketId) {
     LOGGER.info("Received request to fetch a ticket with ID: {}",
         ticketId);
     Optional<TicketOutDto> ticketOut = ticketService
         .findTicketByTicketId(ticketId);
+    String message = ResponseConstants.TICKET_RETRIEVED_BY_ID;
+    Response<TicketOutDto> response =
+        new Response<TicketOutDto>(message,
+            HttpStatus.OK.value(), ticketOut.get());
     LOGGER.info("Fetched ticket with ID: {} successfully.", ticketId);
-    return new ResponseEntity<>(ticketOut.get(), HttpStatus.OK);
+    return new ResponseEntity<Response<TicketOutDto>>(response,
+        HttpStatus.OK);
   }
 }

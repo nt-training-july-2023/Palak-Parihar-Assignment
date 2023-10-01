@@ -229,7 +229,7 @@ export default function NewEmployee(props) {
         console.log(data)
 
         SAVE_NEW_EMPLOYEE(data).then(res => {
-            setModal(() => <Modal message="Employee successfully created" onClick={closeModal} />)
+            setModal(() => <Modal message={res.data.message} onClick={closeModal} />)
             return res.data;
         }).catch(err => {
             console.log(err)

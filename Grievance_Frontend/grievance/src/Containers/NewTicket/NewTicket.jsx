@@ -199,14 +199,14 @@ export default function NewTicket(props) {
         console.log(ticketValues)
 
         GENERATE_NEW_TICKET(ticketValues).then(res => {
-            setModal(() => <Modal message="Ticket successfully created" onClick={closeModal} />)
+            setModal(() => <Modal message={res.data.message} onClick={closeModal} />)
             console.log(res.data)
             setTimeout(() => {
                 navigate(LIST_TICKETS_PATH)
             }, 2000)
         }).catch(err => {
             console.log(err)
-            setModal(() => <Modal message={err.data.response.data.message} onClick={closeModal} />)
+            setModal(() => <Modal message={err.data.message} onClick={closeModal} />)
         })
     }
 

@@ -66,4 +66,14 @@ public final class ErrorConstants {
    */
   public static final String EMPLOYEE_ALREADY_EXIST =
       "Employee already exists.";
+  /**
+   * Error message for a user deleting themself error.
+   */
+  public static final String EMPLOYEE_SELF_DELETE =
+      "User can not delete itself.";
+  /**
+   * Error message for a user delete their own department error.
+   */
+  public static final String DEPARTMENT_SELF_DELETE =
+      "User can not delete their own department.";
 }

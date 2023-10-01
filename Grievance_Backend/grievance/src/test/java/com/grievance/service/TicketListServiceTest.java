@@ -6,6 +6,7 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,7 +69,7 @@ public class TicketListServiceTest {
   void setUp() {
     department = new Department("HR");
     employee = new Employee("ayushi@nucleusteq.com", "Full Name", "QWertf", UserType.ADMIN, true, department, null);
-    ticket = new Ticket("Reimbursement", TicketType.GRIEVANCE, department, "Description", Status.BEING_ADDRESSED, null,
+    ticket = new Ticket("Reimbursement", TicketType.GRIEVANCE, department, "Description", Status.BEING_ADDRESSED, new Date(),
         employee);
 
     tickets = new ArrayList<Ticket>();
