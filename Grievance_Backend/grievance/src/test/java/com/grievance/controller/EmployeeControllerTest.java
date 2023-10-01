@@ -10,9 +10,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.grievance.authentication.AuthenticatingUser;
 import com.grievance.constants.ControllerURLS;
 import com.grievance.dto.ChangePasswordInDto;
+import com.grievance.dto.DepartmentInDto;
 import com.grievance.dto.EmployeeInDto;
 import com.grievance.dto.EmployeeLoginDto;
 import com.grievance.dto.EmployeeOutDto;
+import com.grievance.entity.Department;
 import com.grievance.entity.Employee;
 import com.grievance.entity.UserType;
 import com.grievance.exception.RecordAlreadyExistException;
@@ -64,10 +66,12 @@ class EmployeeControllerTest {
 
   @BeforeEach
   void setUp() {
+    Department department = new Department("HR");
+    department.setDepartmentId(101);
     mockMvc = MockMvcBuilders.standaloneSetup(employeeController).build();
     employeeOutDto = new EmployeeOutDto();
     employeeOutDto.setEmail("example@nucleusteq.com");
-    employeeOutDto.setDepartment(null);
+    employeeOutDto.setDepartment("HR");
     employeeOutDto.setFirstTimeUser(true);
     employeeOutDto.setFullName("Example ");
     employeeOutDto.setUserType(UserType.MEMBER);
@@ -80,7 +84,7 @@ class EmployeeControllerTest {
     employeeLoginDto.setEmail("palak@nucleusteq.com");
 
     employeeInDto = new EmployeeInDto();
-    employeeInDto.setDepartmentDto(null);
+    employeeInDto.setDepartmentDto(new DepartmentInDto(101,"HR"));
     employeeInDto.setEmail("ayushi@nucleusteq.com");
     employeeInDto.setFullName("Ayushi");
     employeeInDto.setPassword("Ayushi#123");

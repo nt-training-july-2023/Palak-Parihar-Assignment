@@ -51,4 +51,17 @@ public class AuthenticatingUserImpl implements AuthenticatingUser {
                      email, password, UserType.ADMIN);
         return !Objects.isNull(employee);
   }
+
+  /**
+   * method to check if user is login in first time.
+   * @param email
+   * @param password
+   * @return boolean.
+   */
+  @Override
+  public Boolean checkIfUserisFirstTimeLogin(final String email,
+      final String password) {
+    return employeeRepository
+        .existsByEmailAndPasswordAndFirstTimeUser(email, password, true);
+  }
 }

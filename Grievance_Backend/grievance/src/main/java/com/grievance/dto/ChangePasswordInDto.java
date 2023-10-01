@@ -1,5 +1,6 @@
 package com.grievance.dto;
 
+import javax.validation.constraints.NotEmpty;
 
 /**
  * Data Transfer Object (DTO) for changing a user's password.
@@ -8,10 +9,12 @@ public class ChangePasswordInDto {
   /**
    * oldPassword present in database.
    */
+  @NotEmpty
   private String oldPassword;
   /**
    * newPassword to replace oldPassword.
    */
+  @NotEmpty
   private String newPassword;
 
   /**

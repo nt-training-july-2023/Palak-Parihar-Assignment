@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.grievance.Configuration.SecurityFilter;
 import com.grievance.authentication.AuthenticatingUser;
+import com.grievance.constants.ErrorConstants;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -52,7 +54,7 @@ public class SecurityFilterTest {
         when(request.getHeader("email")).thenReturn(null);
         when(request.getHeader("password")).thenReturn("Password");
         securityFilter.doFilter(request, response, filterChain);
-        verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid User");
+        verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED,  ErrorConstants.INVALID_USER);
     }
 
   @Test
@@ -87,7 +89,7 @@ public class SecurityFilterTest {
         
         when(request.getRequestURI()).thenReturn("/employee/save");
         securityFilter.doFilter(request, response, filterChain);
-        verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid User");
+        verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED,  ErrorConstants.INVALID_USER);
     }
 
   @Test
@@ -100,7 +102,33 @@ public class SecurityFilterTest {
       when(authenticatingUser.checkIfUserIsAdmin(Mockito.anyString(), Mockito.anyString())).thenReturn(false);
 
       securityFilter.doFilter(request, response, filterChain);
-      verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid User");
+      verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, ErrorConstants.INVALID_USER);
+  }
+  
+  @Test
+  public void testDoFilter_invalid_firstTimeLogin() throws Exception {
+      when(request.getMethod()).thenReturn("POST");
+      when(request.getHeader("email")).thenReturn("admin@nucleusteq.com");
+      when(request.getHeader("password")).thenReturn("Password");
+      when(request.getRequestURI()).thenReturn("/tickets/list");
+
+      when(authenticatingUser.checkIfUserisFirstTimeLogin(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
+
+      securityFilter.doFilter(request, response, filterChain);
+      verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, ErrorConstants.UNAUTHORISED_USER_FIRST_LOGIN);
+  }
+  
+  @Test
+  public void testDoFilter_firstTimeLogin() throws Exception {
+      when(request.getMethod()).thenReturn("POST");
+      when(request.getHeader("email")).thenReturn("admin@nucleusteq.com");
+      when(request.getHeader("password")).thenReturn("Password");
+      when(request.getRequestURI()).thenReturn("/employee/changePassword");
+
+      when(authenticatingUser.checkIfUserisFirstTimeLogin(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
+
+      securityFilter.doFilter(request, response, filterChain);
+      verify(filterChain).doFilter(request, response);
   }
 
 }

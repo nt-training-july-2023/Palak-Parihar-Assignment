@@ -171,7 +171,8 @@ export default function ChangePassword(props) {
                 const userDetails = {
                     ...values,
                     password : btoa(values.newPassword),
-                    firstTimeUser: false
+                    firstTimeUser: false,
+                    isLoggedIn : true
                 }
                 localStorage.setItem('userDetails', JSON.stringify(userDetails));
                 setTimeout(() => {

@@ -53,9 +53,18 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
   /**
    * @param email
    * @param userType
-   * @return boolean if user exist with given mail and userType
+   * @return true if user exist with given mail and userType
    */
   Boolean existsByEmailAndUserType(String email, UserType userType);
 
+  /**
+   *
+   * @param email
+   * @param password
+   * @param firstTimeUser
+   * @return true if user exists and is first time login.
+   */
+  Boolean existsByEmailAndPasswordAndFirstTimeUser(String email,
+      String password, Boolean firstTimeUser);
 }
 

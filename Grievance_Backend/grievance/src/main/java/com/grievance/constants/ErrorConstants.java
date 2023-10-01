@@ -13,6 +13,18 @@ public final class ErrorConstants {
   }
 
   /**
+   * Error message for a user trying to access resources on first time login.
+   */
+  public static final String UNAUTHORISED_USER_FIRST_LOGIN =
+      "You are unauthorised to access this"
+      + " resource please change password to continue";
+
+  /**
+   * Error message for a user trying to access resources on first time login.
+   */
+  public static final String INVALID_USER = "Unauthorised User";
+
+  /**
    * Error message for a generic resource not found error.
    */
   public static final String RESOURCE_NOT_FOUND = "Resource not found.";

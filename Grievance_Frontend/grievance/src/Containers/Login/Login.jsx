@@ -134,7 +134,7 @@ export default function Login() {
                     userType: res.data.userType,
                     firstTimeUser: res.data.firstTimeUser,
                     department: res.data.department,
-                    isLoggedIn : true,
+                    isLoggedIn : !res.data.firstTimeUser,
                 }
                 
                 let userDetails = JSON.stringify(userValues);

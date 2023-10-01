@@ -104,7 +104,7 @@ public class EmployeeController {
    */
   @PostMapping(path = ControllerURLS.SAVE_DATA)
   public ResponseEntity<Response<Boolean>> saveEmployee(
-      @RequestBody final EmployeeInDto employeeInDto) {
+      @Valid @RequestBody final EmployeeInDto employeeInDto) {
     LOGGER.info("Saving employee for email: {}", employeeInDto.getEmail());
     employeeService.saveEmployee(employeeInDto);
     String message = "Employee created successfully";
@@ -122,7 +122,7 @@ public class EmployeeController {
   @PutMapping(path = ControllerURLS.EMPLOYEE_CHANGE_PASSWORD)
   public ResponseEntity<Response<Boolean>> changePassword(
       @RequestHeader final String email,
-      @RequestBody final ChangePasswordInDto changePasswordInDto) {
+      @Valid @RequestBody final ChangePasswordInDto changePasswordInDto) {
     LOGGER.info("Changing password for email: {}", email);
     employeeService.changePassword(changePasswordInDto, email);
     LOGGER.info("Password changed successfully for email: {}", email);

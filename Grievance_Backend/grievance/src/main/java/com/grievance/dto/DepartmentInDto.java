@@ -12,6 +12,7 @@ import java.util.Objects;
 
 import javax.validation.constraints.NotEmpty;
 
+
 /**
  * The DepartmentDto class represents a data transfer
  * object for department-related information.
@@ -44,7 +45,7 @@ public class DepartmentInDto {
   /**
    * departmentName of Department Dto.
    */
-  @NotEmpty
+  @NotEmpty(message = "department name must not be empty")
   private String departmentName;
 
   /**

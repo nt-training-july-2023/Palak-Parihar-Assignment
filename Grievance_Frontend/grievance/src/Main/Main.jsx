@@ -9,8 +9,9 @@ import ListDepartments from "../Containers/ListDepartments/ListDepartments";
 import LogOut from "../Containers/LogOut/LogOut";
 import { CHANGE_PASSWORD_PATH, LOGIN_PATH, LIST_TICKETS_PATH, NEW_TICKET_PATH, PROFILE_EMPLOYEE_REGISTRATION_PATH, GMS_LIST_DEPARTMENTS_PATH, GMS_LIST_EMPLOYEES_PATH, HOME_PATH, GMS_CHANGE_PASSWORD_PATH } from "../API/PathConstant";
 import NewEmployee from "../Containers/NewEmployee/NewEmployee";
+import { useEffect } from "react";
 
-export default function Main(props) {
+export default function Main() {
 
     return (
         <>

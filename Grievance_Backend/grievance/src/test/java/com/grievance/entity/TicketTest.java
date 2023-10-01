@@ -2,6 +2,7 @@ package com.grievance.entity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.junit.jupiter.api.Assertions;
@@ -19,6 +20,7 @@ public class TicketTest {
     ticket2.setTitle("Title");
     ticket2.setTicketType(TicketType.GRIEVANCE);
     ticket2.setStatus(Status.BEING_ADDRESSED);
+    ticket2.setDepartment(new Department("FINANCE"));
     ticket2.setDescription("description");
     ticket2.setDateOpened(new Date());
     ticket2.setEmployee(new Employee());
@@ -37,7 +39,11 @@ public class TicketTest {
     Ticket ticket1 = new Ticket("Title", TicketType.GRIEVANCE, new Department("FINANCE"), "description", Status.BEING_ADDRESSED, new Date(), new Employee());
     Ticket ticket2 = new Ticket("Title", TicketType.GRIEVANCE, new Department("FINANCE"), "description", Status.OPEN, new Date(), new Employee());
     Ticket ticket3 = new Ticket("Title", TicketType.GRIEVANCE, new Department("FINANCE"), "description", Status.BEING_ADDRESSED, new Date(), new Employee());
+    ticket1.setComments(new ArrayList<Comment>());
+    ticket3.setComments(new ArrayList<Comment>());
+    Ticket ticket4 = new Ticket(ticket1);
     
+    Assertions.assertEquals(ticket1.hashCode(), ticket4.hashCode());
     Assertions.assertEquals(ticket1.hashCode(), ticket3.hashCode());
     
     Assertions.assertNotEquals(ticket1.hashCode(), ticket2.hashCode());

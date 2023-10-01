@@ -261,7 +261,7 @@ public class Ticket {
   @Override
   public int hashCode() {
     return Objects.hash(comments, department, description, employee,
-        status, ticketId, ticketType, title);
+        status, ticketId, ticketType, title, comments);
   }
 
   /**
@@ -286,7 +286,8 @@ public class Ticket {
         && status == other.status
         && Objects.equals(ticketId, other.ticketId)
         && ticketType == other.ticketType
-        && Objects.equals(title, other.title);
+        && Objects.equals(title, other.title)
+        && Objects.equals(comments, other.comments);
   }
 
   /**
@@ -326,14 +327,6 @@ public class Ticket {
    */
   public Ticket() {
     super();
-  }
-
-  /**
-   * String value of ticket.
-   */
-  @Override
-  public String toString() {
-    return "Ticket [ticketId=" + ticketId + "]";
   }
 
   /**

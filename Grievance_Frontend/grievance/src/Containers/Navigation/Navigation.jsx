@@ -15,8 +15,11 @@ export default function Navigation(props) {
     const currentPath = useLocation()
     useEffect(() => {
         console.log(currentPath)
-        if (localStorage.getItem('userDetails') !== null) {
+        if (localStorage.getItem('userDetails') !== null){ 
             const userDetails = JSON.parse(localStorage.getItem('userDetails'));
+            if(!userDetails.isLoggedIn){
+                navigate("/logout");
+            }
             console.log(userDetails.userType)
             if (userDetails.userType === 'ADMIN') {
                 setshowMenu(true)

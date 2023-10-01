@@ -3,6 +3,7 @@ package com.grievance.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.grievance.entity.UserType;
 
+
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -10,6 +11,9 @@ import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
 
 /**
  * EmployeeInDto represents an input data transfer object
@@ -17,26 +21,28 @@ import javax.validation.constraints.NotEmpty;
  * This class is used for transferring employee
  * data between layers of the application.
  */
+@Validated
 public class EmployeeInDto {
   /**
    * The email of the employee (unique identifier).
    */
   @Id
   @Column(unique = true)
-  @Email(regexp = "^[A-Za-z0-9+_.-]+@nucleusteq.com(.+)$")
-  @NotBlank
+  @Email(regexp = "^[a-z0-9+_.-]+@+nucleusteq.com",
+  message = "email must of example@nucleusteq.com")
+  @NotEmpty(message = "Email must not be empty")
   private String email;
 
   /**
    * The full name of the employee.
    */
-  @NotEmpty
+  @NotEmpty(message = "Full Name must be empty.")
   private String fullName;
 
   /**
    * The password of the employee.
    */
-  @NotEmpty
+  @NotEmpty(message = "Password must be empty.")
   private String password;
 
   /**
@@ -47,7 +53,7 @@ public class EmployeeInDto {
   /**
    * The department of the employee.
    */
-  @NotEmpty
+  @NotNull(message = "department must not be null")
   @JsonProperty("department")
   private DepartmentInDto departmentInDto;
 
