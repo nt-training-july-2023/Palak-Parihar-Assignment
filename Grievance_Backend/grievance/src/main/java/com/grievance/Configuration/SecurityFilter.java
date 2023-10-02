@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
-import com.grievance.authentication.AuthenticatingUser;
+import com.grievance.authentication.AuthenticateUser;
 import com.grievance.constants.ControllerURLS;
 import com.grievance.constants.ErrorConstants;
 
@@ -46,15 +46,15 @@ public class SecurityFilter implements Filter {
    * @param authenticatingUserField
    */
   public SecurityFilter(
-      final AuthenticatingUser authenticatingUserField) {
-    this.authenticatingUser = authenticatingUserField;
+      final AuthenticateUser authenticatingUserField) {
+    this.authenticateUser = authenticatingUserField;
   }
 
   /**
    *
    */
   @Autowired
-  private AuthenticatingUser authenticatingUser;
+  private AuthenticateUser authenticateUser;
 
   /**
    *
@@ -141,7 +141,7 @@ public class SecurityFilter implements Filter {
               HttpServletResponse.SC_UNAUTHORIZED, ErrorConstants.INVALID_USER);
         }
       } else {
-        if (authenticatingUser.checkIfUserisFirstTimeLogin(email, password)) {
+        if (authenticateUser.checkIfUserisFirstTimeLogin(email, password)) {
           String changePasswordURL = ControllerURLS.EMPLOYEE_BASE_URL
               + ControllerURLS.EMPLOYEE_CHANGE_PASSWORD;
           if (requestUrl.equals(changePasswordURL)) {
@@ -151,9 +151,9 @@ public class SecurityFilter implements Filter {
                 HttpServletResponse.SC_UNAUTHORIZED,
                 ErrorConstants.UNAUTHORISED_USER_FIRST_LOGIN);
           }
-        }
+        } else
         if (adminUrls.contains(requestUrl)) {
-          if (authenticatingUser.checkIfUserIsAdmin(email,
+          if (authenticateUser.checkIfUserIsAdmin(email,
               password)) {
             chain.doFilter(request, response);
           } else {
@@ -162,7 +162,7 @@ public class SecurityFilter implements Filter {
                 ErrorConstants.INVALID_USER);
           }
         } else {
-          if (authenticatingUser.checkIfUserExists(email, password)) {
+          if (authenticateUser.checkIfUserExists(email, password)) {
             chain.doFilter(request, response);
           } else {
             ((HttpServletResponse) response).sendError(

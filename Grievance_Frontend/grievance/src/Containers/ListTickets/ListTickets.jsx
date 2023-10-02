@@ -48,14 +48,10 @@ export default function ListTickets(props) {
 
 
     useEffect(() => {
-        console.log(config)
         if (localStorage.getItem('userDetails') === null) {
             navigate('/logout')
             return
-        } else {
-            console.log(localStorage)
         }
-
         FETCH_ALL_TICKETS(config)
             .then(res => {
                 if (res.data.length < 10) {
@@ -71,13 +67,11 @@ export default function ListTickets(props) {
     }, [config, navigate, ticketUpdate, ticket, showTicket])
 
     const viewSelectedTicket = (ticketId) => {
-        console.log(ticketId)
         let values = JSON.parse(localStorage.getItem('userDetails'))
 
         const response = GET_TICKET_BY_ID(ticketId)
             .then(res => {
                 const ticket = res.data
-                console.log(headers().email)
                 if (values.department === ticket.department || res.data.employee === headers().email) {
                     setCanUpdateTicket(true)
                 } else {

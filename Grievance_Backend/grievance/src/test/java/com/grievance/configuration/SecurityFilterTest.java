@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.grievance.Configuration.SecurityFilter;
-import com.grievance.authentication.AuthenticatingUser;
+import com.grievance.authentication.AuthenticateUser;
 import com.grievance.constants.ErrorConstants;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -21,15 +21,15 @@ public class SecurityFilterTest {
   private HttpServletResponse response;
   private FilterChain filterChain;
 
-  private AuthenticatingUser authenticatingUser;
+  private AuthenticateUser authenticateUser;
 
   @BeforeEach
   public void setup() {
     request = mock(HttpServletRequest.class);
     response = mock(HttpServletResponse.class);
     filterChain = mock(FilterChain.class);
-    authenticatingUser = mock(AuthenticatingUser.class);
-    securityFilter = new SecurityFilter(authenticatingUser);
+    authenticateUser = mock(AuthenticateUser.class);
+    securityFilter = new SecurityFilter(authenticateUser);
   }
 
   @Test
@@ -63,7 +63,7 @@ public class SecurityFilterTest {
         when(request.getHeader("email")).thenReturn("admin@nucleusteq.com");
         when(request.getHeader("password")).thenReturn("Password");
         when(request.getRequestURI()).thenReturn("/employee/save");
-        when(authenticatingUser.checkIfUserIsAdmin(Mockito.eq("admin@nucleusteq.com"),Mockito.eq("Password"))).thenReturn(true);
+        when(authenticateUser.checkIfUserIsAdmin(Mockito.eq("admin@nucleusteq.com"),Mockito.eq("Password"))).thenReturn(true);
         securityFilter.doFilter(request, response, filterChain);
         verify(filterChain).doFilter(request, response);
     }
@@ -74,7 +74,7 @@ public class SecurityFilterTest {
         when(request.getHeader("email")).thenReturn("member@nucleusteq.com");
         when(request.getHeader("password")).thenReturn("Password");
         when(request.getRequestURI()).thenReturn("/ticket/add");
-        when(authenticatingUser.checkIfUserExists(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
+        when(authenticateUser.checkIfUserExists(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
         securityFilter.doFilter(request, response, filterChain);
         verify(filterChain).doFilter(request, response);
     }
@@ -85,7 +85,7 @@ public class SecurityFilterTest {
         when(request.getHeader("email")).thenReturn("member@nucleusteq.com");
         when(request.getHeader("password")).thenReturn("Password");
         
-        when(authenticatingUser.checkIfUserIsAdmin(Mockito.anyString(), Mockito.anyString())).thenReturn(false);
+        when(authenticateUser.checkIfUserIsAdmin(Mockito.anyString(), Mockito.anyString())).thenReturn(false);
         
         when(request.getRequestURI()).thenReturn("/employee/save");
         securityFilter.doFilter(request, response, filterChain);
@@ -99,7 +99,7 @@ public class SecurityFilterTest {
       when(request.getHeader("password")).thenReturn("Password");
       when(request.getRequestURI()).thenReturn("/invalidurl");
 
-      when(authenticatingUser.checkIfUserIsAdmin(Mockito.anyString(), Mockito.anyString())).thenReturn(false);
+      when(authenticateUser.checkIfUserIsAdmin(Mockito.anyString(), Mockito.anyString())).thenReturn(false);
 
       securityFilter.doFilter(request, response, filterChain);
       verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, ErrorConstants.INVALID_USER);
@@ -112,7 +112,7 @@ public class SecurityFilterTest {
       when(request.getHeader("password")).thenReturn("Password");
       when(request.getRequestURI()).thenReturn("/tickets/list");
 
-      when(authenticatingUser.checkIfUserisFirstTimeLogin(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
+      when(authenticateUser.checkIfUserisFirstTimeLogin(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
 
       securityFilter.doFilter(request, response, filterChain);
       verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, ErrorConstants.UNAUTHORISED_USER_FIRST_LOGIN);
@@ -125,7 +125,7 @@ public class SecurityFilterTest {
       when(request.getHeader("password")).thenReturn("Password");
       when(request.getRequestURI()).thenReturn("/employee/changePassword");
 
-      when(authenticatingUser.checkIfUserisFirstTimeLogin(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
+      when(authenticateUser.checkIfUserisFirstTimeLogin(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
 
       securityFilter.doFilter(request, response, filterChain);
       verify(filterChain).doFilter(request, response);

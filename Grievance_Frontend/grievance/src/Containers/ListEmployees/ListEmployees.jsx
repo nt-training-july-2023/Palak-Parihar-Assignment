@@ -26,7 +26,6 @@ export default function ListEmployees(props) {
             return
         } else {
             let values = JSON.parse(localStorage.getItem('userDetails'))
-            console.log(values.firstTimeUser)
             if (values.firstTimeUser) {
                 navigate(CHANGE_PASSWORD_PATH)
                 return
@@ -40,7 +39,6 @@ export default function ListEmployees(props) {
                 } else {
                     setDisableNext(false)
                 }
-                console.log(res.data)
                 setEmployees(res.data)
             })
             .catch(err => {
@@ -76,7 +74,6 @@ export default function ListEmployees(props) {
             .then(res => {
                 setModal(<Modal message={res.data.message} onClick={closeModal} />)
             }).catch(err => {
-                console.log(err.data.message)
                 setModal(<Modal message={err.data.message} onClick={closeModal} />)
             })
     }

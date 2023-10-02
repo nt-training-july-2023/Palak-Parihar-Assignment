@@ -142,7 +142,7 @@ public class EmployeeController {
       @RequestHeader final String email,
       @RequestParam final String deleteEmployee) {
     LOGGER.info("Deleting employee for email: {}", deleteEmployee);
-    employeeService.deleteEmployeeById(deleteEmployee, email);
+    employeeService.deleteEmployeeById(email, deleteEmployee);
     String message = ResponseConstants.EMPLOYEE_DELETED;
     Response<Boolean> response =
         new Response<Boolean>(message, HttpStatus.OK.value(), true);

@@ -2,8 +2,6 @@ import classes from './Table.module.css';
 
 export default function Table(props) {
 
-    console.log(props.values)
-
     const noDataFound = (
         <>
             <img className={classes.noData} src='/NotFound.png' alt='Not Found' />

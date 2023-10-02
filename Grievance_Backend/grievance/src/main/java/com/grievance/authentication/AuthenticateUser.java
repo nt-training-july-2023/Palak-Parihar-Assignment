@@ -3,7 +3,7 @@ package com.grievance.authentication;
 /**
  * Class to authenticate a user.
  */
-public interface AuthenticatingUser {
+public interface AuthenticateUser {
   /**
    * method to check if user is authorised or not.
    * @param email

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 /**
  * The DepartmentServiceImpl class is an implementation of the DepartmentService
@@ -80,6 +81,13 @@ public class DepartmentServiceImpl implements DepartmentService {
     if (departmentInDto.getDepartmentName().trim().length() == 0) {
       throw new CustomException(
           "Department " + ValidationConstants.EMPTY_FIELD);
+    }
+    Boolean isTextOnly = Pattern.matches("^[A-Za-z]+$",
+        departmentInDto.getDepartmentName());
+    if (!isTextOnly) {
+      LOGGER.info("Department {} is not only text.",
+          departmentInDto.getDepartmentName());
+      throw new CustomException("Please provide text only.");
     }
     Department department2 = convertToEntity(departmentInDto);
     Department savedDepartment = departmentRepository

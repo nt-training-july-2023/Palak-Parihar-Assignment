@@ -8,7 +8,6 @@ function InputElement(props) {
         inputClasses.push(classes.Invalid);
     }
 
-    console.log(props)
     switch (props.elementType) {
         case ('input'):
             inputElement = <>
@@ -61,7 +60,6 @@ function InputElement(props) {
     return (
         <>
             <div className={classes.outerDiv}>
-                {console.log(props.label)}
                 <div className={props.label !== undefined ? classes.Input : ''}>
                     <p className={props.label !== undefined ? classes.Label : ''}>
                         {props.label}

@@ -95,12 +95,10 @@ export default function ChangePassword(props) {
 
         let count = 0;
         for (let key in controls) {
-            console.log(controls[key].valid)
             if (!controls[key].valid) {
                 count += 1;
             }
         }
-        console.log(count)
         if (count > 0) {
             setEnableButton(false)
         } else {
@@ -136,7 +134,6 @@ export default function ChangePassword(props) {
     const inputChangeHandler = (e, controlName) => {
 
         const message = checkValidity(e.target.value, controls[controlName].validation)
-        console.log(message)
         const updatedControls = {
             ...controls,
             [controlName]: {
@@ -163,7 +160,6 @@ export default function ChangePassword(props) {
             oldPassword: btoa(controls.oldPassword.value),
             newPassword: btoa(controls.newPassword.value)
         }
-        console.log(values)
         const response = CHANGE_USER_PASSWORD(values)
             .then(res => {
                 setModal(() => <Modal message={res.data.message} onClick={closeModal} />)
@@ -181,11 +177,9 @@ export default function ChangePassword(props) {
                 return res.data
             })
             .catch(err => {
-                console.log(err)
                 setModal(() => <Modal message={err.data.message} onClick={closeModal} />)
                 return err.data
             })
-        console.log(response)
     }
 
     const closeModal = () => {

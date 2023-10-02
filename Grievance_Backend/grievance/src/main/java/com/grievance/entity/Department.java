@@ -19,7 +19,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -34,13 +33,12 @@ public class Department {
    * The unique identifier for the department.
    */
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "dept_seq")
+  @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "dept_seq")
   private Integer departmentId;
 
   /**
    * The name of the department.
    */
-  @NotEmpty
   @Column(nullable = false, unique = true)
   private String departmentName;
 

@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.grievance.authentication.AuthenticatingUser;
+import com.grievance.authentication.AuthenticateUser;
 import com.grievance.constants.ControllerURLS;
 import com.grievance.dto.ChangePasswordInDto;
 import com.grievance.dto.DepartmentInDto;
@@ -45,7 +45,7 @@ class EmployeeControllerTest {
   EmployeeService employeeService;
 
   @Mock
-  private AuthenticatingUser authenticatingUser;
+  private AuthenticateUser authenticateUser;
 
   @InjectMocks
   EmployeeController employeeController;

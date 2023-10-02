@@ -27,7 +27,6 @@ export default function ListDepartments(props) {
             return
         } else {
             let values = JSON.parse(localStorage.getItem('userDetails'))
-            console.log(values.firstTimeUser)
             if (values.firstTimeUser) {
                 navigate(CHANGE_PASSWORD_PATH)
                 return
@@ -46,7 +45,6 @@ export default function ListDepartments(props) {
                     setDisableNext(false)
                 }
                 setDepartments(res.data)
-                console.log(res.data)
             })
             .catch(err => {
                 setModal(() => <Modal message={err.data.response.data} onClick={closeModal} />)
@@ -87,10 +85,8 @@ export default function ListDepartments(props) {
     }
 
     const deleteDepartment = (deptId) => {
-        console.log(deptId)
         DELETE_DEPARTMENT(deptId)
             .then(response => {
-                console.log(response.data.message)
                 setModal(<Modal message={response.data.message} onClick={closeModal} />)
             }).catch(err => {
                 setModal(<Modal message={err.data.response.data} onClick={closeModal} />)

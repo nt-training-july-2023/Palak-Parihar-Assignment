@@ -1,5 +1,3 @@
-
-
 export const LOGIN_PATH = "/"
 export const HOME_PATH = "/gms"
 export const NEW_TICKET_PATH = "/gms/tickets/new"

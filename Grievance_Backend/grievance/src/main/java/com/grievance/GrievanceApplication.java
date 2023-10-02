@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 import com.grievance.Configuration.SecurityFilter;
-import com.grievance.authentication.AuthenticatingUser;
+import com.grievance.authentication.AuthenticateUser;
 
 /**
  * Entry point of Grievance Management Application.
@@ -21,7 +21,7 @@ public class GrievanceApplication {
    *employeeRepository.
    */
   @Autowired
-  private AuthenticatingUser authenticatingUser;
+  private AuthenticateUser authenticateUser;
 
 
   /**
@@ -52,7 +52,7 @@ public class GrievanceApplication {
       FilterRegistrationBean<SecurityFilter> registrationBean =
              new FilterRegistrationBean<>();
 
-      registrationBean.setFilter(new SecurityFilter(authenticatingUser));
+      registrationBean.setFilter(new SecurityFilter(authenticateUser));
 
       registrationBean.addUrlPatterns("/*");
 

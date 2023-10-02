@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
  *
  */
 @Configuration
-public class AuthenticatingUserImpl implements AuthenticatingUser {
+public class AuthenticatingUserImpl implements AuthenticateUser {
   /**
    * employeeRepository instance for
    * access to database.

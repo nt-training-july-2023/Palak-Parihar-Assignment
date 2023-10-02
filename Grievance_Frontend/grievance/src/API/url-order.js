@@ -2,7 +2,6 @@ import { Axios } from "./Axios"
 
 
 export const getMapping = (url, options) =>{
-    console.log(options)
     return Axios.get(url, options);
 }
 

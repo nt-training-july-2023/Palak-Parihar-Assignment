@@ -22,6 +22,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import com.grievance.dto.ChangePasswordInDto;
+import com.grievance.dto.DepartmentInDto;
 import com.grievance.dto.EmployeeInDto;
 import com.grievance.dto.EmployeeLoginDto;
 import com.grievance.dto.EmployeeOutDto;
@@ -73,6 +74,7 @@ class EmployeeServiceTest {
     employeeInDto = new EmployeeInDto();
     employeeInDto.setEmail("palak@nucleusteq.com");
     employeeInDto.setPassword("U3VwZXJAMTIz");
+    employeeInDto.setDepartmentDto(new DepartmentInDto(101, "HR"));
 
     employeeLoginDto = new EmployeeLoginDto();
     employeeLoginDto.setEmail("palak@nucleusteq.com");
@@ -107,7 +109,7 @@ class EmployeeServiceTest {
   
   @Test
   void when_save_employee_fails_due_to_password_violationsreturn_exception() {
-  employeeInDto.setPassword(null);
+  employeeInDto.setPassword("QXl1c2hpIzEyNA==");
   when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
   assertThrows(RecordAlreadyExistException.class, ()->{
        employeeService.saveEmployee(employeeInDto);

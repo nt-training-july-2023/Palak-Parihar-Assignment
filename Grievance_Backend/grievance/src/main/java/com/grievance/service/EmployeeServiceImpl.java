@@ -77,6 +77,9 @@ public class EmployeeServiceImpl implements EmployeeService {
       LOGGER.info("Password doesn't match requirements");
       throw new CustomException(ValidationConstants.PASSWORD_VALIDATION);
     }
+    if (Objects.isNull(employeeInDto.getDepartmentDto().getDepartmentId())) {
+      throw new CustomException("Department must not be null");
+    }
     Employee employee = employeeRepository
         .findByEmail(employeeInDto.getEmail());
     if (Objects.isNull(employee)) {
@@ -208,7 +211,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     if (Objects.isNull(employee)) {
       LOGGER.error("Employee with email {} not found for deletion.",
           deleteEmployee);
-      throw new ResourceNotFoundException(deleteEmployee);
+      throw new ResourceNotFoundException(ErrorConstants.RESOURCE_NOT_FOUND
+          + " " + deleteEmployee);
     }
     employeeRepository.delete(employee);
     LOGGER.info("Employee with email {} deleted successfully.", deleteEmployee);
