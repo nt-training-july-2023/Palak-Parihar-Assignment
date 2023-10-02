@@ -17,9 +17,9 @@ import com.grievance.dto.EmployeeOutDto;
 import com.grievance.entity.Department;
 import com.grievance.entity.Employee;
 import com.grievance.entity.UserType;
+import com.grievance.exception.CustomException;
 import com.grievance.exception.RecordAlreadyExistException;
 import com.grievance.exception.ResourceNotFoundException;
-import com.grievance.exception.PasswordMatchException;
 import com.grievance.service.EmployeeService;
 
 import java.util.ArrayList;
@@ -180,7 +180,7 @@ class EmployeeControllerTest {
   @Test
     void when_change_password_by_user_fails() throws JsonProcessingException, Exception {
     
-    doThrow(PasswordMatchException.class).when(employeeService).changePassword(Mockito.any(ChangePasswordInDto.class), Mockito.anyString());
+    doThrow(CustomException.class).when(employeeService).changePassword(Mockito.any(ChangePasswordInDto.class), Mockito.anyString());
     
     	ChangePasswordInDto changePasswordInDto = new ChangePasswordInDto();
     	changePasswordInDto.setOldPassword("Ayushi#123");
@@ -192,7 +192,7 @@ class EmployeeControllerTest {
     			.content(objectMapper.writeValueAsString(changePasswordInDto))
     			.header("email", "ayushi@nucleusteq.com")
     			.header("password", "Ayushi#123")
-    			).andExpect(status().isConflict()).andDo(MockMvcResultHandlers.print());
+    			).andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print());
     }
   
   @Test

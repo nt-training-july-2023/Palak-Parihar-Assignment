@@ -29,7 +29,7 @@ import com.grievance.entity.Department;
 import com.grievance.entity.Employee;
 import com.grievance.exception.RecordAlreadyExistException;
 import com.grievance.exception.ResourceNotFoundException;
-import com.grievance.exception.SelfDeletionException;
+import com.grievance.exception.CustomException;
 import com.grievance.repository.DepartmentRepository;
 import com.grievance.repository.EmployeeRepository;
 
@@ -147,7 +147,7 @@ class DepartmentServiceTest {
     
     when(departmentRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(this.department));
     when(employeeRepository.findByEmail(Mockito.eq("ayushi@nucleusteq.com"))).thenReturn(employee);
-    assertThrows(SelfDeletionException.class, () -> {
+    assertThrows(CustomException.class, () -> {
       departmentService.deleteDepartment(101, "ayushi@nucleusteq.com");
     });
 

@@ -50,7 +50,7 @@ export default function Login() {
         }
     }
 
-    const [enableButton, setEnableButton] = useState(cont.isValid);
+    const [enableButton, setEnableButton] = useState(false);
     const [controls, setControls] = useState(cont.controls);
     const [modal, setModal] = useState();
     const navigate = useNavigate();
@@ -94,6 +94,8 @@ export default function Login() {
 
         if (controls.email.valid && controls.password.valid) {
             setEnableButton(true)
+        }else{
+            setEnableButton(false)
         }
     }, [controls])
 

@@ -3,8 +3,7 @@ package com.grievance.exceptionhandler;
 import com.grievance.constants.ErrorConstants;
 import com.grievance.exception.RecordAlreadyExistException;
 import com.grievance.exception.ResourceNotFoundException;
-import com.grievance.exception.SelfDeletionException;
-import com.grievance.exception.PasswordMatchException;
+import com.grievance.exception.CustomException;
 import com.grievance.exception.UnauthorisedUserException;
 import com.grievance.response.ErrorResponse;
 
@@ -115,35 +114,19 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   *
-   * @param ex
-   * @return responseEntity.
-   */
-  @ExceptionHandler(PasswordMatchException.class)
-  public ResponseEntity<ErrorResponse> handlePasswordMatchException(
-      final PasswordMatchException ex) {
-    ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(),
-        HttpStatus.CONFLICT.value(), null);
-    return new ResponseEntity<>(
-        errorResponse,
-        HttpStatus.CONFLICT);
-  }
-
-  /**
   *
   * @param ex
   * @return responseEntity.
   */
- @ExceptionHandler(SelfDeletionException.class)
- public ResponseEntity<ErrorResponse> handleSelfDeleteException(
-     final SelfDeletionException ex) {
+ @ExceptionHandler(CustomException.class)
+ public ResponseEntity<ErrorResponse> handleCustomException(
+     final CustomException ex) {
    ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(),
-       HttpStatus.FORBIDDEN.value(), null);
+       HttpStatus.BAD_REQUEST.value(), null);
    return new ResponseEntity<>(
        errorResponse,
-       HttpStatus.FORBIDDEN);
+       HttpStatus.BAD_REQUEST);
  }
-
   /**
    *
    * @param ex

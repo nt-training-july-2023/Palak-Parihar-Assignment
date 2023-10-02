@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * Custom exception class for handling if user is
  * trying to delete itself.
  */
-@ResponseStatus(value = HttpStatus.FORBIDDEN)
-public class SelfDeletionException extends RuntimeException {
+@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+public class CustomException extends RuntimeException {
 
   private static final long serialVersionUID = -3332292346834265674L;
 
@@ -17,7 +17,7 @@ public class SelfDeletionException extends RuntimeException {
    * @param message
    *
    */
-  public SelfDeletionException(final String message) {
+  public CustomException(final String message) {
     super(message);
   }
 

@@ -8,8 +8,7 @@ import com.grievance.dto.EmployeeOutDto;
 import com.grievance.entity.Employee;
 import com.grievance.exception.RecordAlreadyExistException;
 import com.grievance.exception.ResourceNotFoundException;
-import com.grievance.exception.SelfDeletionException;
-import com.grievance.exception.PasswordMatchException;
+import com.grievance.exception.CustomException;
 import com.grievance.repository.EmployeeRepository;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -22,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 /**
  * The EmployeeServiceImpl class is an implementation of the EmployeeService
@@ -71,6 +71,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     Employee employee = employeeRepository
         .findByEmail(employeeInDto.getEmail());
     if (Objects.isNull(employee)) {
+      String password = Base64DecodeService
+          .decodeBase64ToString(employeeInDto.getPassword());
+      Boolean valid = Pattern.matches("^(?=.*[0-9])(?=.*[!@#$%^&*])"
+          + "[a-zA-Z0-9!@#$%^&*]{6,20}$", password);
+      if (!valid) {
+        LOGGER.info("Password doesn't match requirements");
+        throw new CustomException("Password must have a "
+            + "Uppercase a Lowercase and A Special Character");
+      }
       employee = convertToEntity(employeeInDto);
       employee = employeeRepository.save(employee);
       EmployeeOutDto employeeOutDto = convertToDto(employee);
@@ -169,7 +178,7 @@ public class EmployeeServiceImpl implements EmployeeService {
       return;
     }
     LOGGER.error("Password change failed for email: {}", email);
-    throw new PasswordMatchException();
+    throw new CustomException("New Password can not be equal to Old Password");
   }
 
   /**
@@ -183,7 +192,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     LOGGER.info("Deleting employee with email: {}", email);
     if (deleteEmployee.equals(email)) {
       LOGGER.info("user can not delete itself {}", email);
-      throw new SelfDeletionException(ErrorConstants.EMPLOYEE_SELF_DELETE);
+      throw new CustomException(ErrorConstants.EMPLOYEE_SELF_DELETE);
     }
     Employee employee = employeeRepository.findByEmail(deleteEmployee);
     if (Objects.isNull(employee)) {

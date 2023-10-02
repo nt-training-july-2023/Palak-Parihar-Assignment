@@ -29,8 +29,7 @@ import com.grievance.entity.Employee;
 import com.grievance.entity.UserType;
 import com.grievance.exception.RecordAlreadyExistException;
 import com.grievance.exception.ResourceNotFoundException;
-import com.grievance.exception.SelfDeletionException;
-import com.grievance.exception.PasswordMatchException;
+import com.grievance.exception.CustomException;
 import com.grievance.repository.EmployeeRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -73,6 +72,7 @@ class EmployeeServiceTest {
 
     employeeInDto = new EmployeeInDto();
     employeeInDto.setEmail("palak@nucleusteq.com");
+    employeeInDto.setPassword("U3VwZXJAMTIz");
 
     employeeLoginDto = new EmployeeLoginDto();
     employeeLoginDto.setEmail("palak@nucleusteq.com");
@@ -99,12 +99,20 @@ class EmployeeServiceTest {
 
   @Test
     void when_save_employee_fails_return_exception() {
-    	
-    	when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);	
-		    assertThrows(RecordAlreadyExistException.class, ()->{
+    employeeInDto.setPassword("UGFsYWs=");	
+		    assertThrows(CustomException.class, ()->{
 			         employeeService.saveEmployee(employeeInDto);
 		     });
     }
+  
+  @Test
+  void when_save_employee_fails_due_to_password_violationsreturn_exception() {
+  employeeInDto.setPassword(null);
+  when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
+  assertThrows(RecordAlreadyExistException.class, ()->{
+       employeeService.saveEmployee(employeeInDto);
+   });
+  }
 
   @Test
   void when_successfully_login_employee_return_employee() {
@@ -178,7 +186,7 @@ class EmployeeServiceTest {
     changePasswordInDto.setOldPassword("QXl1c2hpIzEyNA==");
     changePasswordInDto.setNewPassword("QXl1c2hpIzEyNA==");
 
-    assertThrows(PasswordMatchException.class, () -> {
+    assertThrows(CustomException.class, () -> {
       employeeService.changePassword(changePasswordInDto, "palak@nucleusteq.com");
     });
   }
@@ -203,7 +211,7 @@ class EmployeeServiceTest {
   
   @Test
   void delete_employee_fails_when_admin_tries_to_delete_itself() {
-    assertThrows(SelfDeletionException.class, ()->{
+    assertThrows(CustomException.class, ()->{
       employeeService.deleteEmployeeById("admin@nucleusteq.com", "admin@nucleusteq.com");
     });
   }

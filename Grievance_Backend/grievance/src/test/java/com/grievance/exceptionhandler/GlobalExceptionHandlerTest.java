@@ -83,22 +83,12 @@ public class GlobalExceptionHandlerTest {
 
 
   @Test
-  void handlePasswordMatchException() {
-    PasswordMatchException ex = mock(PasswordMatchException.class);
+  void handleCustomeException() {
+    CustomException ex = mock(CustomException.class);
 
-    ResponseEntity<ErrorResponse> response = globalExceptionHandler.handlePasswordMatchException(ex);
+    ResponseEntity<ErrorResponse> response = globalExceptionHandler.handleCustomException(ex);
 
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
-    assertThat(response.getBody()).isNotNull();
-  }
-  
-  @Test
-  void handleSelfDeleteException() {
-    SelfDeletionException ex = mock(SelfDeletionException.class);
-
-    ResponseEntity<ErrorResponse> response = globalExceptionHandler.handleSelfDeleteException(ex);
-
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     assertThat(response.getBody()).isNotNull();
   }
 

@@ -209,7 +209,7 @@ export default function NewEmployee(props) {
         }
         console.log(count)
         if (count > 0) {
-            setModal(() => <Modal message="Mandatory fields can't be empty" onClick={closeModal} />)
+            setModal(() => <Modal message="Mandatory fields are either invalid or empty" onClick={closeModal} />)
             setTimeout(() => {
                 setModal(<></>)
             }, 2000)

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * when unauthorised user tries to access.
  */
 @ResponseStatus(
-  value = HttpStatus.CONFLICT,
+  value = HttpStatus.UNAUTHORIZED,
   reason = "Unauthorised User"
 )
 public class UnauthorisedUserException extends RuntimeException {

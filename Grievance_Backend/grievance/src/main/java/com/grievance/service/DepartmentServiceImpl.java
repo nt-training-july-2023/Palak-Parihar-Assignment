@@ -6,7 +6,7 @@ import com.grievance.dto.DepartmentOutDto;
 import com.grievance.entity.Department;
 import com.grievance.exception.RecordAlreadyExistException;
 import com.grievance.exception.ResourceNotFoundException;
-import com.grievance.exception.SelfDeletionException;
+import com.grievance.exception.CustomException;
 import com.grievance.repository.DepartmentRepository;
 import com.grievance.repository.EmployeeRepository;
 
@@ -144,7 +144,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         employeeRepository.findByEmail(email).getDepartment();
     if (userDepartment.equals(dept.get())) {
       LOGGER.info("User can not delete their own department");
-      throw new SelfDeletionException(ErrorConstants.DEPARTMENT_SELF_DELETE);
+      throw new CustomException(ErrorConstants.DEPARTMENT_SELF_DELETE);
     }
     departmentRepository.deleteById(departmentId);
     LOGGER.info("Department with ID {} deleted successfully.",
