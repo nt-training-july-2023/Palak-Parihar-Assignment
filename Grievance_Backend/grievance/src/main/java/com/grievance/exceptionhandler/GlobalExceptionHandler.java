@@ -7,7 +7,8 @@ import com.grievance.exception.CustomException;
 import com.grievance.exception.UnauthorisedUserException;
 import com.grievance.response.ErrorResponse;
 
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -38,10 +39,10 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleConstraintViolationException(
       final ConstraintViolationException ex) {
     Set<ConstraintViolation<?>> violations = ex.getConstraintViolations();
-    Set<String> validationMessages = new HashSet<>();
-
+    Map<String, String> validationMessages = new HashMap<String, String>();
     for (ConstraintViolation<?> violation : violations) {
-      validationMessages.add(violation.getMessage());
+      validationMessages.put(violation.getInvalidValue().toString(),
+          violation.getMessage());
     }
 
     ErrorResponse errorResponse = new ErrorResponse(
@@ -76,7 +77,8 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(HttpMessageNotReadableException.class)
   public ResponseEntity<ErrorResponse> handleHttpMessageNotRedableException(
       final HttpMessageNotReadableException ex) {
-    ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(),
+    ErrorResponse errorResponse = new ErrorResponse(
+        ErrorConstants.INVALID_FORMAT,
         HttpStatus.BAD_REQUEST.value(), null);
     return new ResponseEntity<>(
         errorResponse,
@@ -127,6 +129,21 @@ public class GlobalExceptionHandler {
        errorResponse,
        HttpStatus.BAD_REQUEST);
  }
+
+ /**
+ *
+ * @param ex
+ * @return responseEntity.
+ */
+@ExceptionHandler(IllegalArgumentException.class)
+public ResponseEntity<ErrorResponse> handleIIlegalArgumentException(
+    final IllegalArgumentException ex) {
+  ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(),
+      HttpStatus.BAD_REQUEST.value(), null);
+  return new ResponseEntity<>(
+      errorResponse,
+      HttpStatus.BAD_REQUEST);
+}
   /**
    *
    * @param ex
@@ -135,7 +152,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ErrorResponse> handlerMethodArgumentNotValid(
       final MethodArgumentNotValidException ex) {
-    Set<String> validationErrors = new HashSet<String>();
+    Map<String, String> validationErrors = new HashMap<String, String>();
 
     ex
         .getAllErrors()
@@ -143,7 +160,7 @@ public class GlobalExceptionHandler {
             error -> {
               String fieldName = ((FieldError) error).getField();
               String errorMessage = error.getDefaultMessage();
-              validationErrors.add(fieldName + " : " + errorMessage);
+              validationErrors.put(fieldName, errorMessage);
             });
 
     ErrorResponse errorResponse = new ErrorResponse(

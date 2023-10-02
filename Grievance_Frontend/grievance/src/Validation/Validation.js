@@ -18,14 +18,14 @@ export const inputValidity = (value, rules) => {
     if (rules.minLength) {
         isValid = value.length >= rules.minLength && isValid;
         if (!isValid) {
-            return 'Password must be greater of equals to length 6'
+            return 'Input must be greater or equals to length '+ rules.minLength;
         }
     }
 
     if (rules.maxLength) {
-        isValid = value.length >= rules.minLength && isValid;
+        isValid = value.length < rules.maxLength && isValid;
         if(!isValid){
-            return 'Password must not exceed than length of 15'
+            return 'Input must not exceed than length of '+rules.maxLength
         }
     }
 

@@ -12,6 +12,8 @@ import java.util.Objects;
 
 import javax.validation.constraints.NotEmpty;
 
+import com.grievance.constants.ValidationConstants;
+
 
 /**
  * The DepartmentDto class represents a data transfer
@@ -45,7 +47,7 @@ public class DepartmentInDto {
   /**
    * departmentName of Department Dto.
    */
-  @NotEmpty(message = "department name must not be empty")
+  @NotEmpty(message = ValidationConstants.EMPTY_FIELD)
   private String departmentName;
 
   /**

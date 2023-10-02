@@ -35,7 +35,10 @@ export default function NewEmployee(props) {
                 value: '',
                 validation: {
                     required: true,
-                    isUserName: true
+                    isUserName: true,
+                    textOnly : true,
+                    minLength : 3,
+                    maxLength : 100
                 },
                 error: '',
                 valid: false,
@@ -51,9 +54,9 @@ export default function NewEmployee(props) {
                 value: '',
                 validation: {
                     required: true,
-                    isEmail: true
+                    isEmail: true,
+                    maxLength : 100
                 },
-                // options: null,
                 error: '',
                 valid: false,
                 touched: false,
@@ -69,6 +72,7 @@ export default function NewEmployee(props) {
                 validation: {
                     required: true,
                     minLength: 6,
+                    maxLength : 20,
                     isPassword: true
                 },
                 // options: null,

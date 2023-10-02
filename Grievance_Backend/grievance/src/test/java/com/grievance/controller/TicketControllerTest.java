@@ -59,7 +59,7 @@ public class TicketControllerTest {
     ticketInDto = new TicketInDto();
     ticketInDto.setDepartment(new DepartmentInDto());
     ticketInDto.setDescription("Malfunction");
-    ticketInDto.setEmployeeInDto(new EmployeeInDto());
+    ticketInDto.setEmployee(new EmployeeInDto());
     ticketInDto.setStatus(Status.BEING_ADDRESSED);
     ticketInDto.setTicketType(TicketType.GRIEVANCE);
     ticketInDto.setTitle("Title");

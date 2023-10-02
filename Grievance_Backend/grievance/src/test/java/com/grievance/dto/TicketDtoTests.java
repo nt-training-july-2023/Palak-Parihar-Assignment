@@ -28,21 +28,21 @@ public class TicketDtoTests {
     TicketInDto ticketInDto = new TicketInDto();
     ticketInDto.setDepartment(new DepartmentInDto(101, "HR"));
     ticketInDto.setDescription("Description");
-    ticketInDto.setEmployeeInDto(employeeInDto);
+    ticketInDto.setEmployee(employeeInDto);
     ticketInDto.setTicketType(TicketType.GRIEVANCE);
     ticketInDto.setTitle("Title");
 
     TicketInDto ticketInDto2 = new TicketInDto();
     ticketInDto2.setDepartment(new DepartmentInDto(101, "HR"));
     ticketInDto2.setDescription("Description");
-    ticketInDto2.setEmployeeInDto(employeeInDto);
+    ticketInDto2.setEmployee(employeeInDto);
     ticketInDto2.setTicketType(TicketType.GRIEVANCE);
     ticketInDto2.setTitle("Title");
 
     TicketInDto ticketInDto3 = new TicketInDto();
     ticketInDto3.setDepartment(new DepartmentInDto(101, "HR"));
     ticketInDto3.setDescription("Description");
-    ticketInDto3.setEmployeeInDto(employeeInDto);
+    ticketInDto3.setEmployee(employeeInDto);
     ticketInDto3.setTicketType(TicketType.FEEDBACK);
     ticketInDto3.setTitle("Title");
 
@@ -57,21 +57,21 @@ public class TicketDtoTests {
     TicketInDto ticketInDto = new TicketInDto();
     ticketInDto.setDepartment(new DepartmentInDto(101, "HR"));
     ticketInDto.setDescription("Description");
-    ticketInDto.setEmployeeInDto(employeeInDto);
+    ticketInDto.setEmployee(employeeInDto);
     ticketInDto.setTicketType(TicketType.GRIEVANCE);
     ticketInDto.setTitle("Title");
 
     TicketInDto ticketInDto2 = new TicketInDto();
     ticketInDto2.setDepartment(new DepartmentInDto(101, "HR"));
     ticketInDto2.setDescription("Description");
-    ticketInDto2.setEmployeeInDto(employeeInDto);
+    ticketInDto2.setEmployee(employeeInDto);
     ticketInDto2.setTicketType(TicketType.GRIEVANCE);
     ticketInDto2.setTitle("Title");
 
     TicketInDto ticketInDto3 = new TicketInDto();
     ticketInDto3.setDepartment(new DepartmentInDto(101, "HR"));
     ticketInDto3.setDescription("Description");
-    ticketInDto3.setEmployeeInDto(employeeInDto);
+    ticketInDto3.setEmployee(employeeInDto);
     ticketInDto3.setTicketType(TicketType.FEEDBACK);
     ticketInDto3.setTitle("Title");
 

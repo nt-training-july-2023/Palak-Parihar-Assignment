@@ -12,9 +12,13 @@ export const LOGIN_USER = (userData) => {
         postMapping(LOGIN_USER_URL,
             userData,
         ).then(res => {
-            resolve({ data: res.data.data })
+            resolve({ data: res.data?.data })
         }).catch(err => {
-            reject({ data: err })
+             if(err.response === undefined){
+                reject({data : err})
+             }else{
+                reject({ data: err?.response?.data })
+             }
         })
     });
 }

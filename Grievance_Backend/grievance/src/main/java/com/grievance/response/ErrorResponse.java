@@ -1,6 +1,6 @@
 package com.grievance.response;
 
-import java.util.Set;
+import java.util.Map;
 
 public class ErrorResponse {
   /**
@@ -15,7 +15,7 @@ public class ErrorResponse {
   /**
    * validations.
    */
-  private Set<String> validationErrors;
+  private Map<String, String> validationErrors;
 
   /**
    * @return the message
@@ -48,14 +48,15 @@ public class ErrorResponse {
   /**
    * @return the validationErrors
    */
-  public Set<String> getValidationErrors() {
+  public Map<String, String> getValidationErrors() {
     return validationErrors;
   }
 
   /**
    * @param validationErrorsField the validationErrors to set
    */
-  public void setValidationErrors(final Set<String> validationErrorsField) {
+  public void setValidationErrors(final
+      Map<String, String> validationErrorsField) {
     this.validationErrors = validationErrorsField;
   }
 
@@ -67,7 +68,7 @@ public class ErrorResponse {
    */
   public ErrorResponse(final String messageField,
       final int statusCodeField,
-      final Set<String> validationErrorsField) {
+      final Map<String, String> validationErrorsField) {
     super();
     this.message = messageField;
     this.statusCode = statusCodeField;

@@ -15,7 +15,7 @@ public final class ResponseConstants {
   /**
    * Response message for successful employee login.
    */
-  public static final String EMPLOYEE_LOGIN = "Employee login was successful.";
+  public static final String EMPLOYEE_LOGIN = "Employee login was successfull.";
 
   /**
    * Response message for successful retrieval of employees.

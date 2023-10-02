@@ -82,6 +82,7 @@ class EmployeeControllerTest {
 
     employeeLoginDto = new EmployeeLoginDto();
     employeeLoginDto.setEmail("palak@nucleusteq.com");
+    employeeLoginDto.setPassword("U3VwZXJAMTIz");
 
     employeeInDto = new EmployeeInDto();
     employeeInDto.setDepartmentDto(new DepartmentInDto(101,"HR"));

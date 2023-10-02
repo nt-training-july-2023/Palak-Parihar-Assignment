@@ -9,6 +9,10 @@ package com.grievance.dto;
 
 import java.util.Objects;
 
+import javax.validation.constraints.NotEmpty;
+
+import com.grievance.constants.ValidationConstants;
+
 /**
  * Data transfer object for employee login information.
  */
@@ -16,10 +20,12 @@ public class EmployeeLoginDto {
   /**
    * email of EmployeeLogin Dto.
    */
+  @NotEmpty(message = ValidationConstants.EMPTY_FIELD)
   private String email;
   /**
    * String password of EmaployeeLogin DTO.
    */
+  @NotEmpty(message = ValidationConstants.EMPTY_FIELD)
   private String password;
 
   /**

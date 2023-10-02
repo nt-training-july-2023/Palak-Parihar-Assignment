@@ -16,7 +16,7 @@ public class TicketUpdateDto {
   /**
    * description of comment.
    */
-  @NotEmpty
+  @NotEmpty(message = "Description must not be null.")
   private String description;
 
   /**

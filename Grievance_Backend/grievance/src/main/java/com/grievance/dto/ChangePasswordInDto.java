@@ -9,12 +9,12 @@ public class ChangePasswordInDto {
   /**
    * oldPassword present in database.
    */
-  @NotEmpty
+  @NotEmpty(message = "Old Password must not be null")
   private String oldPassword;
   /**
    * newPassword to replace oldPassword.
    */
-  @NotEmpty
+  @NotEmpty(message = "New Password must not be null")
   private String newPassword;
 
   /**

@@ -106,7 +106,7 @@ public class TicketServiceTest {
     ticketInDto = new TicketInDto();
     ticketInDto.setDepartment(new DepartmentInDto());
     ticketInDto.setDescription("Reimbursement");
-    ticketInDto.setEmployeeInDto(new EmployeeInDto());
+    ticketInDto.setEmployee(new EmployeeInDto());
     ticketInDto.setStatus(Status.BEING_ADDRESSED);
     ticketInDto.setTicketType(TicketType.GRIEVANCE);
     ticketInDto.setTitle("Reimbursement");

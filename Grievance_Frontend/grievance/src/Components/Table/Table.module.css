@@ -2,13 +2,13 @@
     width: 80%;
     box-shadow: 10px 10px 5px #dddadac2;
     min-width: 600px;
-
 }
 
 .table td {
     padding: 9px 8px 4px 4px;
     text-align: center;
     min-width: 100px;
+    overflow-x: auto;
 }
 
 .table th {
@@ -82,10 +82,10 @@
 }
 
 #actions_arrow {
-    position: absolute;
-    left: 48%;
     font-size: 30px;
-    bottom: 6px;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
 }
 
 .noData{
@@ -113,15 +113,36 @@
     .table {
         width: 100%;
     }
+
+    .table td{
+        word-break: break-all;
+    }
 }
 
 @media (max-width: 970px) {
-    #action_arrows {
+    .table_container{
         position: relative;
+        overflow: auto;
+        width: 100%;
+    }
+
+    #action_arrows {
+        position: static;
     }
 
     .table {
         width: 95%;
         overflow-x: scroll;
+    }
+
+    .table td{
+        word-break: break-all;
+    }
+
+    .table td {
+        padding: 7px 5px 5px 2px;
+        text-align: center;
+        min-width: 50px;
+        overflow-x: auto;
     }
 }

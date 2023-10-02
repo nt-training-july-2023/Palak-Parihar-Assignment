@@ -30,6 +30,7 @@
     justify-content: baseline;
     align-items: flex-end;
     overflow-y: scroll;
+    overflow-x: hidden;
     padding-left: 50px;
     padding-right: 10px;
     border-left: 1px solid rgb(226, 223, 223);
@@ -82,7 +83,6 @@ label{
 
 .ticketData{
     display: flex;
-    /* justify-content: space-between; */
     padding: 10px;
     width: 100%;
 }
@@ -155,5 +155,10 @@ label{
     }
     .commentBox{
      margin-bottom: 10%;
+    }
+
+    .ticketData{
+        display: block;
+        overflow-y: scroll;
     }
  }

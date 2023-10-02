@@ -154,8 +154,7 @@ export default function Login() {
                 return res.data;
             }).catch(err => {
                 console.log(err)
-                setModal(() => <Modal message={err.data.response.data.message} onClick={closeModal} />)
-                return err.data.response.data;
+                setModal(() => <Modal message={err?.data?.message} onClick={closeModal} />)
             })
 
 

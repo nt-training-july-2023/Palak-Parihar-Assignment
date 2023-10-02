@@ -1,6 +1,7 @@
 package com.grievance.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.grievance.constants.ValidationConstants;
 import com.grievance.entity.UserType;
 
 
@@ -29,33 +30,34 @@ public class EmployeeInDto {
   @Id
   @Column(unique = true)
   @Email(regexp = "^[a-z0-9+_.-]+@+nucleusteq.com",
-  message = "email must of example@nucleusteq.com")
-  @NotEmpty(message = "Email must not be empty")
+  message = ValidationConstants.EMAIL_VALIDATION)
+  @NotEmpty(message = ValidationConstants.EMPTY_FIELD)
   private String email;
 
   /**
    * The full name of the employee.
    */
-  @NotEmpty(message = "Full Name must be empty.")
+  @NotEmpty(message = ValidationConstants.EMPTY_FIELD)
   private String fullName;
 
   /**
    * The password of the employee.
    */
-  @NotEmpty(message = "Password must be empty.")
+  @NotEmpty(message = ValidationConstants.EMPTY_FIELD)
   private String password;
 
   /**
    * The user type of the employee.
    */
+  @NotNull(message = ValidationConstants.EMPTY_FIELD)
   private UserType userType;
 
   /**
    * The department of the employee.
    */
-  @NotNull(message = "department must not be null")
+  @NotNull(message = ValidationConstants.EMPTY_FIELD)
   @JsonProperty("department")
-  private DepartmentInDto departmentInDto;
+  private DepartmentInDto department;
 
   /**
    * Get the email of the employee.
@@ -135,7 +137,7 @@ public class EmployeeInDto {
    * @return the department
    */
   public DepartmentInDto getDepartmentDto() {
-    return departmentInDto;
+    return department;
   }
 
   /**
@@ -144,7 +146,7 @@ public class EmployeeInDto {
    * @param departmentField the department to set
    */
   public void setDepartmentDto(final DepartmentInDto departmentField) {
-    this.departmentInDto = departmentField;
+    this.department = departmentField;
   }
   /**
    * Default constructor for EmployeeInDto.
@@ -158,7 +160,7 @@ public class EmployeeInDto {
    */
   @Override
   public int hashCode() {
-    return Objects.hash(departmentInDto, email,
+    return Objects.hash(department, email,
         fullName, password, userType);
   }
 
@@ -177,7 +179,7 @@ public class EmployeeInDto {
       return false;
     }
     EmployeeInDto other = (EmployeeInDto) obj;
-    return Objects.equals(departmentInDto, other.departmentInDto)
+    return Objects.equals(department, other.department)
         && Objects.equals(email, other.email)
         && Objects.equals(fullName, other.fullName)
         && Objects.equals(password, other.password)
@@ -204,7 +206,7 @@ public class EmployeeInDto {
     this.fullName = fullNameField;
     this.password = passwordField;
     this.userType = userTypeField;
-    this.departmentInDto = departmentInDtoField;
+    this.department = departmentInDtoField;
   }
 
 }

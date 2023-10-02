@@ -25,6 +25,12 @@ public final class ErrorConstants {
   public static final String INVALID_USER = "Unauthorised User";
 
   /**
+   * Error message for a invalid data provided.
+   */
+  public static final String INVALID_FORMAT =
+      "Data provided has invalid format.";
+
+  /**
    * Error message for a generic resource not found error.
    */
   public static final String RESOURCE_NOT_FOUND = "Resource not found.";

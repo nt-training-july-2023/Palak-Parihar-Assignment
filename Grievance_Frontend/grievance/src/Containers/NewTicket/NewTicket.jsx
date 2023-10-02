@@ -51,7 +51,9 @@ export default function NewTicket(props) {
                 value: '',
                 validation: {
                     required: true,
-                    isUserName: true
+                    isUserName: true,
+                    minLength : 1,
+                    maxLength: 50
                 },
                 error: '',
                 valid: false,
@@ -68,6 +70,7 @@ export default function NewTicket(props) {
                 value: '',
                 validation: {
                     required: true,
+                    maxLength : 225,
                 },
                 error: '',
                 valid: false,
@@ -98,9 +101,6 @@ export default function NewTicket(props) {
                     placeholder: 'Open'
                 },
                 value: 'OPEN',
-                // validation: {
-                //     disabled: 'disabled'
-                // },
                 valid: true,
                 disabled: true,
                 label: "Status"

@@ -1,6 +1,7 @@
 package com.grievance.service;
 
 import com.grievance.constants.ErrorConstants;
+import com.grievance.constants.ValidationConstants;
 import com.grievance.dto.ChangePasswordInDto;
 import com.grievance.dto.EmployeeInDto;
 import com.grievance.dto.EmployeeLoginDto;
@@ -68,18 +69,17 @@ public class EmployeeServiceImpl implements EmployeeService {
   public Optional<EmployeeOutDto> saveEmployee(
       final EmployeeInDto employeeInDto) {
     LOGGER.info("Saving employee: {}", employeeInDto.getEmail());
+    String password = Base64DecodeService
+        .decodeBase64ToString(employeeInDto.getPassword());
+    Boolean valid = Pattern.matches("^(?=.*[0-9])(?=.*[!@#$%^&*])"
+        + "[a-zA-Z0-9!@#$%^&*]{6,20}$", password);
+    if (!valid) {
+      LOGGER.info("Password doesn't match requirements");
+      throw new CustomException(ValidationConstants.PASSWORD_VALIDATION);
+    }
     Employee employee = employeeRepository
         .findByEmail(employeeInDto.getEmail());
     if (Objects.isNull(employee)) {
-      String password = Base64DecodeService
-          .decodeBase64ToString(employeeInDto.getPassword());
-      Boolean valid = Pattern.matches("^(?=.*[0-9])(?=.*[!@#$%^&*])"
-          + "[a-zA-Z0-9!@#$%^&*]{6,20}$", password);
-      if (!valid) {
-        LOGGER.info("Password doesn't match requirements");
-        throw new CustomException("Password must have a "
-            + "Uppercase a Lowercase and A Special Character");
-      }
       employee = convertToEntity(employeeInDto);
       employee = employeeRepository.save(employee);
       EmployeeOutDto employeeOutDto = convertToDto(employee);
@@ -171,6 +171,16 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     if (!employee.getPassword()
         .equals(changePasswordInDto.getNewPassword())) {
+      if (Objects.isNull(employee)) {
+        String password = Base64DecodeService
+            .decodeBase64ToString(changePasswordInDto.getNewPassword());
+        Boolean valid = Pattern.matches("^(?=.*[0-9])(?=.*[!@#$%^&*])"
+            + "[a-zA-Z0-9!@#$%^&*]{6,20}$", password);
+        if (!valid) {
+          LOGGER.info("Password doesn't match requirements");
+          throw new CustomException(ValidationConstants.PASSWORD_VALIDATION);
+        }
+      }
       employee.setPassword(changePasswordInDto.getNewPassword());
       employee.setFirstTimeUser(false);
       employeeRepository.save(employee);
