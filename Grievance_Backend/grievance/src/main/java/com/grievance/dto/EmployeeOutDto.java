@@ -1,12 +1,7 @@
 package com.grievance.dto;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.grievance.entity.UserType;
-import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import java.util.Objects;
 import javax.validation.constraints.NotEmpty;
 
 /**
@@ -19,16 +14,11 @@ public class EmployeeOutDto {
   /**
    * email String of EmployeeOut DTO.
    */
-  @Id
-  @Column(unique = true)
-  @Email(regexp = "^[A-Za-z0-9+_.-]+@nucleusteq.com(.+)$")
-  @NotBlank
   private String email;
 
   /**
    * The full name of the employee.
    */
-  @NotEmpty
   private String fullName;
 
   /**
@@ -39,23 +29,12 @@ public class EmployeeOutDto {
   /**
    * Indicates if the employee is a first-time user.
    */
-  private Boolean firstTimeUser = true;
+  private Boolean firstTimeUser;
 
   /**
    * The department of the employee.
    */
-  @NotEmpty
-//  @JsonBackReference
-//  @JsonIgnore
   private String departmentOutDto;
-
-  /**
-   * The list of tickets associated with the employee.
-   */
-  @NotEmpty
-  @JsonManagedReference
-//  @JsonIgnore
-  private List<TicketOutDto> tickets;
 
   /**
    * Get the email of the employee.
@@ -147,30 +126,64 @@ public class EmployeeOutDto {
   public void setDepartment(final String departmentField) {
     this.departmentOutDto = departmentField;
   }
-
-  /**
-   * Get the list of tickets associated with the employee.
-   *
-   * @return the tickets
-   */
-  public List<TicketOutDto> getTickets() {
-    return tickets;
-  }
-
-  /**
-   * Set the list of tickets associated with the employee.
-   *
-   * @param ticketsField the tickets to set
-   */
-  public void setTickets(final List<TicketOutDto> ticketsField) {
-    this.tickets = ticketsField;
-  }
-
   /**
    * Default constructor for EmployeeOutDto.
    */
   public EmployeeOutDto() {
     super();
-    // TODO Auto-generated constructor stub
   }
+
+  /**
+   * hashcode of this employeeOutDto objects.
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(departmentOutDto, email,
+        firstTimeUser, fullName, userType);
+  }
+
+  /**
+   * equals method to compare object with this employeeOutDto.
+   */
+  @Override
+  public boolean equals(final Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    EmployeeOutDto other = (EmployeeOutDto) obj;
+    return Objects.equals(departmentOutDto, other.departmentOutDto)
+        && Objects.equals(email, other.email)
+        && Objects.equals(firstTimeUser, other.firstTimeUser)
+        && Objects.equals(fullName, other.fullName)
+        && userType == other.userType;
+  }
+
+  /**
+   * parameterised constructor.
+   * @param emailField
+   * @param fullNameField
+   * @param userTypeField
+   * @param firstTimeUserField
+   * @param departmentOutDtoField
+   */
+  public EmployeeOutDto(
+      final String emailField,
+      @NotEmpty final String fullNameField,
+      final UserType userTypeField,
+      final Boolean firstTimeUserField,
+      @NotEmpty final String departmentOutDtoField) {
+    super();
+    this.email = emailField;
+    this.fullName = fullNameField;
+    this.userType = userTypeField;
+    this.firstTimeUser = firstTimeUserField;
+    this.departmentOutDto = departmentOutDtoField;
+  }
+
 }

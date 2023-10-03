@@ -1,29 +1,17 @@
 package com.grievance.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.grievance.entity.Comment;
 import com.grievance.entity.Status;
 import com.grievance.entity.TicketType;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 
 public class TicketOutDto {
-  /**
-   *minimumLength final integer.
-   */
-  private final int minimumLength = 1;
-  /**
-   *maximumLengthOfTitle final integer.
-   */
-  private final int maximumLengthOfTitle = 50;
-  /**
-   *maximumLengthOfDescription final integer.
-   */
-  private final int maximumLengthOfDescription = 500;
-
   /**
    * Integer ticketId of Ticket.
    */
@@ -32,12 +20,6 @@ public class TicketOutDto {
   /**
    * The title of the ticket.
    */
-  @NotEmpty
-  @Size(
-    min = minimumLength,
-    max = maximumLengthOfTitle,
-    message = "Title too long (max 50 characters)"
-  )
   private String title;
 
   /**
@@ -56,12 +38,6 @@ public class TicketOutDto {
   /**
    * The description of the ticket.
    */
-  @NotEmpty
-  @Size(
-    min = minimumLength,
-    max = maximumLengthOfDescription,
-    message = "Description too long (max 500 characters)"
-  )
   private String description;
 
   /**
@@ -71,20 +47,15 @@ public class TicketOutDto {
   private Status status;
 
   /**
-   * The date when the ticket was opened.
-   */
-  private Date dateOpened;
-
-  /**
    * The date when the ticket was last updated.
    */
+  @JsonFormat(pattern = "dd-MM-yyyy hh:mm aa", timezone = "Asia/Kolkata")
   private Date lastUpdated;
 
   /**
    * comments that belongs to this ticket.
    */
-  @JsonIgnore
-  private List<Comment> comments;
+  private List<CommentOutDto> comments;
 
   /**
    * The employee who created the ticket.
@@ -176,62 +147,80 @@ public class TicketOutDto {
   public void setStatus(final Status statusField) {
     this.status = statusField;
   }
-
-  /**
-   * @return the dateOpened
-   */
-  public Date getDateOpened() {
-    return dateOpened;
-  }
-
-  /**
-   * @param dateOpenedField the dateOpened to set
-   */
-  public void setDateOpened(final Date dateOpenedField) {
-    this.dateOpened = dateOpenedField;
-  }
-
   /**
    * @return the lastUpdated
    */
   public Date getLastUpdated() {
-    return lastUpdated;
+    return new Date(lastUpdated.getTime());
   }
 
   /**
    * @param lastUpdatedField the lastUpdated to set
    */
   public void setLastUpdated(final Date lastUpdatedField) {
-    this.lastUpdated = lastUpdatedField;
+    this.lastUpdated = new Date(lastUpdatedField.getTime());
   }
 
-/**
- * @return the comments
- */
-public List<Comment> getComments() {
-return comments;
-}
+  /**
+   * @return the comments
+   */
+  public List<CommentOutDto> getComments() {
+    return comments;
+  }
 
-/**
- * @param commentsField the comments to set
- */
-public void setComments(final List<Comment> commentsField) {
-this.comments = commentsField;
-}
+  /**
+   * @param commentsField the comments to set
+   */
+  public void setComments(final List<CommentOutDto> commentsField) {
+    this.comments = commentsField;
+  }
 
-/**
- * @return the employee
- */
-public String getEmployee() {
-return employeeOutDto;
-}
+  /**
+   * @return the employee
+   */
+  public String getEmployee() {
+    return employeeOutDto;
+  }
 
-/**
- * @param employeeField the employee to set
- */
-public void setEmployee(final String employeeField) {
-this.employeeOutDto = employeeField;
-}
+  /**
+   * @param employeeField the employee to set
+   */
+  public void setEmployee(final String employeeField) {
+    this.employeeOutDto = employeeField;
+  }
 
+  /**
+   * hashcode of ticketOutDto.
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(comments, department, description,
+        employeeOutDto, status, ticketId, ticketType,
+        title);
+  }
 
+  /**
+   * method to compare ticketOutDto to object.
+   */
+  @Override
+  public boolean equals(final Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    TicketOutDto other = (TicketOutDto) obj;
+    return Objects.equals(comments, other.comments)
+        && Objects.equals(department, other.department)
+        && Objects.equals(description, other.description)
+        && Objects.equals(employeeOutDto, other.employeeOutDto)
+        && status == other.status
+        && Objects.equals(ticketId, other.ticketId)
+        && ticketType == other.ticketType
+        && Objects.equals(title, other.title);
+  }
 }

@@ -5,8 +5,9 @@ package com.grievance.authentication;
 
 import com.grievance.entity.Employee;
 import com.grievance.entity.UserType;
-import com.grievance.exception.UnauthorisedUserException;
 import com.grievance.repository.EmployeeRepository;
+
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
  *
  */
 @Configuration
-public class AuthenticatingUserImpl implements AuthenticatingUser {
+public class AuthenticatingUserImpl implements AuthenticateUser {
   /**
    * employeeRepository instance for
    * access to database.
@@ -31,11 +32,9 @@ public class AuthenticatingUserImpl implements AuthenticatingUser {
    */
   @Override
   public Boolean checkIfUserExists(final String email, final String password) {
-      Employee employee = employeeRepository.findByEmail(email);
-      if (employee == null) {
-         throw new UnauthorisedUserException(email);
-      }
-    return employee.getPassword().equals(password);
+      Employee employee = employeeRepository.findByEmailAndPassword(
+              email, password);
+    return !Objects.isNull(employee);
   }
 
   /**
@@ -47,11 +46,22 @@ public class AuthenticatingUserImpl implements AuthenticatingUser {
   @Override
   public Boolean checkIfUserIsAdmin(
         final String email, final String password) {
-        Employee employee = employeeRepository.findByEmail(email);
-      if (employee == null) {
-         throw new UnauthorisedUserException(email);
-      }
-      return employee.getPassword().equals(password)
-         && employee.getUserType().equals(UserType.ADMIN);
+       Employee employee = employeeRepository
+                .findByEmailAndPasswordAndUserType(
+                     email, password, UserType.ADMIN);
+        return !Objects.isNull(employee);
+  }
+
+  /**
+   * method to check if user is login in first time.
+   * @param email
+   * @param password
+   * @return boolean.
+   */
+  @Override
+  public Boolean checkIfUserisFirstTimeLogin(final String email,
+      final String password) {
+    return employeeRepository
+        .existsByEmailAndPasswordAndFirstTimeUser(email, password, true);
   }
 }

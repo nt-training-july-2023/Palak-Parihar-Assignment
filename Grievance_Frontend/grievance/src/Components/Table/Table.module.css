@@ -1,0 +1,148 @@
+.table {
+    width: 80%;
+    box-shadow: 10px 10px 5px #dddadac2;
+    min-width: 600px;
+}
+
+.table td {
+    padding: 9px 8px 4px 4px;
+    text-align: center;
+    min-width: 100px;
+    overflow-x: auto;
+}
+
+.table th {
+    padding: 14px 2px 10px 2px;
+    text-align: center;
+    background-color: #266183;
+    color: #fff;
+}
+
+.table_container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+}
+
+.table tr:nth-child(even) {
+    background-color: #fff;
+}
+
+.table tr:nth-child(odd) {
+    background-color: #e2dddd;
+}
+
+.table tr:hover {
+    background-color: #c5c0c0;
+}
+
+#icon {
+    padding: 0px 10px 0px 10px;
+    cursor: pointer;
+}
+
+.heading {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 15px;
+    font-weight: 700;
+    font-size: x-large;
+}
+
+#action_icon {
+    margin: 10px;
+    color: #174c6b;
+    cursor: pointer;
+}
+
+#action_icon:hover {
+    color: #3c8dbc;
+}
+
+
+#disable_action_icon {
+    margin: 10px;
+    color: #7c7878;
+    cursor: default;
+}
+
+#disable_action_icon :hover {
+    margin: 10px;
+    color: #c5c0c0;
+    cursor: default;
+}
+
+#active {
+    background-color: gray;
+    color: white;
+}
+
+#actions_arrow {
+    font-size: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.noData{
+    height: 300px;
+    width: 300px;
+    margin-left: 40%;
+    border-radius: 50%;
+}
+
+@media (max-width: 1300px) {
+    .table td {
+        padding: 9px 6px 3px 3px;
+        overflow-x: hidden;
+    }
+
+    .table {
+        width: 90%;
+    }
+}
+
+@media (max-width: 1100px) {
+    #actions_arrow{
+        bottom: 2px;
+    }
+    .table {
+        width: 100%;
+    }
+
+    .table td{
+        word-break: break-all;
+    }
+}
+
+@media (max-width: 970px) {
+    .table_container{
+        position: relative;
+        overflow: auto;
+        width: 100%;
+    }
+
+    #action_arrows {
+        position: static;
+    }
+
+    .table {
+        width: 95%;
+        overflow-x: scroll;
+    }
+
+    .table td{
+        word-break: break-all;
+    }
+
+    .table td {
+        padding: 7px 5px 5px 2px;
+        text-align: center;
+        min-width: 50px;
+        overflow-x: auto;
+    }
+}

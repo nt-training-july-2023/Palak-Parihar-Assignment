@@ -7,6 +7,12 @@
 
 package com.grievance.dto;
 
+import java.util.Objects;
+
+import javax.validation.constraints.NotEmpty;
+
+import com.grievance.constants.ValidationConstants;
+
 /**
  * Data transfer object for employee login information.
  */
@@ -14,10 +20,12 @@ public class EmployeeLoginDto {
   /**
    * email of EmployeeLogin Dto.
    */
+  @NotEmpty(message = ValidationConstants.EMPTY_FIELD)
   private String email;
   /**
    * String password of EmaployeeLogin DTO.
    */
+  @NotEmpty(message = ValidationConstants.EMPTY_FIELD)
   private String password;
 
   /**
@@ -57,10 +65,50 @@ public class EmployeeLoginDto {
   }
 
   /**
-   *toString of EmployeeLogin Dto.
+   * hashCode of this employeeLoginDto.
    */
   @Override
-  public String toString() {
-    return "EmployeeLoginDto [email=" + email + ", password=" + password + "]";
+  public int hashCode() {
+    return Objects.hash(email, password);
   }
+
+  /**
+   * method to compare this employeeLoginDto with object.
+   */
+  @Override
+  public boolean equals(final Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    EmployeeLoginDto other = (EmployeeLoginDto) obj;
+    return Objects.equals(email, other.email)
+        && Objects.equals(password, other.password);
+  }
+
+  /**
+   * parameterized constructor.
+   * @param emailField
+   * @param passwordField
+   */
+  public EmployeeLoginDto(
+      final String emailField,
+      final String passwordField) {
+    super();
+    this.email = emailField;
+    this.password = passwordField;
+  }
+
+  /**
+   * default constructor.
+   */
+  public EmployeeLoginDto() {
+    super();
+  }
+
 }

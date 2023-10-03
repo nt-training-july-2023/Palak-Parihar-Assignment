@@ -117,7 +117,7 @@ public class Comment {
    * @return the createdOn date
    */
   public Date getCreatedOn() {
-    return createdOn;
+    return new Date(createdOn.getTime());
   }
 
   /**
@@ -126,7 +126,7 @@ public class Comment {
    * @param createdOnField the createdOn date to set
    */
   public void setCreatedOn(final Date createdOnField) {
-    this.createdOn = createdOnField;
+    this.createdOn = new Date(createdOnField.getTime());
   }
 
   /**
@@ -145,5 +145,27 @@ public class Comment {
    */
   public void setTicket(final Ticket ticketField) {
     this.ticket = ticketField;
+  }
+
+  /**
+   * parametrised constructor.
+   * @param descriptionField
+   * @param userNameField
+   * @param ticketField
+   */
+  public Comment(@NotEmpty final String descriptionField,
+      @NotEmpty final String userNameField,
+      final Ticket ticketField) {
+    super();
+    this.description = descriptionField;
+    this.userName = userNameField;
+    this.ticket = ticketField;
+  }
+
+  /**
+   * default constructor.
+   */
+  public Comment() {
+    super();
   }
 }

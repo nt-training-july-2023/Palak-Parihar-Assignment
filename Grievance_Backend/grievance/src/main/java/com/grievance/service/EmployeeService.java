@@ -1,5 +1,6 @@
 package com.grievance.service;
 
+import com.grievance.dto.ChangePasswordInDto;
 import com.grievance.dto.EmployeeInDto;
 import com.grievance.dto.EmployeeLoginDto;
 import com.grievance.dto.EmployeeOutDto;
@@ -35,10 +36,25 @@ public interface EmployeeService {
 
   /**
    * Retrieves a list of all employees.
-   *
+   * @param page
    * @return An optional containing a list of
    *     EmployeeOutDto objects representing all employees.
    */
-  Optional<List<EmployeeOutDto>> listAllEmployees();
+  Optional<List<EmployeeOutDto>> listAllEmployees(Integer page);
+
+  /**
+   * changePassword for existing user.
+   *@param changePasswordInDto
+   *@param email
+   *
+   */
+  void changePassword(ChangePasswordInDto changePasswordInDto, String email);
+
+  /**
+   * delete employee by Id.
+   * @param email
+   * @param deleteEmployee
+   */
+  void deleteEmployeeById(String email, String deleteEmployee);
 
 }

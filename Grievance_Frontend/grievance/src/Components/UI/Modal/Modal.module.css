@@ -1,0 +1,39 @@
+dialog::backdrop {
+    background-color: black;
+}
+
+.outerDiv {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+.close {
+    width: 50%;
+    opacity: 1;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width : 300px;
+    opacity: 1;
+    background-color: white;
+    height: fit-content;
+    padding: 15px 20px 3px 20px;
+    border-radius: 3px;
+    z-index: 100;
+}
+
+.modal-container {
+    height: 100%;
+}

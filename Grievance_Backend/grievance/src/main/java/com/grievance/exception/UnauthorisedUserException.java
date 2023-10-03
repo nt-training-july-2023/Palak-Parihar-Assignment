@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * when unauthorised user tries to access.
  */
 @ResponseStatus(
-  value = HttpStatus.CONFLICT,
+  value = HttpStatus.UNAUTHORIZED,
   reason = "Unauthorised User"
 )
 public class UnauthorisedUserException extends RuntimeException {
@@ -22,6 +22,6 @@ public class UnauthorisedUserException extends RuntimeException {
     * @param email The email address for which the employee was not found.
     */
    public UnauthorisedUserException(final String email) {
-      super("Unauthorized user=" + email);
+      super("Unauthorized user = " + email);
    }
 }

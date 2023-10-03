@@ -10,6 +10,8 @@
 package com.grievance.entity;
 
 import java.util.List;
+import java.util.Objects;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,15 +19,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
- * Department entity class.
- * This class represents the Department entity used in the application.
- * It contains information about
- * departments and their associated employees and tickets.
+ * Department entity class. This class represents the Department entity used in
+ * the application. It contains information about departments and their
+ * associated employees and tickets.
  */
 @Entity
 public class Department {
@@ -33,27 +33,28 @@ public class Department {
    * The unique identifier for the department.
    */
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "dept_seq")
+  @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "dept_seq")
   private Integer departmentId;
 
   /**
    * The name of the department.
    */
-  @NotEmpty
   @Column(nullable = false, unique = true)
   private String departmentName;
 
   /**
    * The list of employees associated with this department.
    */
-  @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "department", cascade = CascadeType.ALL,
+      orphanRemoval = true)
   @JsonManagedReference
   private List<Employee> employees;
 
   /**
    * The list of tickets associated with this department.
    */
-  @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "department", cascade = CascadeType.ALL,
+      orphanRemoval = true)
   @JsonManagedReference
   private List<Ticket> tickets;
 
@@ -134,7 +135,7 @@ public class Department {
    * @param departmentField
    */
   public Department(final String departmentField) {
-     this.departmentName = departmentField;
+    this.departmentName = departmentField;
   }
 
   /**
@@ -142,4 +143,32 @@ public class Department {
    */
   public Department() {
   }
+
+  /**
+   * hashCode of this department object.
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(departmentId, departmentName);
+  }
+
+  /**
+   * equals method to compare two department object.
+   */
+  @Override
+  public boolean equals(final Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    Department other = (Department) obj;
+    return Objects.equals(departmentId, other.departmentId)
+        && Objects.equals(departmentName, other.departmentName);
+  }
+
 }

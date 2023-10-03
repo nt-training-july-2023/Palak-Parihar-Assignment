@@ -1,0 +1,20 @@
+.outerDiv{
+    width: 300px;
+    background-color: white;
+    transition: opacity 0.3s 0s, visibility 0s 0s;
+    padding: 20px;
+}
+
+.btnContainer{
+    display: flex;
+}
+
+.content{
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+
+.btn{
+    width: 50%;
+}

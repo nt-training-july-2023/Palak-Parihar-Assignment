@@ -1,12 +1,20 @@
 package com.grievance.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.grievance.constants.ValidationConstants;
 import com.grievance.entity.UserType;
+
+
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
 
 /**
  * EmployeeInDto represents an input data transfer object
@@ -14,44 +22,42 @@ import javax.validation.constraints.NotEmpty;
  * This class is used for transferring employee
  * data between layers of the application.
  */
+@Validated
 public class EmployeeInDto {
   /**
    * The email of the employee (unique identifier).
    */
   @Id
   @Column(unique = true)
-  @Email(regexp = "^[A-Za-z0-9+_.-]+@nucleusteq.com(.+)$")
-  @NotBlank
+  @Email(regexp = "^[a-z0-9+_.-]+@+nucleusteq.com",
+  message = ValidationConstants.EMAIL_VALIDATION)
+  @NotEmpty(message = ValidationConstants.EMPTY_FIELD)
   private String email;
 
   /**
    * The full name of the employee.
    */
-  @NotEmpty
+  @NotEmpty(message = ValidationConstants.EMPTY_FIELD)
   private String fullName;
 
   /**
    * The password of the employee.
    */
-  @NotEmpty
+  @NotEmpty(message = ValidationConstants.EMPTY_FIELD)
   private String password;
 
   /**
    * The user type of the employee.
    */
+  @NotNull(message = ValidationConstants.EMPTY_FIELD)
   private UserType userType;
-
-  /**
-   * Indicates if the employee is a first-time user.
-   */
-  private Boolean firstTimeUser = true;
 
   /**
    * The department of the employee.
    */
-  @NotEmpty
+  @NotNull(message = ValidationConstants.EMPTY_FIELD)
   @JsonProperty("department")
-  private DepartmentInDto departmentInDto;
+  private DepartmentInDto department;
 
   /**
    * Get the email of the employee.
@@ -126,30 +132,12 @@ public class EmployeeInDto {
   }
 
   /**
-   * Get the status of whether the employee is a first-time user.
-   *
-   * @return the firstTimeUser
-   */
-  public Boolean getFirstTimeUser() {
-    return firstTimeUser;
-  }
-
-  /**
-   * Set the status of whether the employee is a first-time user.
-   *
-   * @param firstTimeUserField the firstTimeUser to set
-   */
-  public void setFirstTimeUser(final Boolean firstTimeUserField) {
-    this.firstTimeUser = firstTimeUserField;
-  }
-
-  /**
    * Get the department of the employee.
    *
    * @return the department
    */
   public DepartmentInDto getDepartmentDto() {
-    return departmentInDto;
+    return department;
   }
 
   /**
@@ -158,7 +146,7 @@ public class EmployeeInDto {
    * @param departmentField the department to set
    */
   public void setDepartmentDto(final DepartmentInDto departmentField) {
-    this.departmentInDto = departmentField;
+    this.department = departmentField;
   }
   /**
    * Default constructor for EmployeeInDto.
@@ -167,7 +155,58 @@ public class EmployeeInDto {
     super();
   }
 
+  /**
+   * hashcode of employeeInDto.
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(department, email,
+        fullName, password, userType);
+  }
 
+  /**
+   * equals method.
+   */
+  @Override
+  public boolean equals(final Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    EmployeeInDto other = (EmployeeInDto) obj;
+    return Objects.equals(department, other.department)
+        && Objects.equals(email, other.email)
+        && Objects.equals(fullName, other.fullName)
+        && Objects.equals(password, other.password)
+        && userType == other.userType;
+  }
 
+  /**
+   * parameterized constructor.
+   * @param emailField
+   * @param fullNameField
+   * @param passwordField
+   * @param userTypeField
+   * @param departmentInDtoField
+   */
+  public EmployeeInDto(
+      @Email(regexp = "^[A-Za-z0-9+_.-]+@nucleusteq.com(.+)$")
+      @NotBlank final String emailField,
+      @NotEmpty final String fullNameField,
+      @NotEmpty final String passwordField,
+      final UserType userTypeField,
+      @NotEmpty final DepartmentInDto departmentInDtoField) {
+    super();
+    this.email = emailField;
+    this.fullName = fullNameField;
+    this.password = passwordField;
+    this.userType = userTypeField;
+    this.department = departmentInDtoField;
+  }
 
 }

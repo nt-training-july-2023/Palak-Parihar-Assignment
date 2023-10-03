@@ -1,0 +1,164 @@
+.ticketContent {
+    height: 80%;
+    padding: 0px 40px;
+    overflow-y: scroll;
+}
+
+.ticketContent::-webkit-scrollbar {
+    display: none;
+  }
+  
+
+.mainContainer {
+    display: flex;
+    flex-direction: row;
+    padding: 0px 20px;
+    width: 100%;
+    overflow: hidden;
+    height: 100%;
+
+}
+
+.ticketContainer{
+    width: 50%;
+}
+
+.commentsContainer {
+    position: relative;
+    width: 43%;
+    height: 80%;
+    justify-content: baseline;
+    align-items: flex-end;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-left: 50px;
+    padding-right: 10px;
+    border-left: 1px solid rgb(226, 223, 223);
+    background-color: #F0F0F0;
+    scroll-behavior: smooth;
+}
+
+.commentContent{
+    display: inline-block;
+    background-color: #fff;
+    border : 1px solid black;
+    border-radius: 10px 10px 0px 10px;
+    padding: 10px;
+    margin: 12px 0px 12px 20px;
+    align-self: flex-end;
+    width: 85%;
+    word-break: break-all;
+    border: 1px solid #e2dddd;
+}
+
+
+.outerDiv {
+    display: flex;
+    flex-direction: column;
+    height: 80%;
+    width: 90%;
+    background-color: #fff;
+    justify-content: space-between;
+    border-radius: 10px;
+    z-index: 1;
+}
+
+.heading {
+    display: flex;
+    min-height: 50px;
+    width: 100%;
+    background-color: #266183;
+    border-radius: 10px 10px 0px 0px;
+    align-items: center;
+    justify-content: space-between;
+    text-align: right;
+    color: #fff;
+}
+
+label{
+    font-weight: bolder;
+    margin-right: 30px;
+    min-width: 100px;
+}
+
+.ticketData{
+    display: flex;
+    padding: 10px;
+    width: 100%;
+}
+
+.commentBox{
+    position: fixed;
+    bottom: 0;
+    width: 37%;
+    margin-bottom: 5%;
+}
+
+#icon_close{
+    cursor: pointer;
+    width: 50%;
+    float: right;
+    padding: 10px;
+}
+
+.date{
+    font-size: 13px;
+    opacity: 0.8;
+    padding: 0px;
+    float: right;
+}
+
+.userName{
+    color: #205675;
+    padding: 0px;
+    font-weight: 500;
+}
+
+.description{
+    padding: 0px;
+}
+
+.scrollBtn{
+    float: right;
+    cursor: pointer;
+}
+
+@media (max-width: 1200px) {
+   .mainContainer{
+    width: 95%;
+   }
+
+   .ticketContent{
+    padding: 10px 30px;
+   }
+
+   .commentBox{
+    margin-bottom: 7%;
+   }
+}
+
+@media (max-width: 900px) {
+ 
+    .commentBox{
+     margin-bottom: 9%;
+    }
+
+    .ticketContent{
+        padding: 10px 20px;
+    }
+ }
+
+ @media (max-width: 700px) {
+ 
+    .ticketContent{
+        padding: 10px
+    }
+    .commentBox{
+     margin-bottom: 10%;
+    }
+
+    .ticketData{
+        display: block;
+        overflow-y: scroll;
+    }
+ }

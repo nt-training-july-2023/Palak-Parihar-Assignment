@@ -4,6 +4,8 @@ import com.grievance.entity.Department;
 import com.grievance.entity.Employee;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import com.grievance.entity.UserType;
+
 
 /**
  * The EmployeeRepository interface provides data access
@@ -27,4 +29,42 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
    *     to the specified department.
    */
   List<Employee> findByDepartment(Department department);
+
+  /**
+   * find Employee by email and password and userType.
+   * @param email
+   * @param password
+   * @param userType
+   * @return existed Employee by email and password and userType.
+   */
+  Employee findByEmailAndPasswordAndUserType(
+          String email,
+          String password,
+          UserType userType);
+
+  /**
+   * find Employee by email and password.
+   * @param email
+   * @param password
+   * @return existed Employee by email and password.
+   */
+  Employee findByEmailAndPassword(String email, String password);
+
+  /**
+   * @param email
+   * @param userType
+   * @return true if user exist with given mail and userType
+   */
+  Boolean existsByEmailAndUserType(String email, UserType userType);
+
+  /**
+   *
+   * @param email
+   * @param password
+   * @param firstTimeUser
+   * @return true if user exists and is first time login.
+   */
+  Boolean existsByEmailAndPasswordAndFirstTimeUser(String email,
+      String password, Boolean firstTimeUser);
 }
+

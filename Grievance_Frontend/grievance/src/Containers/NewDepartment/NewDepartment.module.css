@@ -1,0 +1,38 @@
+.outerDiv{
+        height: fit-content;
+        width: 37%;
+        border: 0.2px solid black;
+        padding: 0px 40px 40px 40px;
+        background-color: rgb(240, 240, 240);
+        border-radius: 0px 0px 5px 5px;
+}
+
+.heading{
+    background-color: #174c6b;
+    color: #fff;
+    margin: 0px !important;
+    width: 37%;
+    padding: 10px;
+    border-radius: 5px 5px 0px 0px;
+    align-items: center;
+    font-weight: bolder;
+    font-size: larger;
+}
+
+#icon_close{
+    cursor: pointer;
+    float: right;
+    padding-right: 20px;
+    padding-left: 50px;
+}
+
+.reg-container{
+    height: fit-content;
+    width: 50%;
+    border: 0.2px solid black;
+    border-top: none;
+    padding: 0px 40px 40px 40px;
+    background-color: rgb(240, 240, 240);
+    border-radius: 0px 0px 5px 5px;
+    box-shadow: 20px 20px 10px grey;
+}
