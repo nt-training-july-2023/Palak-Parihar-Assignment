@@ -66,12 +66,6 @@ export default function ChangePassword(props) {
             }
         }
     }
-    let containerCss = {
-        display: 'flex',
-        'justify-content': 'center',
-        'align-items': 'center',
-        width : '57%'
-    }
     const [controls, setControls] = useState(cont.controls);
     const [message, setMessage] = useState('');
     const [modal, setModal] = useState();
@@ -166,9 +160,9 @@ export default function ChangePassword(props) {
                 let values = JSON.parse(localStorage.getItem('userDetails'))
                 const userDetails = {
                     ...values,
-                    password : btoa(values.newPassword),
+                    password: btoa(values.newPassword),
                     firstTimeUser: false,
-                    isLoggedIn : true
+                    isLoggedIn: true
                 }
                 localStorage.setItem('userDetails', JSON.stringify(userDetails));
                 setTimeout(() => {
@@ -186,13 +180,24 @@ export default function ChangePassword(props) {
         setModal(() => <></>)
     }
 
+    let outerContainer = {
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center'
+    }
 
+    let containerCss = {
+        display: 'flex',
+        'justify-content': 'center',
+        'align-items': 'center',
+        width: '57%'
+    }
 
     return (
         <>
             {modal}
-            <div className="reg-container">
-                <div className="container">
+            <div className="container">
+                <div style={outerContainer}>
                     <div style={containerCss} >
                         <Form
                             content={completeForm}

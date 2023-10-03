@@ -52,7 +52,7 @@ export default function NewTicket(props) {
                 validation: {
                     required: true,
                     isUserName: true,
-                    minLength : 1,
+                    minLength: 1,
                     maxLength: 50
                 },
                 error: '',
@@ -70,7 +70,7 @@ export default function NewTicket(props) {
                 value: '',
                 validation: {
                     required: true,
-                    maxLength : 225,
+                    maxLength: 225,
                 },
                 error: '',
                 valid: false,
@@ -252,16 +252,24 @@ export default function NewTicket(props) {
         width: '65%'
     }
 
+    let outerContainer = {
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center'
+    }
+
     return (
         <>
             {modal}
             <div className="container">
-                <div style={containerCss}>
-                    <Form
-                        content={completeForm}
-                        onSubmit={submithandler}
-                        enable={true}
-                        heading="Raise A Ticket" />
+                <div style={outerContainer}>
+                    <div style={containerCss}>
+                        <Form
+                            content={completeForm}
+                            onSubmit={submithandler}
+                            enable={true}
+                            heading="Raise A Ticket" />
+                    </div>
                 </div>
             </div>
         </>

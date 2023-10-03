@@ -36,9 +36,9 @@ export default function NewEmployee(props) {
                 validation: {
                     required: true,
                     isUserName: true,
-                    textOnly : true,
-                    minLength : 3,
-                    maxLength : 100
+                    textOnly: true,
+                    minLength: 3,
+                    maxLength: 100
                 },
                 error: '',
                 valid: false,
@@ -55,7 +55,7 @@ export default function NewEmployee(props) {
                 validation: {
                     required: true,
                     isEmail: true,
-                    maxLength : 100
+                    maxLength: 100
                 },
                 error: '',
                 valid: false,
@@ -72,7 +72,7 @@ export default function NewEmployee(props) {
                 validation: {
                     required: true,
                     minLength: 6,
-                    maxLength : 20,
+                    maxLength: 20,
                     isPassword: true
                 },
                 // options: null,
@@ -252,16 +252,24 @@ export default function NewEmployee(props) {
         width: '65%'
     }
 
+    let outerContainer = {
+        width:'100%',
+        display : 'flex',
+        justifyContent : 'center'
+    }
+
     return (
         <>
             {modal}
             <div className="container">
-                <div style={containerCss}>
-                    <Form
-                        content={completeForm}
-                        onSubmit={submithandler}
-                        enable={true}
-                        heading="Register Employee" />
+                <div style={outerContainer}>
+                    <div style={containerCss}>
+                        <Form
+                            content={completeForm}
+                            onSubmit={submithandler}
+                            enable={true}
+                            heading="Register Employee" />
+                    </div>
                 </div>
             </div>
         </>

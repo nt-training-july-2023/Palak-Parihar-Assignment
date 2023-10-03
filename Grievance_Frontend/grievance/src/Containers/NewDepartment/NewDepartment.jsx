@@ -17,7 +17,7 @@ export default function NewDepartment(props) {
         value: '',
         validation: {
             required: true,
-            textOnly : true
+            textOnly: true
         },
         error: '',
         valid: false,
@@ -48,10 +48,10 @@ export default function NewDepartment(props) {
         setControls(updatedControls)
     }
 
-    useEffect(()=>{
-        if(controls.valid){
+    useEffect(() => {
+        if (controls.valid) {
             setEnableBtn(true)
-        }else{
+        } else {
             setEnableBtn(false)
         }
         console.log(controls.value)
@@ -66,7 +66,7 @@ export default function NewDepartment(props) {
         let departmentData = {
             departmentName: controls.value
         }
-      GENERATE_NEW_DEPARTMENT(departmentData)
+        GENERATE_NEW_DEPARTMENT(departmentData)
             .then(response => {
                 console.log(response)
                 setModal(() => <Modal message={response.data.message} onClick={props.closeModal} />)
@@ -91,18 +91,16 @@ export default function NewDepartment(props) {
 
     return (
         <>
-            <div className="modal-container">
-                {modal}
-            </div>
-            <div className="reg-container">
-                <div style={{ width: '70%' }}>
-                    <Form
-                        content={formElement}
-                        onSubmit={submithandler}
-                        enable={enableBtn}
-                        heading={heading}
-                    />
-                </div>
+            {modal}
+            <div className="container">
+                    <div style={{ width: '70%' }}>
+                        <Form
+                            content={formElement}
+                            onSubmit={submithandler}
+                            enable={enableBtn}
+                            heading={heading}
+                        />
+                    </div>
             </div >
         </>
     )

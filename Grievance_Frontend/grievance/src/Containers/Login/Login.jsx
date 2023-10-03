@@ -1,4 +1,4 @@
-import "./Login.css";
+import classes from './Login.module.css';
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'
 import InputElement from "../../Components/UI/InputElement/InputElement";
@@ -164,19 +164,12 @@ export default function Login() {
         setModal(() => <></>)
     }
 
-    let containerCss = {
-        display: 'flex',
-        'justify-content': 'center',
-        'align-items': 'center',
-        width: '50%'
-    }
-
     return (
         <>
             {modal}
-            <h1 className="login-heading"><p>Grievance Management System</p></h1>
-            <div className="container">
-                <div style={containerCss}>
+            <h1 className={classes.loginHeading}><p>Grievance Management System</p></h1>
+            <div className={classes.container}>
+                <div className={classes.contentContainer}>
                     <Form
                         content={completeForm}
                         onSubmit={submithandler}

@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react"
 import { DELETE_EMPLOYEE, FETCH_ALL_USERS } from "../../Service/EmployeeServices"
-import './ListEmployees.css';
 import { useNavigate } from "react-router";
 import Table from "../../Components/Table/Table";
-import { headers } from "../../API/Headers";
 import Modal from "../../Components/UI/Modal/Modal";
 import ConfirmationDialog from "../../Components/Confirmation/ConfirmationDialog";
 import { CHANGE_PASSWORD_PATH } from "../../API/PathConstant";

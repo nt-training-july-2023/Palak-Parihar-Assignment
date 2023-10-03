@@ -46,7 +46,7 @@ export const inputValidity = (value, rules) => {
     }
 
     if(rules.textOnly){
-        const pattern = /^[A-Za-z]+$/
+        const pattern = /^[a-zA-Z\s]*$/
         isValid = pattern.test(value) && isValid
         if(!isValid){
             return "Please provide text only"

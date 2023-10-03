@@ -4,7 +4,6 @@ import Modal from "../../Components/UI/Modal/Modal"
 import NewDepartment from "../NewDepartment/NewDepartment"
 import { useNavigate } from "react-router"
 import Table from "../../Components/Table/Table"
-import classes from './ListDepartment.module.css';
 import { CHANGE_PASSWORD_PATH } from "../../API/PathConstant"
 import { headers } from "../../API/Headers"
 import ConfirmationDialog from "../../Components/Confirmation/ConfirmationDialog"
@@ -33,7 +32,7 @@ export default function ListDepartments(props) {
             }
         }
 
-        if(page === 0){
+        if (page === 0) {
             setDisablePrevious(true)
         }
 
@@ -60,8 +59,8 @@ export default function ListDepartments(props) {
     }
 
     const previousPage = () => {
-        if(page > 0){
-            setPage((page) => page-1)
+        if (page > 0) {
+            setPage((page) => page - 1)
         }
     }
 
@@ -93,13 +92,22 @@ export default function ListDepartments(props) {
             })
     }
 
+    const addEntryCss = {
+        textAlign : 'center',
+        padding : '10px',
+        fontSize : 'larger',
+        fontWeight : '500',
+        cursor : 'pointer'
+    }
 
     return (
         <>
             {modal}
             <div>
-                <div className={classes.add_entry}>
-                    Add Department  <i id="icon" class='fas fa-plus-circle' onClick={() => AddDepartment()}></i>
+                <div style={addEntryCss}>
+                    <p onClick={() => AddDepartment()}>
+                        Add Department  <i id="icon" class='fas fa-plus-circle'></i>
+                    </p>
                 </div>
                 <div className="list_main_container">
                     <Table
