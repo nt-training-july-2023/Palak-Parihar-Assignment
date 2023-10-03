@@ -34,6 +34,13 @@
     font-size: large;
 }
 
+.headLabel{
+    text-align: left;
+    font-size: large;
+    font-weight: bold;
+    padding: 10px 0px 10px 0px;
+}
+
 
 .InputElement:focus {
     outline: none;
@@ -68,7 +75,7 @@
     }
 }
 
-@media (max-width: 1200px) { 
+@media (min-width : 900px) and (max-width: 1200px)  { 
 
     .Label{
         width: 43%;

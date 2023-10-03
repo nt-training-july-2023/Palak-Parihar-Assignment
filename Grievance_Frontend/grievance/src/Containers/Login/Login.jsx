@@ -18,7 +18,7 @@ export default function Login() {
                 elementType: 'input',
                 elementConfig: {
                     type: 'email',
-                    placeholder: 'Your Email'
+                    placeholder: 'Email'
                 },
                 value: '',
                 label: 'Email',
@@ -70,7 +70,7 @@ export default function Login() {
                 elementType={formElement.config.elementType}
                 elementConfig={formElement.config.elementConfig}
                 value={formElement.config.value}
-                label={formElement.config.label}
+                headLabel={formElement.config.label}
                 invalid={formElement.config.valid}
                 error={formElement.config.error}
                 shouldValidate={formElement.config.validation}
