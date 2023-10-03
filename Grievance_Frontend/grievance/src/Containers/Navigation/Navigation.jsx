@@ -118,7 +118,7 @@ export default function Navigation(props) {
         <>
             {modal}
             {show ? NavContent : null}
-            <div style={{ overflowY: 'scroll', height: '90vh', marginTop: '15px' }}>
+            <div style={{ overflowY: 'scroll', height: '87vh', marginTop: '15px' }}>
                 <Outlet></Outlet>
             </div>
         </>
