@@ -157,16 +157,8 @@ export default function ChangePassword(props) {
         const response = CHANGE_USER_PASSWORD(values)
             .then(res => {
                 setModal(() => <Modal message={res.data.message} onClick={closeModal} />)
-                let values = JSON.parse(localStorage.getItem('userDetails'))
-                const userDetails = {
-                    ...values,
-                    password: btoa(values.newPassword),
-                    firstTimeUser: false,
-                    isLoggedIn: true
-                }
-                localStorage.setItem('userDetails', JSON.stringify(userDetails));
                 setTimeout(() => {
-                    navigate(LIST_TICKETS_PATH)
+                    navigate("/logout")
                 }, 1000);
                 return res.data
             })

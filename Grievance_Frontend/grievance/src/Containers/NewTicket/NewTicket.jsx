@@ -151,7 +151,6 @@ export default function NewTicket(props) {
 
     const inputChangeHandler = (e, controlName) => {
         const message = checkValidity(e.target.value, controls[controlName].validation)
-        console.log(message)
         const updatedControls = {
             ...controls,
             [controlName]: {
@@ -196,7 +195,6 @@ export default function NewTicket(props) {
                 email: userValues.email
             }
         }
-        console.log(ticketValues)
 
         GENERATE_NEW_TICKET(ticketValues).then(res => {
             setModal(() => <Modal message={res.data.message} onClick={closeModal} />)

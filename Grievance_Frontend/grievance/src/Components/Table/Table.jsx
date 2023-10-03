@@ -12,6 +12,7 @@ export default function Table(props) {
     const tableData = (
         <>
             <p className={classes.heading}><u>{props.heading}</u></p>
+            
             <div className={classes.table_container}>
                 <table className={classes.table}>
                     <thead>

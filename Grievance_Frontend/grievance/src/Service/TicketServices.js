@@ -35,7 +35,7 @@ export const GENERATE_NEW_TICKET = (ticketData) => {
             {
                 headers: headersRequired
             }).then(res => {
-                resolve({ data: res.data.data })
+                resolve({ data: res.data })
             }).catch(err => {
                 reject({ data: err.response.data })
             })

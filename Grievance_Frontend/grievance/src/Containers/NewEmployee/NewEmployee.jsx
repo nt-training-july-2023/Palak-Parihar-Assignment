@@ -75,7 +75,6 @@ export default function NewEmployee(props) {
                     maxLength: 20,
                     isPassword: true
                 },
-                // options: null,
                 error: '',
                 valid: false,
                 touched: false,
@@ -233,13 +232,31 @@ export default function NewEmployee(props) {
         console.log(data)
 
         SAVE_NEW_EMPLOYEE(data).then(res => {
-            setModal(() => <Modal message={res.data.message} onClick={closeModal} />)
+            setModal(() => <Modal message={res.data.message} onClick={clearForm} />)
             return res.data;
         }).catch(err => {
             console.log(err)
             setModal(() => <Modal message={err.data.response.data.message} onClick={closeModal} />)
             return err.data;
         })
+    }
+
+    const clearForm = () => {
+        for (let key in controls) {
+            console.log(key)
+            const updatedControls = {
+                ...controls,
+                [key]: {
+                    ...controls[key],
+                    value: '',
+                    error: '',
+                    valid: false,
+                    touched: false
+                }
+            }
+            setControls(updatedControls)
+        }
+        setModal(<></>)
     }
 
     const closeModal = () => {
@@ -253,9 +270,9 @@ export default function NewEmployee(props) {
     }
 
     let outerContainer = {
-        width:'100%',
-        display : 'flex',
-        justifyContent : 'center'
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center'
     }
 
     return (

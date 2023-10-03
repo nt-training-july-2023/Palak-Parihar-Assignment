@@ -36,9 +36,9 @@ export default function ListTickets(props) {
         status: null,
     })
 
-    const headings = ["Ticket Id", "Title", "Ticket Type", "Department", "Raised By", "Status", "Last Updated", "Actions"]
+    const headings = ["Title", "Ticket Type", "Department", "Raised By", "Status", "Last Updated", "Actions"]
 
-    const columns = ["ticketId", "title", "ticketType", "department", "employee", "status", "lastUpdated"]
+    const columns = ["title", "ticketType", "department", "employee", "status", "lastUpdated"]
 
     const [ticketUpdate, setTicketUpdate] = useState({
         status: null,
