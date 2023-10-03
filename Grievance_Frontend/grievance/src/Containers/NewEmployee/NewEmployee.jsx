@@ -266,7 +266,7 @@ export default function NewEmployee(props) {
         display: 'flex',
         'justify-content': 'center',
         'align-items': 'center',
-        width: '60%'
+        width: '55%'
     }
 
     let outerContainer = {

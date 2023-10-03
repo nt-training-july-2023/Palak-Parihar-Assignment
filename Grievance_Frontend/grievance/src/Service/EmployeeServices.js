@@ -98,7 +98,7 @@ export const DELETE_EMPLOYEE = (empId) => {
             }
         }).then(res => {
             console.log(res)
-            resolve({ data: res.data.data })
+            resolve({ data: res.data })
         }).catch(err => {
             reject({ data: err.response.data })
         })

@@ -30,7 +30,7 @@
     text-align: left;
     align-items: center;
     font-weight: bold;
-    width: 30%;
+    width: 35%;
     font-size: large;
 }
 
@@ -65,5 +65,12 @@
 
     .Label{
         width: 100%;
+    }
+}
+
+@media (max-width: 1200px) { 
+
+    .Label{
+        width: 43%;
     }
 }

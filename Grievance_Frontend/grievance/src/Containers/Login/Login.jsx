@@ -128,8 +128,10 @@ export default function Login() {
 
         LOGIN_USER(values)
             .then(res => {
+                console.log(res.data)
                 setModal(() => <Modal component={<Spinner />} />)
                 let userValues = {
+                    employeeId : res.data.employeeId,
                     email: values.email,
                     password: values.password,
                     fullName: res.data.fullName,

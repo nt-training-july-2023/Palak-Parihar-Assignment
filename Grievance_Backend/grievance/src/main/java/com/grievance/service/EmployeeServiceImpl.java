@@ -201,21 +201,21 @@ public class EmployeeServiceImpl implements EmployeeService {
    */
   @Override
   public void deleteEmployeeById(
-      final String email, final String deleteEmployee) {
-    LOGGER.info("Deleting employee with email: {}", email);
-    if (deleteEmployee.equals(email)) {
-      LOGGER.info("user can not delete itself {}", email);
-      throw new CustomException(ErrorConstants.EMPLOYEE_SELF_DELETE);
-    }
-    Employee employee = employeeRepository.findByEmail(deleteEmployee);
-    if (Objects.isNull(employee)) {
-      LOGGER.error("Employee with email {} not found for deletion.",
+      final String email, final Integer deleteEmployee) {
+    LOGGER.info("Deleting employee with Id: {}", deleteEmployee);
+    Optional<Employee> employee = employeeRepository.findById(deleteEmployee);
+    if (!employee.isPresent()) {
+      LOGGER.error("Employee with this Id {} not found for deletion.",
           deleteEmployee);
       throw new ResourceNotFoundException(ErrorConstants.RESOURCE_NOT_FOUND
           + " " + deleteEmployee);
     }
-    employeeRepository.delete(employee);
-    LOGGER.info("Employee with email {} deleted successfully.", deleteEmployee);
+    if (email.equals(employee.get().getEmail())) {
+      LOGGER.info("user can not delete itself {}", email);
+      throw new CustomException(ErrorConstants.EMPLOYEE_SELF_DELETE);
+    }
+    employeeRepository.delete(employee.get());
+    LOGGER.info("Employee with Id {} deleted successfully.", deleteEmployee);
   }
 
   /**

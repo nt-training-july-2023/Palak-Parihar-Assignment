@@ -12,7 +12,6 @@ function InputElement(props) {
         case ('input'):
             inputElement = <>
                 <div style={{ width: '100%' }}>
-                    <h3 style={{ 'text-align': 'left' }}>{props.headLabel}</h3>
                     <input
                         className={inputClasses.join(' ')}
                         type={props.elementConfig.type}

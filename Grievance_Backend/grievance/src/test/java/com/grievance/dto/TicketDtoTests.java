@@ -19,7 +19,7 @@ public class TicketDtoTests {
 
   @BeforeEach
   void setUpt() {
-    employeeInDto = new EmployeeInDto("ayushi@nucleusteq.com", "Ayushi", "PaadfgWSdf==", UserType.ADMIN,
+    employeeInDto = new EmployeeInDto(1,"ayushi@nucleusteq.com", "Ayushi", "PaadfgWSdf==", UserType.ADMIN,
         null);
   }
 

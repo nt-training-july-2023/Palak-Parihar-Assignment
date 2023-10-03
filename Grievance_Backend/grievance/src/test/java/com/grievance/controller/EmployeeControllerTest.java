@@ -199,14 +199,14 @@ class EmployeeControllerTest {
   @Test
   void when_delete_employee_success() throws Exception {
     
-    doNothing().when(employeeService).deleteEmployeeById(Mockito.anyString(), Mockito.anyString());
+    doNothing().when(employeeService).deleteEmployeeById(Mockito.anyString(), Mockito.anyInt());
     
     String url = ControllerURLS.EMPLOYEE_BASE_URL + ControllerURLS.DELETE_DATA_BY_ID;
     mockMvc.perform(MockMvcRequestBuilders.delete(url)
         .contentType(MediaType.APPLICATION_JSON)
         .header("email", "ayushi@nucleusteq.com")
         .header("password", "Ayushi#123")
-        .param("deleteEmployee", "ayushi@nucleusteq.com")
+        .param("deleteEmployee", "1")
         ).andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
   }
   
@@ -214,14 +214,14 @@ class EmployeeControllerTest {
   
   void when_delete_employee_fails() throws Exception {
     
-    doThrow(ResourceNotFoundException.class).when(employeeService).deleteEmployeeById(Mockito.anyString(), Mockito.anyString());
+    doThrow(ResourceNotFoundException.class).when(employeeService).deleteEmployeeById(Mockito.anyString(), Mockito.anyInt());
     
     String url = ControllerURLS.EMPLOYEE_BASE_URL + ControllerURLS.DELETE_DATA_BY_ID;
     mockMvc.perform(MockMvcRequestBuilders.delete(url)
         .contentType(MediaType.APPLICATION_JSON)
         .header("email", "ayushi@nucleusteq.com")
         .header("password", "Ayushi#123")
-        .param("deleteEmployee", "ayushi@nucleusteq.com")
+        .param("deleteEmployee", "1")
         ).andExpect(status().isNotFound()).andDo(MockMvcResultHandlers.print());
   }
 

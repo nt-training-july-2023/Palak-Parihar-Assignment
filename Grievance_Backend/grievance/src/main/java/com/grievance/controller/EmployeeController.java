@@ -140,7 +140,7 @@ public class EmployeeController {
   @DeleteMapping(path = ControllerURLS.DELETE_DATA_BY_ID)
   public ResponseEntity<Response<Boolean>> deleteEmployee(
       @RequestHeader final String email,
-      @RequestParam final String deleteEmployee) {
+      @RequestParam final Integer deleteEmployee) {
     LOGGER.info("Deleting employee for email: {}", deleteEmployee);
     employeeService.deleteEmployeeById(email, deleteEmployee);
     String message = ResponseConstants.EMPLOYEE_DELETED;

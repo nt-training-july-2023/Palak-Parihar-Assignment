@@ -6,10 +6,10 @@ import Modal from "../../Components/UI/Modal/Modal";
 import ConfirmationDialog from "../../Components/Confirmation/ConfirmationDialog";
 import { CHANGE_PASSWORD_PATH } from "../../API/PathConstant";
 
-export default function ListEmployees(props) {
+export default function ListEmployees() {
 
     const [employees, setEmployees] = useState([]);
-
+    const [flag, setFlag] = useState(false)
     const headings = ['Full Name', 'Email', 'Department', 'UserType', 'Actions']
     const columns = ["fullName", "email", "department", "userType"]
     const [modal, setModal] = useState()
@@ -42,7 +42,7 @@ export default function ListEmployees(props) {
             .catch(err => {
                 console.log(err.data)
             })
-    }, [modal, page, navigate])
+    }, [page, navigate, flag])
 
     const previousPage = () => {
         if (page === 0) {
@@ -61,7 +61,7 @@ export default function ListEmployees(props) {
         let params = {
             enable: true,
             content: 'Delete Employee',
-            delete: () => deleteEmployee(employee.email),
+            delete: () => deleteEmployee(employee.employeeId),
             close: () => closeModal()
         }
         setModal(<Modal component={ConfirmationDialog(params)} />)
@@ -70,6 +70,7 @@ export default function ListEmployees(props) {
     const deleteEmployee = (empId) => {
         DELETE_EMPLOYEE(empId)
             .then(res => {
+                setFlag(!flag)
                 setModal(<Modal message={res.data.message} onClick={closeModal} />)
             }).catch(err => {
                 setModal(<Modal message={err.data.message} onClick={closeModal} />)
@@ -89,7 +90,7 @@ export default function ListEmployees(props) {
                     delete={deleteEmployeeHandler}
                     columns={columns}
                     heading=" Employees "
-                    id="email"
+                    id="employeeId"
                     previousPage={previousPage}
                     nextPage={nextPage}
                     disablePrevious={disablePrevious}

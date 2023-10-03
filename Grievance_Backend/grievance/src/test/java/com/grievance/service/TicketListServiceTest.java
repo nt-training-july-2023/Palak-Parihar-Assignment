@@ -68,7 +68,7 @@ public class TicketListServiceTest {
   @BeforeEach
   void setUp() {
     department = new Department("HR");
-    employee = new Employee("ayushi@nucleusteq.com", "Full Name", "QWertf", UserType.ADMIN, true, department, null);
+    employee = new Employee(1,"ayushi@nucleusteq.com", "Full Name", "QWertf", UserType.ADMIN, true, department);
     ticket = new Ticket("Reimbursement", TicketType.GRIEVANCE, department, "Description", Status.BEING_ADDRESSED, new Date(),
         employee);
 

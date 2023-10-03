@@ -10,8 +10,8 @@ public class EmployeeTest {
   
   @Test
   void testEmployeeEquals() {
-    Employee employee1 = new Employee("ayushi@nucleusteq.com", "Ayushi", "Qwergfds==", UserType.ADMIN, false, null, null);
-    Employee employee2 = new Employee("ayushi@nucleusteq.com", "Ayushi", "Qwergfds==", UserType.ADMIN, false, null, null);
+    Employee employee1 = new Employee(1,"ayushi@nucleusteq.com", "Ayushi", "Qwergfds==", UserType.ADMIN, false, null);
+    Employee employee2 = new Employee(1,"ayushi@nucleusteq.com", "Ayushi", "Qwergfds==", UserType.ADMIN, false, null);
     
     assertThat(employee1.equals(employee2));
     
@@ -24,9 +24,9 @@ public class EmployeeTest {
   
   @Test
   void testEmployeeHashCode() {
-    Employee employee1 = new Employee("ayushi@nucleusteq.com", "Ayushi", "Qwergfds==", UserType.ADMIN, false, null, null);
-    Employee employee2 = new Employee("ayushi@nucleusteq.com", "Ayushi", "Qwergfds==", UserType.ADMIN, false, null, null);
-    Employee employee3 = new Employee("anita@nucleusteq.com", "Ayushi", "Qwergfds==", UserType.ADMIN, false, null, null);
+    Employee employee1 = new Employee(1,"ayushi@nucleusteq.com", "Ayushi", "Qwergfds==", UserType.ADMIN, false, null);
+    Employee employee2 = new Employee(1,"ayushi@nucleusteq.com", "Ayushi", "Qwergfds==", UserType.ADMIN, false, null);
+    Employee employee3 = new Employee(1,"anita@nucleusteq.com", "Ayushi", "Qwergfds==", UserType.ADMIN, false, null);
 
     Assertions.assertEquals(employee1.hashCode(), employee2.hashCode());
     Assertions.assertNotEquals(employee1.hashCode(), employee3.hashCode());

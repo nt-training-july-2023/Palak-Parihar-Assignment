@@ -76,7 +76,7 @@ public class TicketServiceTest {
 
     department = new Department("HR");
     department.setDepartmentId(101);
-    employee = new Employee("ayushi@nucleusteq.com", "Full Name", "QWertf", UserType.ADMIN, true, department, new ArrayList<Ticket>());
+    employee = new Employee(1,"ayushi@nucleusteq.com", "Full Name", "QWertf", UserType.ADMIN, true, department);
     ticket = new Ticket("Reimbursement", TicketType.GRIEVANCE, department, "Description", Status.BEING_ADDRESSED, new Date(),
         employee);
     ticket.setDateOpened(new Date());

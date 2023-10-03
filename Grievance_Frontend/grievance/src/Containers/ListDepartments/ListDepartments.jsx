@@ -9,8 +9,8 @@ import { headers } from "../../API/Headers"
 import ConfirmationDialog from "../../Components/Confirmation/ConfirmationDialog"
 
 
-export default function ListDepartments(props) {
-
+export default function ListDepartments() {
+    const [flag, setFlag] = useState(true)
     const [departments, setDepartments] = useState([])
     const [modal, setModal] = useState()
     const headings = ["Department Id", " Department Name", "Actions"]
@@ -48,7 +48,7 @@ export default function ListDepartments(props) {
             .catch(err => {
                 setModal(() => <Modal message={err.data.response.data} onClick={closeModal} />)
             })
-    }, [modal, page, navigate])
+    }, [page, navigate])
 
     const closeModal = () => {
         setModal(() => <></>)
@@ -86,6 +86,7 @@ export default function ListDepartments(props) {
     const deleteDepartment = (deptId) => {
         DELETE_DEPARTMENT(deptId)
             .then(response => {
+                setFlag(!flag)
                 setModal(<Modal message={response.data.message} onClick={closeModal} />)
             }).catch(err => {
                 setModal(<Modal message={err.data.response.data} onClick={closeModal} />)

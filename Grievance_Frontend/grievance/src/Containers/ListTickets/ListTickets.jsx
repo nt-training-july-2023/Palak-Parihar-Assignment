@@ -23,6 +23,7 @@ export default function ListTickets(props) {
         value: 'RESOLVED',
         option: 'Resolved'
     }]
+    const [flag, setFlag] = useState(true)
     const [tickets, setTickets] = useState([]);
     const [ticket, setTicket] = useState()
     const [showTicket, setShowTicket] = useState(false)
@@ -64,7 +65,7 @@ export default function ListTickets(props) {
             }).catch(err => {
                 return err.data
             })
-    }, [config, navigate, ticketUpdate, ticket, showTicket])
+    }, [config, navigate, flag])
 
     const viewSelectedTicket = (ticketId) => {
         let values = JSON.parse(localStorage.getItem('userDetails'))
@@ -171,6 +172,7 @@ export default function ListTickets(props) {
 
         UPDATE_TICKET_BY_ID(Id, ticketUpdate)
             .then(res => {
+                setFlag(!flag)
                 setTicket(res.data.data)
                 let ticketUpdatedSuccessfully = {
                     status: null,

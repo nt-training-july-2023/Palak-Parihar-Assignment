@@ -56,6 +56,7 @@ class EmployeeServiceTest {
   @BeforeEach
   void setUp() {
     employeeOutDto = new EmployeeOutDto();
+    employeeOutDto.setEmployeeId(1);
     employeeOutDto.setDepartment(null);
     employeeOutDto.setEmail("palak@nucleusteq.com");
     employeeOutDto.setFirstTimeUser(true);
@@ -63,6 +64,7 @@ class EmployeeServiceTest {
     employeeOutDto.setUserType(UserType.MEMBER);
 
     employee = new Employee();
+    employee.setEmployeeId(1);
     employee.setDepartment(null);
     employee.setEmail("palak@nucleusteq.com");
     employee.setFirstTimeUser(true);
@@ -72,6 +74,7 @@ class EmployeeServiceTest {
     employee.setPassword("Ayushi#123");
 
     employeeInDto = new EmployeeInDto();
+    employeeInDto.setEmployeeId(1);
     employeeInDto.setEmail("palak@nucleusteq.com");
     employeeInDto.setPassword("U3VwZXJAMTIz");
     employeeInDto.setDepartmentDto(new DepartmentInDto(101, "HR"));
@@ -196,10 +199,10 @@ class EmployeeServiceTest {
   @Test
   void delete_employee_successfully() {
     
-    when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
+    when(employeeRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(employee));
     doNothing().when(employeeRepository).delete(employee);
     
-    employeeService.deleteEmployeeById("ayushi@nucleusteq.com", "admin@nucleusteq.com");
+    employeeService.deleteEmployeeById("ayushi@nucleusteq.com", 1);
     
     Mockito.verify(employeeRepository, Mockito.times(1)).delete(employee);
   }
@@ -207,14 +210,15 @@ class EmployeeServiceTest {
   @Test
   void delete_employee_fails() {
     assertThrows(ResourceNotFoundException.class, ()->{
-      employeeService.deleteEmployeeById("ayushi@nucleusteq.com", "admin@nucleusteq.com");
+      employeeService.deleteEmployeeById("ayushi@nucleusteq.com", 1);
     });
   }
   
   @Test
   void delete_employee_fails_when_admin_tries_to_delete_itself() {
+    when(employeeRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(employee));
     assertThrows(CustomException.class, ()->{
-      employeeService.deleteEmployeeById("admin@nucleusteq.com", "admin@nucleusteq.com");
+      employeeService.deleteEmployeeById("palak@nucleusteq.com", 1);
     });
   }
 }

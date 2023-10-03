@@ -7,8 +7,6 @@ import com.grievance.entity.UserType;
 
 import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -25,10 +23,13 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public class EmployeeInDto {
   /**
+   * employeeId of EmployeeInDTo.
+   */
+  private Integer employeeId;
+
+  /**
    * The email of the employee (unique identifier).
    */
-  @Id
-  @Column(unique = true)
   @Email(regexp = "^[a-z0-9+_.-]+@+nucleusteq.com",
   message = ValidationConstants.EMAIL_VALIDATION)
   @NotEmpty(message = ValidationConstants.EMPTY_FIELD)
@@ -58,6 +59,21 @@ public class EmployeeInDto {
   @NotNull(message = ValidationConstants.EMPTY_FIELD)
   @JsonProperty("department")
   private DepartmentInDto department;
+  /**
+   * method to get employeeId.
+   * @return the employeeId
+   */
+  public Integer getEmployeeId() {
+    return employeeId;
+  }
+
+  /**
+   * method to set employeeId.
+   * @param employeeIdField the employeeId to set
+   */
+  public void setEmployeeId(final Integer employeeIdField) {
+    this.employeeId = employeeIdField;
+  }
 
   /**
    * Get the email of the employee.
@@ -179,7 +195,8 @@ public class EmployeeInDto {
       return false;
     }
     EmployeeInDto other = (EmployeeInDto) obj;
-    return Objects.equals(department, other.department)
+    return Objects.equals(employeeId, other.employeeId)
+        && Objects.equals(department, other.department)
         && Objects.equals(email, other.email)
         && Objects.equals(fullName, other.fullName)
         && Objects.equals(password, other.password)
@@ -188,6 +205,7 @@ public class EmployeeInDto {
 
   /**
    * parameterized constructor.
+   * @param employeeIdField
    * @param emailField
    * @param fullNameField
    * @param passwordField
@@ -195,6 +213,7 @@ public class EmployeeInDto {
    * @param departmentInDtoField
    */
   public EmployeeInDto(
+      final Integer employeeIdField,
       @Email(regexp = "^[A-Za-z0-9+_.-]+@nucleusteq.com(.+)$")
       @NotBlank final String emailField,
       @NotEmpty final String fullNameField,
@@ -202,6 +221,7 @@ public class EmployeeInDto {
       final UserType userTypeField,
       @NotEmpty final DepartmentInDto departmentInDtoField) {
     super();
+    this.employeeId = employeeIdField;
     this.email = emailField;
     this.fullName = fullNameField;
     this.password = passwordField;

@@ -19,11 +19,11 @@ class EmployeeDtoTest {
   @Test
   void test_employeeInDto_equals() {
 
-    EmployeeInDto employeeInDto = new EmployeeInDto("ayushi@nucleusteq.com", "Ayushi", "PaadfgWSdf==", UserType.ADMIN,
+    EmployeeInDto employeeInDto = new EmployeeInDto(1,"ayushi@nucleusteq.com", "Ayushi", "PaadfgWSdf==", UserType.ADMIN,
         null);
-    EmployeeInDto employeeInDto1 = new EmployeeInDto("ayushi@nucleusteq.com", "Ayushi", "PaadfgWSdf==", UserType.MEMBER,
+    EmployeeInDto employeeInDto1 = new EmployeeInDto(1, "ayushi@nucleusteq.com", "Ayushi", "PaadfgWSdf==", UserType.MEMBER,
         null);
-    EmployeeInDto employeeInDto2 = new EmployeeInDto("ayushi@nucleusteq.com", "Ayushi", "PaadfgWSdf==", UserType.ADMIN,
+    EmployeeInDto employeeInDto2 = new EmployeeInDto(1, "ayushi@nucleusteq.com", "Ayushi", "PaadfgWSdf==", UserType.ADMIN,
         null);
 
     assertThat(!employeeInDto.equals(employeeInDto1));
@@ -34,11 +34,11 @@ class EmployeeDtoTest {
 
   @Test
   void test_employeeInDto_hashCode() {
-    EmployeeInDto employeeInDto = new EmployeeInDto("ayushi@nucleusteq.com", "Ayushi", "PaadfgWSdf==", UserType.ADMIN,
+    EmployeeInDto employeeInDto = new EmployeeInDto(1,"ayushi@nucleusteq.com", "Ayushi", "PaadfgWSdf==", UserType.ADMIN,
         null);
-    EmployeeInDto employeeInDto1 = new EmployeeInDto("ayushi@nucleusteq.com", "Ayushi", "PaadfgWSdf==", UserType.MEMBER,
+    EmployeeInDto employeeInDto1 = new EmployeeInDto(1,"ayushi@nucleusteq.com", "Ayushi", "PaadfgWSdf==", UserType.MEMBER,
         null);
-    EmployeeInDto employeeInDto2 = new EmployeeInDto("ayushi@nucleusteq.com", "Ayushi", "PaadfgWSdf==", UserType.ADMIN,
+    EmployeeInDto employeeInDto2 = new EmployeeInDto(1,"ayushi@nucleusteq.com", "Ayushi", "PaadfgWSdf==", UserType.ADMIN,
         null);
 
     assertEquals(employeeInDto.hashCode(), employeeInDto2.hashCode());
@@ -70,9 +70,9 @@ class EmployeeDtoTest {
 
   @Test
   void test_employeeOutDto_equals() {
-    EmployeeOutDto employeeOutDto = new EmployeeOutDto("ayushi@nucleusteq.com", "Ayushi", UserType.ADMIN, false, "HR");
-    EmployeeOutDto employeeOutDto1 = new EmployeeOutDto("aayushi@nucleusteq.com", "Ayushi", UserType.MEMBER, false, "HR");
-    EmployeeOutDto employeeOutDto2 = new EmployeeOutDto("aayushi@nucleusteq.com", "Ayushi", UserType.ADMIN, false, "HR");
+    EmployeeOutDto employeeOutDto = new EmployeeOutDto(1,"ayushi@nucleusteq.com", "Ayushi", UserType.ADMIN, false, "HR");
+    EmployeeOutDto employeeOutDto1 = new EmployeeOutDto(1,"aayushi@nucleusteq.com", "Ayushi", UserType.MEMBER, false, "HR");
+    EmployeeOutDto employeeOutDto2 = new EmployeeOutDto(1,"aayushi@nucleusteq.com", "Ayushi", UserType.ADMIN, false, "HR");
 
     assertThat(!employeeOutDto.equals(employeeOutDto1));
 
@@ -85,9 +85,9 @@ class EmployeeDtoTest {
 
   @Test
   void test_employeeOutDto_hashCode() {
-    EmployeeOutDto employeeOutDto = new EmployeeOutDto("ayushi@nucleusteq.com", "Ayushi", UserType.ADMIN, false, "HR");
-    EmployeeOutDto employeeOutDto1 = new EmployeeOutDto("aayushi@nucleusteq.com", "Ayushi", UserType.ADMIN, false, "HR");
-    EmployeeOutDto employeeOutDto2 = new EmployeeOutDto("ayushi@nucleusteq.com", "Ayushi", UserType.ADMIN, false, "HR");
+    EmployeeOutDto employeeOutDto = new EmployeeOutDto(1,"ayushi@nucleusteq.com", "Ayushi", UserType.ADMIN, false, "HR");
+    EmployeeOutDto employeeOutDto1 = new EmployeeOutDto(1,"aayushi@nucleusteq.com", "Ayushi", UserType.ADMIN, false, "HR");
+    EmployeeOutDto employeeOutDto2 = new EmployeeOutDto(1,"ayushi@nucleusteq.com", "Ayushi", UserType.ADMIN, false, "HR");
     
     assertEquals(employeeOutDto.hashCode(), employeeOutDto2.hashCode());
     

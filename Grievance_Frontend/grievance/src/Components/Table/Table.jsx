@@ -12,7 +12,7 @@ export default function Table(props) {
     const tableData = (
         <>
             <p className={classes.heading}><u>{props.heading}</u></p>
-            
+
             <div className={classes.table_container}>
                 <table className={classes.table}>
                     <thead>
@@ -27,10 +27,12 @@ export default function Table(props) {
                             props.values.map((row, rowIndex) => (
                                 <tr key={rowIndex}>
                                     {
+
                                         props.columns.map((column, colIndex) => (
                                             <td key={colIndex}>{row[column]}</td>
                                         ))
                                     }
+                                    {console.log(row[props.id])}
                                     {props.view && <td>
                                         <i id={classes.icon} class='fas fa-edit' onClick={() => props.view(row[props.id])} />
                                     </td>}
