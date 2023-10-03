@@ -97,7 +97,7 @@ export default function Navigation(props) {
                         <li className={classes.dropdown}>
                             <Link to={GMS_CHANGE_PASSWORD_PATH}>
                                 <div className={currentPath.pathname.startsWith(GMS_CHANGE_PASSWORD_PATH) ? classes.active : ''}>
-                                    Profile <i class="fa fa-caret-down"></i>
+                                    Profile <i class='fas fa-user-alt'></i>
                                 </div>
                             </Link>
                             <ul className={classes.dropdownContent}>

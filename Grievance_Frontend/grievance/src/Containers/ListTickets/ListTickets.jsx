@@ -69,7 +69,7 @@ export default function ListTickets(props) {
     const viewSelectedTicket = (ticketId) => {
         let values = JSON.parse(localStorage.getItem('userDetails'))
 
-        const response = GET_TICKET_BY_ID(ticketId)
+        GET_TICKET_BY_ID(ticketId)
             .then(res => {
                 const ticket = res.data
                 if (values.department === ticket.department || res.data.employee === headers().email) {
@@ -79,13 +79,10 @@ export default function ListTickets(props) {
                 }
                 setTicket(ticket)
                 setShowTicket(true)
-                return res.data;
             })
             .catch(err => {
-                console.error(err.data.message)
-                return err.data
+                setModal(<Modal message={err.data.message} onClick={closeModal}/>)
             })
-        console.log(response)
     }
 
     const closeTicketModal = () => {
@@ -97,7 +94,6 @@ export default function ListTickets(props) {
     }
 
     const MyTickets = () => {
-        console.log(config)
         let updateConfig = {
             ...config,
             myTickets: true,
@@ -105,7 +101,6 @@ export default function ListTickets(props) {
             page: 0,
         }
         setConfig(updateConfig)
-        console.log(config)
         setDisablePrevious(true)
     }
 
@@ -125,18 +120,15 @@ export default function ListTickets(props) {
             myTickets: null,
             departmentTickets: null
         }
-        console.log(updateConfig)
         setConfig(updateConfig)
         setDisablePrevious(true)
     }
 
     const setStatus = (e) => {
-        console.log(e.target.value)
         let updateConfig = {
             ...config,
             status: e.target.value
         }
-        console.log(updateConfig)
         setConfig(updateConfig)
     }
 
@@ -153,7 +145,6 @@ export default function ListTickets(props) {
     }
 
     const updateStatus = (e) => {
-        console.log(e.target.value)
         let updateTicketConfig = {
             ...ticketUpdate,
             status: e.target.value
@@ -163,7 +154,6 @@ export default function ListTickets(props) {
     }
 
     const updateComment = (e) => {
-        console.log(e.target.value)
         let updateTicketConfig = {
             ...ticketUpdate,
             description: e.target.value
@@ -173,7 +163,6 @@ export default function ListTickets(props) {
     }
 
     const updateTicket = (Id) => {
-        console.log(ticketUpdate.description === null)
 
         if (ticketUpdate.description === null || ticketUpdate.description.trim().length === 0) {
             setModal(<Modal message="Please leave a comment to update ticket" onClick={closeModal} />)
@@ -182,15 +171,15 @@ export default function ListTickets(props) {
 
         UPDATE_TICKET_BY_ID(Id, ticketUpdate)
             .then(res => {
-                console.log(res.data)
-                setTicket(res.data)
+                setTicket(res.data.data)
                 let ticketUpdatedSuccessfully = {
                     status: null,
                     description: ''
                 }
                 setTicketUpdate(ticketUpdatedSuccessfully)
+                setModal(<Modal message={res.data.message} onClick={closeModal}/>)
             }).catch(err => {
-                console.log(err)
+                setModal(<Modal message={err.data.message} onClick={closeModal}/>)
             })
     }
 

@@ -1,14 +1,12 @@
 
 
 export const inputValidity = (value, rules) => {
-    console.log(rules)
     let isValid = true;
     if (!rules) {
         return '';
     }
 
     if (rules.required) {
-        console.log('required')
         isValid = value.trim() !== '' && isValid;
         if (!isValid) {
             return 'Field can not be empty'

@@ -80,9 +80,9 @@ export const UPDATE_TICKET_BY_ID = (Id, ticketUpdate) => {
             }
         })
             .then(res => {
-                return resolve({ data: res.data.data })
+                return resolve({ data: res.data })
             }).catch(err => {
-                return reject({ data: err })
+                return reject({ data: err.data })
             })
     })
 }
