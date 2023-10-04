@@ -53,10 +53,35 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
    * @param department
    * @param status
    * @param pageRequest
-   * @return list of tickets by status department and employee.
+   * @return list of tickets by status department
    */
   List<Ticket> findByDepartmentAndStatus(
       Department department, Status status,
       PageRequest pageRequest);
+  /**
+   *
+   * @param department
+   * @param status
+   * @param employee
+   * @param pageRequest
+   * @return list of tickets by status department and employee.
+   */
+  List<Ticket> findByDepartmentAndStatusAndEmployee(
+      Department department,
+      Status status,
+      Employee employee,
+      PageRequest pageRequest);
+
+  /**
+  *
+  * @param department
+  * @param employee
+  * @param pageRequest
+  * @return list of tickets by status department and employee.
+  */
+ List<Ticket> findByDepartmentAndEmployee(
+     Department department,
+     Employee employee,
+     PageRequest pageRequest);
 }
 

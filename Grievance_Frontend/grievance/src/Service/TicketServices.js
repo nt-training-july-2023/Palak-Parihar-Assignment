@@ -3,7 +3,7 @@ import { getMapping, postMapping, putMapping } from "../API/url-order";
 import { headers } from "../API/Headers";
 
 export const FETCH_ALL_TICKETS = (parameters) => {
-    console.log(headers())
+    console.log(parameters)
     let userValues = headers()
     let headersRequired = {
         email: userValues.email,

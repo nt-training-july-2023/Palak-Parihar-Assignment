@@ -84,11 +84,12 @@ public interface TicketService {
    * @param page
    * @param status
    * @param myTickets
+   * @param department
    * @return list of tickets.
    */
   Optional<List<TicketOutWOComment>> listAllTickets(
       String email, Integer page, Status status,
-      Boolean myTickets);
+      Boolean myTickets, Integer department);
 
   /**
    *
@@ -102,5 +103,49 @@ public interface TicketService {
       Status status,
       Integer page);
 
+  /**
+   *
+   * @param departmentId
+   * @param status
+   * @param page
+   * @return list of tickets by department and status
+   */
+  Optional<List<TicketOutWOComment>> listTicketsByDepartmentAndStatus(
+      Integer departmentId,
+      Status status,
+      Integer page);
+  /**
+  *
+  * @param departmentId
+  * @param page
+  * @return list of tickets by department
+  */
+ Optional<List<TicketOutWOComment>> listTicketsByDepartment(
+     Integer departmentId,
+     Integer page);
+
+ /**
+ * @param email
+ * @param departmentId
+ * @param status
+ * @param page
+ * @return list of tickets by department
+ */
+Optional<List<TicketOutWOComment>> listTicketsRaisedByUserByDepartmentAndStatus(
+    String email,
+    Integer departmentId,
+    Status status,
+    Integer page);
+
+/**
+ * @param email
+ * @param departmentId
+ * @param page
+ * @return list of tickets by department
+ */
+Optional<List<TicketOutWOComment>> listTicketsRaisedByUserByDepartment(
+    String email,
+    Integer departmentId,
+    Integer page);
 }
 

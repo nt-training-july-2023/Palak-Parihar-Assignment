@@ -192,7 +192,7 @@ export default function NewTicket(props) {
             status: controls.status.value.toUpperCase(),
             ticketType: controls.ticketType.value.toUpperCase(),
             employee: {
-                email: userValues.email
+                employeeId: userValues.employeeId
             }
         }
 

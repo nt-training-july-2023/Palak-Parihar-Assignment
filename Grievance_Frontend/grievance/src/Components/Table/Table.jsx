@@ -49,14 +49,16 @@ export default function Table(props) {
     )
     return (
         <>
-            {props.values.length !== 0 ? tableData : noDataFound}
-            <div id={classes.actions_arrow}>
-                {props.disablePrevious ?
-                    <i id={classes.disable_action_icon} class='fas fa-arrow-alt-circle-left'></i>
-                    : <i id={classes.action_icon} class='fas fa-arrow-alt-circle-left' onClick={props.previousPage}></i>}
+            <div>
+                {props.values.length !== 0 ? tableData : noDataFound}
+                <div id={classes.actions_arrow}>
+                    {props.disablePrevious ?
+                        <i id={classes.disable_action_icon} class='fas fa-arrow-alt-circle-left'></i>
+                        : <i id={classes.action_icon} class='fas fa-arrow-alt-circle-left' onClick={props.previousPage}></i>}
 
-                {props.disableNext ? <i id={classes.disable_action_icon} class='fas fa-arrow-alt-circle-right'></i> :
-                    <i id={classes.action_icon} class='fas fa-arrow-alt-circle-right' onClick={props.nextPage}></i>}
+                    {props.disableNext ? <i id={classes.disable_action_icon} class='fas fa-arrow-alt-circle-right'></i> :
+                        <i id={classes.action_icon} class='fas fa-arrow-alt-circle-right' onClick={props.nextPage}></i>}
+                </div>
             </div>
         </>
     )

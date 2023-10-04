@@ -7,6 +7,7 @@ import Table from "../../Components/Table/Table";
 import classes from "./ListTickets.module.css"
 import InputElement from "../../Components/UI/InputElement/InputElement";
 import { headers } from "../../API/Headers";
+import { FETCH_ALL_DEPARTMENTS } from "../../Service/DepartmentService";
 
 
 export default function ListTickets(props) {
@@ -30,16 +31,18 @@ export default function ListTickets(props) {
     const [disablePrevious, setDisablePrevious] = useState(true)
     const [disableNext, setDisableNext] = useState(true)
     const [canUpdateTicket, setCanUpdateTicket] = useState(true)
+    const [departments, setDepartments] = useState([])
     const navigate = useNavigate()
     const [config, setConfig] = useState({
         page: 0,
         myTickets: null,
         status: null,
+        department: null
     })
 
-    const headings = ["Title", "Ticket Type", "Department", "Raised By", "Status", "Last Updated", "Actions"]
+    const headings = ["Title", "Department", "Status", "Raised By", "Last Updated", "Actions"]
 
-    const columns = ["title", "ticketType", "department", "employee", "status", "lastUpdated"]
+    const columns = ["title", "department", "status", "employee", "lastUpdated"]
 
     const [ticketUpdate, setTicketUpdate] = useState({
         status: null,
@@ -65,6 +68,18 @@ export default function ListTickets(props) {
             }).catch(err => {
                 return err.data
             })
+        FETCH_ALL_DEPARTMENTS()
+            .then(res => {
+                if (res.data.length < 10) {
+                    setDisableNext(true)
+                } else {
+                    setDisableNext(false)
+                }
+                setDepartments(res.data)
+            })
+            .catch(err => {
+                setModal(() => <Modal message={err.data.response.data} onClick={closeModal} />)
+            })
     }, [config, navigate, flag])
 
     const viewSelectedTicket = (ticketId) => {
@@ -82,7 +97,7 @@ export default function ListTickets(props) {
                 setShowTicket(true)
             })
             .catch(err => {
-                setModal(<Modal message={err.data.message} onClick={closeModal}/>)
+                setModal(<Modal message={err.data.message} onClick={closeModal} />)
             })
     }
 
@@ -100,6 +115,7 @@ export default function ListTickets(props) {
             myTickets: true,
             departmentTickets: null,
             page: 0,
+            department: null
         }
         setConfig(updateConfig)
         setDisablePrevious(true)
@@ -119,7 +135,7 @@ export default function ListTickets(props) {
             ...config,
             page: 0,
             myTickets: null,
-            departmentTickets: null
+            department: null
         }
         setConfig(updateConfig)
         setDisablePrevious(true)
@@ -129,6 +145,14 @@ export default function ListTickets(props) {
         let updateConfig = {
             ...config,
             status: e.target.value
+        }
+        setConfig(updateConfig)
+    }
+
+    const setDepartment = (e) => {
+        let updateConfig = {
+            ...config,
+            department: e.target.value
         }
         setConfig(updateConfig)
     }
@@ -179,9 +203,9 @@ export default function ListTickets(props) {
                     description: ''
                 }
                 setTicketUpdate(ticketUpdatedSuccessfully)
-                setModal(<Modal message={res.data.message} onClick={closeModal}/>)
+                setModal(<Modal message={res.data.message} onClick={closeModal} />)
             }).catch(err => {
-                setModal(<Modal message={err.data.message} onClick={closeModal}/>)
+                setModal(<Modal message={err.data.message} onClick={closeModal} />)
             })
     }
 
@@ -199,27 +223,38 @@ export default function ListTickets(props) {
         <>
             {showTicket ? <Modal component={ViewTicket(viewTicketparams)} /> : null}
             {modal}
-            <div className="list_main_container">
-                <div>
-                    <div className={classes.menu_bar}>
-                        <div id={classes.menu}>
-                            <button class={classes.menu_button} id={config.myTickets ? '' : classes.active} onClick={() => AllTickets()}>All Tickets</button>
-                            <button class={classes.menu_button} id={config.myTickets ? classes.active : ''} onClick={() => MyTickets()}>MyTickets</button>
-                        </div>
-                        <h2 className={classes.heading}>All Tickets</h2>
-                        <div className={classes.status_dropdown}>
-                            <InputElement
-                                label='Status'
-                                elementType='select'
-                                options={statusOptions}
-                                selectValue='value'
-                                selectOption='option'
-                                default='ALL TICKETS'
-                                changed={e => setStatus(e)}
-                            />
-                        </div>
+            <div className={classes.menuOuterDiv}>
+                <div className={classes.menu_bar}>
+                    <div id={classes.menu}>
+                        <button class={classes.menu_button} id={config.myTickets ? '' : classes.active} onClick={() => AllTickets()}>All Tickets</button>
+                        <button class={classes.menu_button} id={config.myTickets ? classes.active : ''} onClick={() => MyTickets()}>MyTickets</button>
                     </div>
+                    <h2 className={classes.heading}>All Tickets</h2>
+                    <div className={classes.status_dropdown}>
+                        <p className={classes.Label}>Departments : </p>
+                        <InputElement
+                            elementType='select'
+                            options={departments}
+                            selectValue='departmentId'
+                            selectOption='departmentName'
+                            default='DEPARTMENT'
+                            changed={e => setDepartment(e)}
+                        />
+                        <p className={classes.Label}>Status : </p>
+                        <InputElement
+                            elementType='select'
+                            options={statusOptions}
+                            selectValue='value'
+                            selectOption='option'
+                            default='ALL TICKETS'
+                            changed={e => setStatus(e)}
+                        />
+                    </div>
+                </div>
+            </div>
+            <div className={classes.mainContainer}>
 
+                <div>
                     <Table
                         values={tickets}
                         headings={headings}

@@ -9,12 +9,15 @@ import com.grievance.dto.TicketOutDto;
 import com.grievance.dto.TicketOutWOComment;
 import com.grievance.dto.TicketUpdateDto;
 import com.grievance.entity.Comment;
+import com.grievance.entity.Department;
 import com.grievance.entity.Employee;
 import com.grievance.entity.Status;
 import com.grievance.entity.Ticket;
 import com.grievance.entity.UserType;
+import com.grievance.exception.CustomException;
 import com.grievance.exception.ResourceNotFoundException;
 import com.grievance.exception.UnauthorisedUserException;
+import com.grievance.repository.DepartmentRepository;
 import com.grievance.repository.EmployeeRepository;
 import com.grievance.repository.TicketRepository;
 
@@ -61,6 +64,13 @@ public class TicketServiceImpl implements TicketService {
    */
   @Autowired
   private EmployeeRepository employeeRepository;
+
+  /**
+   * department repository instance provide access method for interacting with
+   * database.
+   */
+  @Autowired
+  private DepartmentRepository departmentRepository;
 
   /**
    * variable to store pageSize for pagination.
@@ -299,10 +309,126 @@ public class TicketServiceImpl implements TicketService {
   }
 
   /**
+  *
+  * @param departmentId
+  * @param status
+  * @param page
+  * @return list of tickets by department and status
+  */
+  @Override
+  public Optional<List<TicketOutWOComment>> listTicketsByDepartmentAndStatus(
+      final Integer departmentId,
+      final Status status,
+      final Integer page) {
+    Department department =
+        departmentRepository.findById(departmentId).orElseThrow(() -> {
+      throw new CustomException(ErrorConstants.DEPARTMENT_NOT_FOUND);
+    });
+    List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
+    ticketRepository.findByDepartmentAndStatus(
+        department,
+        status,
+        PageRequest.of(page, pageSize))
+        .forEach(e -> {
+          list.add(convertToWOCommentDto(e));
+        });
+    return Optional.ofNullable(list);
+  }
+
+  /**
+  *
+  * @param departmentId
+  * @param page
+  * @return list of tickets by department
+  */
+  @Override
+  public Optional<List<TicketOutWOComment>> listTicketsByDepartment(
+      final Integer departmentId,
+      final Integer page) {
+    Department department =
+        departmentRepository.findById(departmentId).orElseThrow(() -> {
+      throw new CustomException(ErrorConstants.DEPARTMENT_NOT_FOUND);
+    });
+    List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
+    ticketRepository.findByDepartment(
+        department,
+        PageRequest.of(page, pageSize))
+        .forEach(e -> {
+          list.add(convertToWOCommentDto(e));
+        });
+    return Optional.ofNullable(list);
+  }
+
+  /**
+  *
+  * @param departmentId
+  * @param status
+  * @param page
+  * @return list of tickets by department
+  */
+  @Override
+  public Optional<List<TicketOutWOComment>>
+  listTicketsRaisedByUserByDepartmentAndStatus(
+      final String email,
+      final Integer departmentId,
+      final Status status,
+      final Integer page) {
+    Employee employee = employeeRepository.findByEmail(email);
+    if (Objects.isNull(employee)) {
+      throw new CustomException(ErrorConstants.EMPLOYEE_NOT_FOUND);
+    }
+    Department department = departmentRepository
+        .findById(departmentId).orElseThrow(() -> {
+      throw new CustomException(ErrorConstants.DEPARTMENT_NOT_FOUND);
+    });
+    List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
+    ticketRepository.findByDepartmentAndStatusAndEmployee(
+        department,
+        status,
+        employee,
+        PageRequest.of(page, pageSize))
+    .forEach((e) -> {
+      list.add(convertToWOCommentDto(e));
+    });
+    return Optional.ofNullable(list);
+  }
+
+  /**
+   * @param email
+   * @param departmentId
+   * @param page
+   * @return list of tickets by department
+   */
+  @Override
+  public Optional<List<TicketOutWOComment>> listTicketsRaisedByUserByDepartment(
+      final String email,
+      final Integer departmentId,
+      final Integer page) {
+    Employee employee = employeeRepository.findByEmail(email);
+    if (Objects.isNull(employee)) {
+      throw new CustomException(ErrorConstants.EMPLOYEE_NOT_FOUND);
+    }
+    Department department = departmentRepository
+        .findById(departmentId).orElseThrow(() -> {
+      throw new CustomException(ErrorConstants.DEPARTMENT_NOT_FOUND);
+    });
+    List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
+    ticketRepository.findByDepartmentAndEmployee(
+        department,
+        employee,
+        PageRequest.of(page, pageSize))
+    .forEach((e) -> {
+      list.add(convertToWOCommentDto(e));
+    });
+    return Optional.ofNullable(list);
+  }
+
+  /**
    * @param email
    * @param page
    * @param status
    * @param myTickets
+   * @param department
    * @return list of tickets.
    */
   @Override
@@ -310,17 +436,24 @@ public class TicketServiceImpl implements TicketService {
       final String email,
       final Integer page,
       final Status status,
-      final Boolean myTickets) {
+      final Boolean myTickets,
+      final Integer department) {
     LOGGER.info("Listing Tickets");
     Boolean isAdmin = employeeRepository.existsByEmailAndUserType(
         email, UserType.ADMIN);
     if (Objects.isNull(myTickets)) {
       if (isAdmin) {
-        if (Objects.isNull(status)) {
-          return listOfAllTickets(page);
+        if (!Objects.isNull(status) && !Objects.isNull(department)) {
+          return listTicketsByDepartmentAndStatus(department, status, page);
         } else {
-          return listTicketsByStatus(status, page);
+          if (!Objects.isNull(status)) {
+            return listTicketsByStatus(status, page);
+          }
+          if (!Objects.isNull(department)) {
+            return listTicketsByDepartment(department, page);
+          }
         }
+        return listOfAllTickets(page);
       } else {
         if (Objects.isNull(status)) {
           return listOfAllTicketsByEmployeeDepartment(email, page);
@@ -330,11 +463,18 @@ public class TicketServiceImpl implements TicketService {
         }
       }
     } else {
-      if (Objects.isNull(status)) {
-        return listTicketsRaisedByUser(page, email);
+      if (!Objects.isNull(department) && !Objects.isNull(status)) {
+        return listTicketsRaisedByUserByDepartmentAndStatus(
+            email, department, status, page);
       } else {
-        return listTicketByStatusAndEmployee(page, status, email);
+        if (!Objects.isNull(status)) {
+          return listTicketByStatusAndEmployee(page, status, email);
+        }
+        if (!Objects.isNull(department)) {
+          return listTicketsRaisedByUserByDepartment(email, department, page);
+        }
       }
+      return listTicketsRaisedByUser(page, email);
     }
   }
 

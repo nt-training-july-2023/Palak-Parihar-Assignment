@@ -74,6 +74,7 @@ public class TicketController {
    * @param status    The status of the tickets (optional).
    * @param myTickets Flag indicating whether to return only the user's tickets
    *                  (optional).
+   * @param department List tickets by their department.
    * @return ResponseEntity with optional of list of all tickets.
    */
   @GetMapping(path = ControllerURLS.GET_ALL_DATA)
@@ -81,10 +82,11 @@ public class TicketController {
       @RequestHeader final String email,
       @RequestParam final Integer page,
       @RequestParam(required = false) final Status status,
-      @RequestParam(required = false) final Boolean myTickets) {
+      @RequestParam(required = false) final Boolean myTickets,
+      @RequestParam (required = false) final Integer department) {
     LOGGER.info("Received request to list all tickets.");
     Optional<List<TicketOutWOComment>> optionalTickets = ticketService
-        .listAllTickets(email, page, status, myTickets);
+        .listAllTickets(email, page, status, myTickets, department);
     String message = ResponseConstants.TICKET_RETRIEVED;
     Response<List<TicketOutWOComment>> response =
         new Response<List<TicketOutWOComment>>(message,
