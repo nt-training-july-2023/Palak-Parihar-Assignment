@@ -91,7 +91,7 @@ public class TicketControllerTest {
     List<TicketOutWOComment> ticketOutDtos = new ArrayList<TicketOutWOComment>();
 
     when(ticketService.listAllTickets(Mockito.anyString(),
-        Mockito.anyInt(), Mockito.any(Status.class), Mockito.anyBoolean()))
+        Mockito.anyInt(), Mockito.any(Status.class), Mockito.anyBoolean(), Mockito.anyInt()))
         .thenReturn(Optional.of(ticketOutDtos));
 
     mockMvc
@@ -101,7 +101,7 @@ public class TicketControllerTest {
             .header("email", "ayushi@nucleusteq.com")
             .header("password", "Ayushi#123")
             .param("myTickets", "true")
-            .param("departmentTickets", "true")
+            .param("department", "1")
             .param("status", "OPEN")
             .param("page", "0"))
         .andExpect(status().isOk())

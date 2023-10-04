@@ -29,6 +29,7 @@ import com.grievance.entity.Status;
 import com.grievance.entity.Ticket;
 import com.grievance.entity.TicketType;
 import com.grievance.entity.UserType;
+import com.grievance.exception.CustomException;
 import com.grievance.exception.ResourceNotFoundException;
 import com.grievance.repository.DepartmentRepository;
 import com.grievance.repository.EmployeeRepository;
@@ -219,9 +220,10 @@ public class TicketListServiceTest {
 
   @Test
   void list_all_tickets_return_list_ticket_by_status() {
+    when(departmentRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(new Department()));
     when(employeeRepository.existsByEmailAndUserType(Mockito.anyString(), Mockito.any(UserType.class))).thenReturn(true);
 
-    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, Status.OPEN,null);
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, Status.OPEN,null, 1);
     assertThat(result).isNotNull();
     
     assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
@@ -236,7 +238,7 @@ public class TicketListServiceTest {
     Page<Ticket> page = new PageImpl<Ticket>(tickets);
     when(ticketRepository.findAll(Mockito.any(PageRequest.class))).thenReturn(page);
 
-    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, null,null);
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, null,null, null);
     assertThat(result).isNotNull();
     
     assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
@@ -248,7 +250,7 @@ public class TicketListServiceTest {
   void list_all_tickets_if_not_admin_when_status_is_null() {
     when(employeeRepository.existsByEmailAndUserType(Mockito.anyString(), Mockito.any(UserType.class))).thenReturn(false);
     when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
-    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, null,null);
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, null,null, 1);
     
     assertThat(result).isNotNull();
     
@@ -261,7 +263,7 @@ public class TicketListServiceTest {
   void list_all_tickets_if_not_admin_when_status_is_not_null() {
     when(employeeRepository.existsByEmailAndUserType(Mockito.anyString(), Mockito.any(UserType.class))).thenReturn(false);
     when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
-    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, Status.OPEN,null);
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, Status.OPEN,null,1);
     
     assertThat(result).isNotNull();
     
@@ -272,9 +274,10 @@ public class TicketListServiceTest {
   
   @Test
   void list_all_tickets_return_raised_by_user() {
+    when(departmentRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(new Department()));
     when(employeeRepository.existsByEmailAndUserType(Mockito.anyString(), Mockito.any(UserType.class))).thenReturn(false);
     when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
-    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, null,true);
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, null,true,1);
     
     assertThat(result).isNotNull();
     
@@ -285,9 +288,57 @@ public class TicketListServiceTest {
   
   @Test
   void list_all_tickets_return_raised_by_user_status() {
+    when(departmentRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(new Department()));
     when(employeeRepository.existsByEmailAndUserType(Mockito.anyString(), Mockito.any(UserType.class))).thenReturn(false);
     when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
-    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, Status.BEING_ADDRESSED,true);
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, Status.BEING_ADDRESSED,true,1);
+    
+    assertThat(result).isNotNull();
+    
+    assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
+      assertThat(ticketOutWOComments).hasSize(tickets.size());
+    });
+  }
+  
+  @Test
+  void list_tickets_by_department() {
+    when(departmentRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(new Department()));
+    
+    Optional<List<TicketOutWOComment>> result = ticketService.listTicketsByDepartment(1, 0);
+    
+    assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
+      assertThat(ticketOutWOComments).hasSize(tickets.size());
+    });
+    
+  }
+  
+  @Test
+  void list_tickets_by_department_fails() {
+        
+    assertThrows(CustomException.class, () -> {
+      ticketService.listTicketsByDepartment(1,0);
+    });
+    
+  }
+  
+  @Test
+  void list_all_tickets_if_admin_by_status() {
+    when(employeeRepository.existsByEmailAndUserType(Mockito.anyString(), Mockito.any(UserType.class))).thenReturn(true);
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0,Status.OPEN, null, null);
+    
+    assertThat(result).isNotNull();
+    
+    assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
+      assertThat(ticketOutWOComments).hasSize(tickets.size());
+    });
+  } 
+  
+  @Test
+  void list_all_tickets_if_admin_by_department() {
+    when(departmentRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(new Department()));
+    when(employeeRepository.existsByEmailAndUserType(Mockito.anyString(), Mockito.any(UserType.class))).thenReturn(true);
+    when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0,null, true, 1);
     
     assertThat(result).isNotNull();
     
