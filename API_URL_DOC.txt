@@ -1,0 +1,115 @@
+1. saving a new Entry(Employee)
+POST : localhost:8080/saveEmployee
+
+PayLoad :
+{
+        "firstName": "Core ",
+        "lastName": "Sign",
+        "department": "HR",
+        "email": "cor@nucleusteq.com",
+        "salary": 123955,
+        "address": "91 ABC",
+        "dateOfJoining": "2023-05-27"
+}
+
+{
+        "firstName": "Core ", //String
+        "lastName": "Sign",  //String
+        "department": "HR", //Enum
+        "email": "cor@nucleusteq.com", //String
+        "salary": 123955, //Long
+        "address": "91 ABC", //String
+        "dateOfJoining": "2023-05-27" //java.sql.Date
+}
+
+2. Listing All the existing entries of the database
+GET : localhost:8080/listAllEmployees
+
+3. Deleting an existing Entry(Employee)
+DELETE : localhost:8080/deleteEmployee
+
+Payload:
+{
+        "firstName": "Core ",
+        "lastName": "Sign",
+        "department": "HR",
+        "email": "cor@nucleusteq.com",
+        "salary": 123955,
+        "address": "91 ABC",
+        "dateOfJoining": "2023-05-27"
+}
+
+4. Finding Employee by Email
+GET : localhost:8080/findEmployeeByEmail/{email}
+
+5. Finding Employee by Id
+GET : localhost:8080/findEmployeeById/{id}
+
+6. Listing Employees By Date Of Joining
+GET : http://localhost:8080/listEmployeesByDateOfJoining/{dateOfJoining}
+
+7. Listing Employees By Department
+GET : http://localhost:8080/listEmployeesByDepartment/{department}
+eg: http://localhost:8080/listEmployeesByDepartment/LEGALL
+Department is enum
+
+8. Updating an existing Entry
+PUT: http://localhost:8080/updateEmployee
+Payload:
+{
+        "firstName": "Core ",
+        "lastName": "Sign",
+        "department": "HR",
+        "email": "cor@nucleusteq.com",
+        "salary": 123955,
+        "address": "91 ABC",
+        "dateOfJoining": "2023-05-27"
+}
+
+
+
+
+Dummy Data:
+[
+    {
+        "employeeId": 2,
+        "firstName": "Nucleusteq",
+        "lastName": "Teq",
+        "department": "LEGAL",
+        "email": "nucleusteq@gmail.com",
+        "salary": 123455,
+        "address": "92 ABC",
+        "dateOfJoining": "2023-03-31"
+    },
+    {
+        "employeeId": 202,
+        "firstName": "Core ",
+        "lastName": "Signal",
+        "department": "HR",
+        "email": "corehr@nucleusteq.com",
+        "salary": 123955,
+        "address": "91 ABC",
+        "dateOfJoining": "2023-05-27"
+    },
+    {
+        "employeeId": 302,
+        "firstName": "Core ",
+        "lastName": "Sign",
+        "department": "HR",
+        "email": "cohr@nucleusteq.com",
+        "salary": 123955,
+        "address": "91 ABC",
+        "dateOfJoining": "2023-05-27"
+    },
+    {
+        "employeeId": 402,
+        "firstName": "Core ",
+        "lastName": "Sign",
+        "department": "HR",
+        "email": "cor@nucleusteq.com",
+        "salary": 123955,
+        "address": "91 ABC",
+        "dateOfJoining": "2023-05-27"
+    }
+]
+
