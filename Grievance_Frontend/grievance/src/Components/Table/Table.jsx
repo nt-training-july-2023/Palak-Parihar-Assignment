@@ -4,7 +4,9 @@ export default function Table(props) {
 
     const noDataFound = (
         <>
-            <img className={classes.noData} src='/NotFound.png' alt='Not Found' />
+            <div className={classes.noDataDiv}>
+                <img className={classes.noData} src='/NotFound.png' alt='Not Found' />
+            </div>
             <h2 style={{ textAlign: 'center' }}>No Data Found, Please go back</h2>
         </>
     )
@@ -18,8 +20,7 @@ export default function Table(props) {
                     <thead>
                         {
                             props.headings.map((column, index) => {
-                                return <th key={index}>{column}</th>
-                            })
+                                return <th key={index}>{column}</th>                            })
                         }
                     </thead>
                     <tbody>

@@ -197,25 +197,25 @@ public class EmployeeServiceImpl implements EmployeeService {
   /**
    * delete employee by Id.
    * @param email
-   * @param deleteEmployee
+   * @param deleteEmployeeId
    */
   @Override
   public void deleteEmployeeById(
-      final String email, final Integer deleteEmployee) {
-    LOGGER.info("Deleting employee with Id: {}", deleteEmployee);
-    Optional<Employee> employee = employeeRepository.findById(deleteEmployee);
+      final String email, final Integer deleteEmployeeId) {
+    LOGGER.info("Deleting employee with Id: {}", deleteEmployeeId);
+    Optional<Employee> employee = employeeRepository.findById(deleteEmployeeId);
     if (!employee.isPresent()) {
       LOGGER.error("Employee with this Id {} not found for deletion.",
-          deleteEmployee);
+          deleteEmployeeId);
       throw new ResourceNotFoundException(ErrorConstants.RESOURCE_NOT_FOUND
-          + " " + deleteEmployee);
+          + " " + deleteEmployeeId);
     }
     if (email.equals(employee.get().getEmail())) {
       LOGGER.info("user can not delete itself {}", email);
       throw new CustomException(ErrorConstants.EMPLOYEE_SELF_DELETE);
     }
     employeeRepository.delete(employee.get());
-    LOGGER.info("Employee with Id {} deleted successfully.", deleteEmployee);
+    LOGGER.info("Employee with Id {} deleted successfully.", deleteEmployeeId);
   }
 
   /**

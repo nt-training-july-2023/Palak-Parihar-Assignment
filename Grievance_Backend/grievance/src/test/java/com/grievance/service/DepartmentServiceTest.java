@@ -96,7 +96,7 @@ class DepartmentServiceTest {
 	}
 
   @Test
-  public void fetch_all_departments() {
+  public void fetch_all_departments_with_pagination() {
 
     List<Department> departments = new ArrayList<Department>();
     departments.add(department);
@@ -109,7 +109,23 @@ class DepartmentServiceTest {
 
     assertThat(result).hasValueSatisfying(departmentOutDtos -> {
       assertThat(departmentOutDtos).hasSize(departments.size());
-    });  }
+    });  
+    }
+  
+  @Test
+  public void fetch_all_departments() {
+
+    List<Department> departments = new ArrayList<Department>();
+    departments.add(department);
+    
+    when(departmentRepository.findAll()).thenReturn(departments);
+
+    Optional<List<DepartmentOutDto>> result = departmentService.listAllDepartment(null);
+
+    assertThat(result).hasValueSatisfying(departmentOutDtos -> {
+      assertThat(departmentOutDtos).hasSize(departments.size());
+    });  
+    }
 
   @Test
   public void delete_department_success() {

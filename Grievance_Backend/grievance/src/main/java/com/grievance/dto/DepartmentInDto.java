@@ -110,7 +110,6 @@ public class DepartmentInDto {
   public DepartmentInDto(
       final Integer departmentIdField,
       final String departmentNameField) {
-    super();
     this.departmentId = departmentIdField;
     this.departmentName = departmentNameField;
   }

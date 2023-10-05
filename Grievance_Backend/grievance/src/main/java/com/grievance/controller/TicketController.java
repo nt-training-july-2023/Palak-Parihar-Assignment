@@ -134,7 +134,7 @@ public class TicketController {
     LOGGER.info("Received request to fetch a ticket with ID: {}",
         ticketId);
     Optional<TicketOutDto> ticketOut = ticketService
-        .findTicketByTicketId(ticketId);
+        .findTicketById(ticketId);
     String message = ResponseConstants.TICKET_RETRIEVED_BY_ID;
     Response<TicketOutDto> response =
         new Response<TicketOutDto>(message,

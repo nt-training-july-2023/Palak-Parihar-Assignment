@@ -168,7 +168,6 @@ public class EmployeeInDto {
    * Default constructor for EmployeeInDto.
    */
   public EmployeeInDto() {
-    super();
   }
 
   /**
@@ -220,7 +219,6 @@ public class EmployeeInDto {
       @NotEmpty final String passwordField,
       final UserType userTypeField,
       @NotEmpty final DepartmentInDto departmentInDtoField) {
-    super();
     this.employeeId = employeeIdField;
     this.email = emailField;
     this.fullName = fullNameField;

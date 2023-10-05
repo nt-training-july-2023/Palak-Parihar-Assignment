@@ -37,6 +37,12 @@
     background-color: #c5c0c0;
 }
 
+.noDataDiv{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 #icon {
     padding: 0px 10px 0px 10px;
     cursor: pointer;

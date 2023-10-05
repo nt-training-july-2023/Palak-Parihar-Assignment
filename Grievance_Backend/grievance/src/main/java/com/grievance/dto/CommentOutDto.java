@@ -103,7 +103,6 @@ public class CommentOutDto {
   public CommentOutDto(final String descriptionField,
       final String userNameField,
       final Date createdOnField) {
-    super();
     this.description = descriptionField;
     this.userName = userNameField;
     this.createdOn = new Date(createdOnField.getTime());

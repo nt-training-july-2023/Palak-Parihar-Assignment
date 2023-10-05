@@ -153,7 +153,7 @@ assertThat(dto.equals(ticket));
     Page<Ticket> list = new PageImpl<Ticket>(listOfTickets);
     when(ticketRepository.findAll(Mockito.any(PageRequest.class))).thenReturn(list);
 
-    List<TicketOutWOComment> list2 = ticketService.listOfAllTickets(0).get();
+    List<TicketOutWOComment> list2 = ticketService.findAll(0).get();
 
     for (int i = 0; i < list2.size(); i++) {
       assertThat(list2.get(i).equals(listOfTickets.get(i)));
@@ -161,24 +161,6 @@ assertThat(dto.equals(ticket));
 
   }
 
-  @Test
-  void filter_list_of_tickets_by_department_name() {
-
-    List<Ticket> list = new ArrayList<Ticket>();
-    list.add(ticket);
-
-    when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
-
-    when(ticketRepository.findByDepartment(Mockito.any(Department.class),
-        Mockito.any(PageRequest.class))).thenReturn(list);
-
-    Optional<List<TicketOutWOComment>> ticketOut = ticketService
-        .listOfAllTicketsByEmployeeDepartment("ayushi@nucleusteq.com", 0);
-
-    for (int i = 0; i < ticketOut.get().size(); i++) {
-      assertThat(ticketOut.get().get(i).equals(list.get(i)));
-    }
-  }
 
   @Test
   void ticket_updated_successfully() {
@@ -227,7 +209,7 @@ assertThat(dto.equals(ticket));
     
     when(ticketRepository.findById(Mockito.eq(1))).thenReturn(Optional.of(ticket));
         
-    TicketOutDto result = ticketService.findTicketByTicketId(1).get();
+    TicketOutDto result = ticketService.findTicketById(1).get();
     assertThat(result.equals(ticket));
     
   }
@@ -237,7 +219,7 @@ assertThat(dto.equals(ticket));
     when(ticketRepository.findById(Mockito.anyInt())).thenReturn(Optional.empty());
 
     assertThrows(ResourceNotFoundException.class, () -> {
-      ticketService.findTicketByTicketId(1);
+      ticketService.findTicketById(1);
     });
   }
   
@@ -252,4 +234,5 @@ assertThat(dto.equals(ticket));
       ticketService.updateTicket(ticketUpdateDto, 1, "ayushi@nucleusteq.com");
     });
   }
+  
 }

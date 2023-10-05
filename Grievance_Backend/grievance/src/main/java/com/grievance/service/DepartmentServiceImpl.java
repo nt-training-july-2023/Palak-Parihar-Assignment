@@ -1,7 +1,6 @@
 package com.grievance.service;
 
 import com.grievance.constants.ErrorConstants;
-import com.grievance.constants.ValidationConstants;
 import com.grievance.dto.DepartmentInDto;
 import com.grievance.dto.DepartmentOutDto;
 import com.grievance.entity.Department;
@@ -78,10 +77,6 @@ public class DepartmentServiceImpl implements DepartmentService {
       final DepartmentInDto departmentInDto) {
     LOGGER.info("Saving department: {}",
         departmentInDto.getDepartmentName());
-    if (departmentInDto.getDepartmentName().trim().length() == 0) {
-      throw new CustomException(
-          "Department " + ValidationConstants.EMPTY_FIELD);
-    }
     Boolean isTextOnly = Pattern.matches("^[A-Za-z]+$",
         departmentInDto.getDepartmentName());
     if (!isTextOnly) {

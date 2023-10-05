@@ -99,7 +99,6 @@ public class EmployeeLoginDto {
   public EmployeeLoginDto(
       final String emailField,
       final String passwordField) {
-    super();
     this.email = emailField;
     this.password = passwordField;
   }
@@ -108,7 +107,6 @@ public class EmployeeLoginDto {
    * default constructor.
    */
   public EmployeeLoginDto() {
-    super();
   }
 
 }

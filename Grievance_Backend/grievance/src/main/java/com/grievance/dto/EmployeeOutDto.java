@@ -148,7 +148,6 @@ public class EmployeeOutDto {
    * Default constructor for EmployeeOutDto.
    */
   public EmployeeOutDto() {
-    super();
   }
 
   /**
@@ -199,7 +198,6 @@ public class EmployeeOutDto {
       final UserType userTypeField,
       final Boolean firstTimeUserField,
       @NotEmpty final String departmentOutDtoField) {
-    super();
     this.employeeId = employeeIdField;
     this.email = emailField;
     this.fullName = fullNameField;

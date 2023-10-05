@@ -137,7 +137,7 @@ public class TicketControllerTest {
 
 @Test
 	public void get_ticket_by_id_success() throws Exception {
-		when(ticketService.findTicketByTicketId(Mockito.anyInt())).thenReturn(Optional.of(ticketOutDto));
+		when(ticketService.findTicketById(Mockito.anyInt())).thenReturn(Optional.of(ticketOutDto));
 		
 		mockMvc.perform(MockMvcRequestBuilders.get(baseURL+ControllerURLS.GET_DATA_BY_ID)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -149,7 +149,7 @@ public class TicketControllerTest {
 
 @Test
 	public void get_ticket_by_id_fails() throws Exception {
-		when(ticketService.findTicketByTicketId(Mockito.anyInt())).thenThrow(ResourceNotFoundException.class);
+		when(ticketService.findTicketById(Mockito.anyInt())).thenThrow(ResourceNotFoundException.class);
 		
 		mockMvc.perform(MockMvcRequestBuilders.get(baseURL+ControllerURLS.GET_DATA_BY_ID)
 				.contentType(MediaType.APPLICATION_JSON)
