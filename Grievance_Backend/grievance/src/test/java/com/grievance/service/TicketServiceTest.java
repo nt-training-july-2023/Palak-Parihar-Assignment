@@ -36,6 +36,7 @@ import com.grievance.entity.Ticket;
 import com.grievance.entity.TicketType;
 import com.grievance.entity.UserType;
 import com.grievance.exception.ResourceNotFoundException;
+import com.grievance.exception.UnauthorisedUserException;
 import com.grievance.repository.DepartmentRepository;
 import com.grievance.repository.EmployeeRepository;
 import com.grievance.repository.TicketRepository;
@@ -237,6 +238,18 @@ assertThat(dto.equals(ticket));
 
     assertThrows(ResourceNotFoundException.class, () -> {
       ticketService.findTicketByTicketId(1);
+    });
+  }
+  
+  @Test
+  void when_update_tickets_fails() {
+    Employee employee1 = new Employee(1, "sneha@nucleusteq.com", "Sneha", "WEDFGHJ==", UserType.MEMBER, false, new Department("CRM"));
+    ticket.setEmployee(new Employee());
+    when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee1);
+    when(ticketRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(ticket));
+    
+    assertThrows(UnauthorisedUserException.class, () -> {
+      ticketService.updateTicket(ticketUpdateDto, 1, "ayushi@nucleusteq.com");
     });
   }
 }

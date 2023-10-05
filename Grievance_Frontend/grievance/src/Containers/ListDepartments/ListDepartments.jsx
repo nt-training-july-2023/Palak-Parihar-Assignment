@@ -48,14 +48,14 @@ export default function ListDepartments() {
             .catch(err => {
                 setModal(() => <Modal message={err.data.response.data} onClick={closeModal} />)
             })
-    }, [page, navigate])
+    }, [page, navigate, flag])
 
     const closeModal = () => {
         setModal(() => <></>)
     }
 
     const AddDepartment = () => {
-        setModal(() => <Modal component={<NewDepartment closeModal={closeModal} />} />)
+        setModal(() => <Modal component={<NewDepartment closeModal={closeModal} flag={flag} set={setFlag}/>} />)
     }
 
     const previousPage = () => {
@@ -94,11 +94,17 @@ export default function ListDepartments() {
     }
 
     const addEntryCss = {
-        textAlign : 'center',
-        padding : '10px',
-        fontSize : 'larger',
-        fontWeight : '500',
-        cursor : 'pointer'
+        textAlign: 'center',
+        padding: '10px',
+        fontSize: 'larger',
+        fontWeight: '500',
+        cursor: 'pointer'
+    }
+
+    let containerCss={
+        display : 'flex',
+        alignItems : 'center',
+        justifyContent : 'center'
     }
 
     return (
@@ -110,17 +116,19 @@ export default function ListDepartments() {
                         Add Department  <i id="icon" class='fas fa-plus-circle'></i>
                     </p>
                 </div>
-                <div className="list_main_container">
-                    <Table
-                        headings={headings}
-                        values={departments}
-                        columns={columns}
-                        delete={deleteDepartmentHandler}
-                        id="departmentId"
-                        previousPage={previousPage}
-                        nextPage={nextPage}
-                        disablePrevious={disablePrevious}
-                        disableNext={disableNext} />
+                <div style={containerCss}>
+                    <div style={{width:'60%'}}>
+                        <Table
+                            headings={headings}
+                            values={departments}
+                            columns={columns}
+                            delete={deleteDepartmentHandler}
+                            id="departmentId"
+                            previousPage={previousPage}
+                            nextPage={nextPage}
+                            disablePrevious={disablePrevious}
+                            disableNext={disableNext} />
+                    </div>
                 </div>
             </div>
         </>

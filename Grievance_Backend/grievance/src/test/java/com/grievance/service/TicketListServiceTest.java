@@ -346,4 +346,29 @@ public class TicketListServiceTest {
       assertThat(ticketOutWOComments).hasSize(tickets.size());
     });
   }
+  
+  @Test
+  void list_tickets_raised_by_user_success() {
+    when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
+  Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0,null, true, null);
+    
+    assertThat(result).isNotNull();
+    
+    assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
+      assertThat(ticketOutWOComments).hasSize(tickets.size());
+    });
+  }
+  
+  @Test
+  void list_tickets_by_department_success() {
+    when(departmentRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(new Department()));
+    when(employeeRepository.existsByEmailAndUserType(Mockito.anyString(), Mockito.any())).thenReturn(true);
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0,null, null, 100);
+    
+    assertThat(result).isNotNull();
+    
+    assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
+      assertThat(ticketOutWOComments).hasSize(tickets.size());
+    });
+  }
 }

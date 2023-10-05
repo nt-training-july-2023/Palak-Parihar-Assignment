@@ -46,9 +46,9 @@
 
 .menu_bar {
     display: flex;
-    padding-top: 1.5rem;
     width: 100%;
-    justify-content: space-around;
+    justify-content: space-between;
+    margin: 0px 50px;
 }
 
 .menuOuterDiv{
@@ -59,7 +59,7 @@
 .heading {
     margin: 0px 30px;
     text-decoration: underline;
-
+    text-align: center;
 }
 
 #active {

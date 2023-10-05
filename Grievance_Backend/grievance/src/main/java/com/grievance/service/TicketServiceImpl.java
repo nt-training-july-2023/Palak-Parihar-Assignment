@@ -320,6 +320,8 @@ public class TicketServiceImpl implements TicketService {
       final Integer departmentId,
       final Status status,
       final Integer page) {
+    LOGGER.info("Listing tickets by department {}, "
+        + "and status {}", departmentId, status);
     Department department =
         departmentRepository.findById(departmentId).orElseThrow(() -> {
       throw new CustomException(ErrorConstants.DEPARTMENT_NOT_FOUND);
@@ -345,6 +347,7 @@ public class TicketServiceImpl implements TicketService {
   public Optional<List<TicketOutWOComment>> listTicketsByDepartment(
       final Integer departmentId,
       final Integer page) {
+    LOGGER.info("Listing tickets by department {}", departmentId);
     Department department =
         departmentRepository.findById(departmentId).orElseThrow(() -> {
       throw new CustomException(ErrorConstants.DEPARTMENT_NOT_FOUND);
@@ -373,6 +376,8 @@ public class TicketServiceImpl implements TicketService {
       final Integer departmentId,
       final Status status,
       final Integer page) {
+    LOGGER.info("Listing tickets by Raised by user {}, by department {}, "
+        + "and status {}", email, departmentId, status);
     Employee employee = employeeRepository.findByEmail(email);
     if (Objects.isNull(employee)) {
       throw new CustomException(ErrorConstants.EMPLOYEE_NOT_FOUND);
@@ -404,6 +409,8 @@ public class TicketServiceImpl implements TicketService {
       final String email,
       final Integer departmentId,
       final Integer page) {
+    LOGGER.info("Listing tickets Raised by user {}, "
+        + "by department {}", email, departmentId);
     Employee employee = employeeRepository.findByEmail(email);
     if (Objects.isNull(employee)) {
       throw new CustomException(ErrorConstants.EMPLOYEE_NOT_FOUND);

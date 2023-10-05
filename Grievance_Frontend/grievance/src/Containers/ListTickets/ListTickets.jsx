@@ -49,12 +49,16 @@ export default function ListTickets(props) {
         description: null
     })
     const [modal, setModal] = useState();
+    const [isAdmin, setIsAdmin] = useState(false)
 
 
     useEffect(() => {
         if (localStorage.getItem('userDetails') === null) {
             navigate('/logout')
             return
+        } else {
+            let userDetails = JSON.parse(localStorage.getItem('userDetails'))
+            setIsAdmin(userDetails.userType === 'ADMIN')
         }
         FETCH_ALL_TICKETS(config)
             .then(res => {
@@ -80,7 +84,7 @@ export default function ListTickets(props) {
             .catch(err => {
                 setModal(() => <Modal message={err.data.response.data} onClick={closeModal} />)
             })
-    }, [config, navigate, flag])
+    }, [config, navigate, flag, isAdmin])
 
     const viewSelectedTicket = (ticketId) => {
         let values = JSON.parse(localStorage.getItem('userDetails'))
@@ -223,23 +227,26 @@ export default function ListTickets(props) {
         <>
             {showTicket ? <Modal component={ViewTicket(viewTicketparams)} /> : null}
             {modal}
+            <h2 className={classes.heading}>All Tickets</h2>
             <div className={classes.menuOuterDiv}>
                 <div className={classes.menu_bar}>
                     <div id={classes.menu}>
                         <button class={classes.menu_button} id={config.myTickets ? '' : classes.active} onClick={() => AllTickets()}>All Tickets</button>
                         <button class={classes.menu_button} id={config.myTickets ? classes.active : ''} onClick={() => MyTickets()}>MyTickets</button>
                     </div>
-                    <h2 className={classes.heading}>All Tickets</h2>
                     <div className={classes.status_dropdown}>
-                        <p className={classes.Label}>Departments : </p>
-                        <InputElement
-                            elementType='select'
-                            options={departments}
-                            selectValue='departmentId'
-                            selectOption='departmentName'
-                            default='DEPARTMENT'
-                            changed={e => setDepartment(e)}
-                        />
+                        {isAdmin ?
+                            <>
+                                <p className={classes.Label}>Departments : </p>
+                                <InputElement
+                                    elementType='select'
+                                    options={departments}
+                                    selectValue='departmentId'
+                                    selectOption='departmentName'
+                                    default='DEPARTMENT'
+                                    changed={e => setDepartment(e)}
+                                />
+                            </> : ''}
                         <p className={classes.Label}>Status : </p>
                         <InputElement
                             elementType='select'
@@ -254,7 +261,7 @@ export default function ListTickets(props) {
             </div>
             <div className={classes.mainContainer}>
 
-                <div>
+                <div style={{width : '90%'}}>
                     <Table
                         values={tickets}
                         headings={headings}

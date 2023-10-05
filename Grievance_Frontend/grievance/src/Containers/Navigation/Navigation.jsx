@@ -83,7 +83,7 @@ export default function Navigation(props) {
                 </div>
                 <div>
                     <ul className={classes.navItems}>
-                        {showMenu ? menuItem : null}
+                       
                         <li className={classes.dropdown}>
                             <Link to={LIST_TICKETS_PATH}>
                                 <div className={currentPath.pathname.startsWith(LIST_TICKETS_PATH) ? classes.activeMenu : ''}>
@@ -94,6 +94,7 @@ export default function Navigation(props) {
                                 <li><Link to={NEW_TICKET_PATH}>Raise a Ticket</Link></li>
                             </ul>
                         </li>
+                        {showMenu ? menuItem : null}
                         <li className={classes.dropdown}>
                             <Link to={USER_PROFILE_PATH}>
                                 <div className={currentPath.pathname.startsWith(USER_PROFILE_PATH) ? classes.active : ''}>

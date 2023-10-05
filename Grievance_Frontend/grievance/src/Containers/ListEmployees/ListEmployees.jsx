@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import classes from './ListEmployees.module.css';
 import { DELETE_EMPLOYEE, FETCH_ALL_USERS } from "../../Service/EmployeeServices"
 import { useNavigate } from "react-router";
 import Table from "../../Components/Table/Table";
@@ -84,17 +85,19 @@ export default function ListEmployees() {
     return (
         <>
             {modal}
-            <div className="list_main_container">
-                <Table values={employees}
-                    headings={headings}
-                    delete={deleteEmployeeHandler}
-                    columns={columns}
-                    heading=" Employees "
-                    id="employeeId"
-                    previousPage={previousPage}
-                    nextPage={nextPage}
-                    disablePrevious={disablePrevious}
-                    disableNext={disableNext} />
+            <div className={classes.outerDiv}>
+                <div style={{ width: '70%' }}>
+                    <Table values={employees}
+                        headings={headings}
+                        delete={deleteEmployeeHandler}
+                        columns={columns}
+                        heading=" Employees "
+                        id="employeeId"
+                        previousPage={previousPage}
+                        nextPage={nextPage}
+                        disablePrevious={disablePrevious}
+                        disableNext={disableNext} />
+                </div>
             </div>
 
         </>
