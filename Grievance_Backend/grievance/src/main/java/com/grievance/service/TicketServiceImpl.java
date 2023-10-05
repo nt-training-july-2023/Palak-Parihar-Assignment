@@ -322,13 +322,14 @@ public class TicketServiceImpl implements TicketService {
       final Integer page) {
     LOGGER.info("Listing tickets by department {}, "
         + "and status {}", departmentId, status);
-    Department department =
-        departmentRepository.findById(departmentId).orElseThrow(() -> {
+    Optional<Department> department =
+        departmentRepository.findById(departmentId);
+    if (!department.isPresent()) {
       throw new CustomException(ErrorConstants.DEPARTMENT_NOT_FOUND);
-    });
+    }
     List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
     ticketRepository.findByDepartmentAndStatus(
-        department,
+        department.get(),
         status,
         PageRequest.of(page, pageSize))
         .forEach(e -> {
@@ -348,13 +349,14 @@ public class TicketServiceImpl implements TicketService {
       final Integer departmentId,
       final Integer page) {
     LOGGER.info("Listing tickets by department {}", departmentId);
-    Department department =
-        departmentRepository.findById(departmentId).orElseThrow(() -> {
+    Optional<Department> department =
+        departmentRepository.findById(departmentId);
+    if (!department.isPresent()) {
       throw new CustomException(ErrorConstants.DEPARTMENT_NOT_FOUND);
-    });
+    }
     List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
     ticketRepository.findByDepartment(
-        department,
+        department.get(),
         PageRequest.of(page, pageSize))
         .forEach(e -> {
           list.add(convertToWOCommentDto(e));
@@ -382,13 +384,14 @@ public class TicketServiceImpl implements TicketService {
     if (Objects.isNull(employee)) {
       throw new CustomException(ErrorConstants.EMPLOYEE_NOT_FOUND);
     }
-    Department department = departmentRepository
-        .findById(departmentId).orElseThrow(() -> {
+    Optional<Department> department =
+        departmentRepository.findById(departmentId);
+    if (!department.isPresent()) {
       throw new CustomException(ErrorConstants.DEPARTMENT_NOT_FOUND);
-    });
+    }
     List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
     ticketRepository.findByDepartmentAndStatusAndEmployee(
-        department,
+        department.get(),
         status,
         employee,
         PageRequest.of(page, pageSize))
@@ -415,13 +418,14 @@ public class TicketServiceImpl implements TicketService {
     if (Objects.isNull(employee)) {
       throw new CustomException(ErrorConstants.EMPLOYEE_NOT_FOUND);
     }
-    Department department = departmentRepository
-        .findById(departmentId).orElseThrow(() -> {
+    Optional<Department> department =
+        departmentRepository.findById(departmentId);
+    if (!department.isPresent()) {
       throw new CustomException(ErrorConstants.DEPARTMENT_NOT_FOUND);
-    });
+    }
     List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
     ticketRepository.findByDepartmentAndEmployee(
-        department,
+        department.get(),
         employee,
         PageRequest.of(page, pageSize))
     .forEach((e) -> {
