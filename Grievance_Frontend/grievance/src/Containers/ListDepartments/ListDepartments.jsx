@@ -9,8 +9,8 @@ import { headers } from "../../API/Headers"
 import ConfirmationDialog from "../../Components/Confirmation/ConfirmationDialog"
 
 
-export default function ListDepartments(props) {
-
+export default function ListDepartments() {
+    const [flag, setFlag] = useState(true)
     const [departments, setDepartments] = useState([])
     const [modal, setModal] = useState()
     const headings = ["Department Id", " Department Name", "Actions"]
@@ -48,14 +48,14 @@ export default function ListDepartments(props) {
             .catch(err => {
                 setModal(() => <Modal message={err.data.response.data} onClick={closeModal} />)
             })
-    }, [modal, page, navigate])
+    }, [page, navigate, flag])
 
     const closeModal = () => {
         setModal(() => <></>)
     }
 
     const AddDepartment = () => {
-        setModal(() => <Modal component={<NewDepartment closeModal={closeModal} />} />)
+        setModal(() => <Modal component={<NewDepartment closeModal={closeModal} flag={flag} set={setFlag}/>} />)
     }
 
     const previousPage = () => {
@@ -86,6 +86,7 @@ export default function ListDepartments(props) {
     const deleteDepartment = (deptId) => {
         DELETE_DEPARTMENT(deptId)
             .then(response => {
+                setFlag(!flag)
                 setModal(<Modal message={response.data.message} onClick={closeModal} />)
             }).catch(err => {
                 setModal(<Modal message={err.data.response.data} onClick={closeModal} />)
@@ -93,11 +94,17 @@ export default function ListDepartments(props) {
     }
 
     const addEntryCss = {
-        textAlign : 'center',
-        padding : '10px',
-        fontSize : 'larger',
-        fontWeight : '500',
-        cursor : 'pointer'
+        textAlign: 'center',
+        padding: '10px',
+        fontSize: 'larger',
+        fontWeight: '500',
+        cursor: 'pointer'
+    }
+
+    let containerCss={
+        display : 'flex',
+        alignItems : 'center',
+        justifyContent : 'center'
     }
 
     return (
@@ -109,17 +116,19 @@ export default function ListDepartments(props) {
                         Add Department  <i id="icon" class='fas fa-plus-circle'></i>
                     </p>
                 </div>
-                <div className="list_main_container">
-                    <Table
-                        headings={headings}
-                        values={departments}
-                        columns={columns}
-                        delete={deleteDepartmentHandler}
-                        id="departmentId"
-                        previousPage={previousPage}
-                        nextPage={nextPage}
-                        disablePrevious={disablePrevious}
-                        disableNext={disableNext} />
+                <div style={containerCss}>
+                    <div style={{width:'60%'}}>
+                        <Table
+                            headings={headings}
+                            values={departments}
+                            columns={columns}
+                            delete={deleteDepartmentHandler}
+                            id="departmentId"
+                            previousPage={previousPage}
+                            nextPage={nextPage}
+                            disablePrevious={disablePrevious}
+                            disableNext={disableNext} />
+                    </div>
                 </div>
             </div>
         </>

@@ -5,7 +5,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 
 import com.grievance.Configuration.SecurityFilter;
 import com.grievance.authentication.AuthenticateUser;
@@ -14,7 +13,6 @@ import com.grievance.authentication.AuthenticateUser;
  * Entry point of Grievance Management Application.
  */
 @SpringBootApplication
-@ComponentScan("com.grievance")
 public class GrievanceApplication {
 
   /**

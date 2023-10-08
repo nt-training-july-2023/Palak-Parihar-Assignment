@@ -49,7 +49,6 @@ public class DepartmentOutDto {
   public DepartmentOutDto(
       final Integer departmentIdField,
       final String departmentNameField) {
-    super();
     this.departmentId = departmentIdField;
     this.departmentName = departmentNameField;
   }
@@ -85,6 +84,5 @@ public class DepartmentOutDto {
    * default constructor.
    */
   public DepartmentOutDto() {
-    super();
   }
 }

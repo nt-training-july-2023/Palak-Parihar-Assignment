@@ -9,12 +9,15 @@ import com.grievance.dto.TicketOutDto;
 import com.grievance.dto.TicketOutWOComment;
 import com.grievance.dto.TicketUpdateDto;
 import com.grievance.entity.Comment;
+import com.grievance.entity.Department;
 import com.grievance.entity.Employee;
 import com.grievance.entity.Status;
 import com.grievance.entity.Ticket;
 import com.grievance.entity.UserType;
+import com.grievance.exception.CustomException;
 import com.grievance.exception.ResourceNotFoundException;
 import com.grievance.exception.UnauthorisedUserException;
+import com.grievance.repository.DepartmentRepository;
 import com.grievance.repository.EmployeeRepository;
 import com.grievance.repository.TicketRepository;
 
@@ -49,7 +52,7 @@ public class TicketServiceImpl implements TicketService {
   private ModelMapper modelMapper;
 
   /**
-   * ticket repository instance provide access method for interacting with
+   * ticket repository instance provide access method for interacting withs
    * database.
    */
   @Autowired
@@ -61,6 +64,13 @@ public class TicketServiceImpl implements TicketService {
    */
   @Autowired
   private EmployeeRepository employeeRepository;
+
+  /**
+   * department repository instance provide access method for interacting with
+   * database.
+   */
+  @Autowired
+  private DepartmentRepository departmentRepository;
 
   /**
    * variable to store pageSize for pagination.
@@ -83,10 +93,10 @@ public class TicketServiceImpl implements TicketService {
   /**
    * return list of All tickets present in database.
    *
+   * @param page
    * @return optional of list of ticketOut DTO.
    */
-  @Override
-  public Optional<List<TicketOutWOComment>> listOfAllTickets(
+  public Optional<List<TicketOutWOComment>> findAll(
       final Integer page) {
     LOGGER.info("Listing all tickets");
     List<TicketOutWOComment> tickets = new ArrayList<TicketOutWOComment>();
@@ -103,23 +113,26 @@ public class TicketServiceImpl implements TicketService {
   /**
    * method to access rickets by their department Name.
    *
-   * @param email
+   * @Id
+   * @param page
+   * @param departmentId
    * @return list of ticket out DTO
    */
-  @Override
   public Optional<List<TicketOutWOComment>>
-  listOfAllTicketsByEmployeeDepartment(
-      final String email,
+  findByDepartment(
+      final Integer departmentId,
       final Integer page) {
-    LOGGER.info("Listing all tickets by user {}'s department", email);
-    Employee employee = employeeRepository.findByEmail(email);
-    if (Objects.isNull(employee)) {
-      throw new ResourceNotFoundException(email);
-    }
+    LOGGER.info("Listing all tickets by user {}'s department",
+        departmentId);
     List<TicketOutWOComment> ticketOutDtos =
         new ArrayList<TicketOutWOComment>();
+    Optional<Department> department =
+        departmentRepository.findById(departmentId);
+    if (!department.isPresent()) {
+      throw new ResourceNotFoundException(ErrorConstants.DEPARTMENT_NOT_FOUND);
+    }
     ticketRepository
-        .findByDepartment(employee.getDepartment(),
+        .findByDepartment(department.get(),
             PageRequest.of(page, pageSize).withSort(Sort.by("status")))
         .forEach(
             e -> {
@@ -130,11 +143,11 @@ public class TicketServiceImpl implements TicketService {
 
   /**
    * method to update ticket.
-   *
+   * @param ticketId
+   * @param email
    * @param ticketUpdateDto
    * @return updated ticket.
    */
-  @Override
   public Optional<TicketOutDto> updateTicket(
       final TicketUpdateDto ticketUpdateDto, final Integer ticketId,
       final String email) {
@@ -179,12 +192,13 @@ public class TicketServiceImpl implements TicketService {
   }
 
   /**
+   * list Tickets Raised By User.
+   *
    * @param page
    * @param email
    * @return list of tickets raised by user.
    */
-  @Override
-  public Optional<List<TicketOutWOComment>> listTicketsRaisedByUser(
+  public Optional<List<TicketOutWOComment>> findByEmployee(
       final Integer page,
       final String email) {
     LOGGER.info("Listing all tickets raised by user {}", email);
@@ -205,11 +219,12 @@ public class TicketServiceImpl implements TicketService {
   }
 
   /**
+   * find Ticket By Ticket Id.
+   *
    * @param ticketId
    * @return ticket
    */
-  @Override
-  public Optional<TicketOutDto> findTicketByTicketId(
+  public Optional<TicketOutDto> findTicketById(
       final Integer ticketId) {
     LOGGER.info("Finding ticket by Id {} ", ticketId);
     Optional<Ticket> ticket = ticketRepository.findById(ticketId);
@@ -224,13 +239,14 @@ public class TicketServiceImpl implements TicketService {
   }
 
   /**
+   * list Ticket By Status And Employee.
+   *
    * @param status
    * @param page
    * @param email
    * @return list of tickets.
    */
-  @Override
-  public Optional<List<TicketOutWOComment>> listTicketByStatusAndEmployee(
+  public Optional<List<TicketOutWOComment>> findByStatusAndEmployee(
       final Integer page,
       final Status status,
       final String email) {
@@ -253,11 +269,13 @@ public class TicketServiceImpl implements TicketService {
   }
 
   /**
+   * list Tickets By Status.
+   *
    * @param status
+   * @param page
    * @return list of tickets.
    */
-  @Override
-  public Optional<List<TicketOutWOComment>> listTicketsByStatus(
+  public Optional<List<TicketOutWOComment>> findByStatus(
       final Status status,
       final Integer page) {
     LOGGER.info("Liting tickets filtered by status {} ", status);
@@ -271,38 +289,116 @@ public class TicketServiceImpl implements TicketService {
   }
 
   /**
-   * @param email
-   * @param status
-   * @param page
-   * @return list of tickets by department and status.
-   */
-  @Override
-  public Optional<List<TicketOutWOComment>>
-  listTicketsByUserDepartmentAndStatus(
-      final String email,
+  * list Tickets By Department And Status.
+  *
+  * @param departmentId
+  * @param status
+  * @param page
+  * @return list of tickets by department and status
+  */
+  public Optional<List<TicketOutWOComment>> findByDepartmentAndStatus(
+      final Integer departmentId,
       final Status status,
       final Integer page) {
-    LOGGER.info("Listing tickets by "
-        + "user {} department and status {} ", email, status);
-    Employee employee = employeeRepository.findByEmail(email);
-    if (Objects.isNull(employee)) {
-      throw new ResourceNotFoundException(email);
+    LOGGER.info("Listing tickets by department {}, "
+        + "and status {}", departmentId, status);
+    Optional<Department> department =
+        departmentRepository.findById(departmentId);
+    if (!department.isPresent()) {
+      throw new CustomException(ErrorConstants.DEPARTMENT_NOT_FOUND);
     }
     List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
     ticketRepository.findByDepartmentAndStatus(
-        employee.getDepartment(),
-        status, PageRequest.of(page, pageSize))
+        department.get(),
+        status,
+        PageRequest.of(page, pageSize))
         .forEach(e -> {
           list.add(convertToWOCommentDto(e));
         });
     return Optional.ofNullable(list);
   }
 
+
   /**
+  * list Tickets Raised By User By Department And Status.
+  *
+  * @param departmentId
+  * @param status
+  * @param page
+  * @param email
+  * @return list of tickets by department
+  */
+  public Optional<List<TicketOutWOComment>>
+  findByDepartmentStatusAndEmployee(
+      final String email,
+      final Integer departmentId,
+      final Status status,
+      final Integer page) {
+    LOGGER.info("Listing tickets by Raised by user {}, by department {}, "
+        + "and status {}", email, departmentId, status);
+    Employee employee = employeeRepository.findByEmail(email);
+    if (Objects.isNull(employee)) {
+      throw new CustomException(ErrorConstants.EMPLOYEE_NOT_FOUND);
+    }
+    Optional<Department> department =
+        departmentRepository.findById(departmentId);
+    if (!department.isPresent()) {
+      throw new CustomException(ErrorConstants.DEPARTMENT_NOT_FOUND);
+    }
+    List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
+    ticketRepository.findByDepartmentAndStatusAndEmployee(
+        department.get(),
+        status,
+        employee,
+        PageRequest.of(page, pageSize))
+    .forEach((e) -> {
+      list.add(convertToWOCommentDto(e));
+    });
+    return Optional.ofNullable(list);
+  }
+
+  /**
+   * list Tickets Raised By User By Department.
+   *
+   * @param email
+   * @param departmentId
+   * @param page
+   * @return list of tickets by department
+   */
+  public Optional<List<TicketOutWOComment>> findByDepartmentAndEmployee(
+      final String email,
+      final Integer departmentId,
+      final Integer page) {
+    LOGGER.info("Listing tickets Raised by user {}, "
+        + "by department {}", email, departmentId);
+    Employee employee = employeeRepository.findByEmail(email);
+    if (Objects.isNull(employee)) {
+      throw new CustomException(ErrorConstants.EMPLOYEE_NOT_FOUND);
+    }
+    Optional<Department> department =
+        departmentRepository.findById(departmentId);
+    if (!department.isPresent()) {
+      throw new CustomException(ErrorConstants.DEPARTMENT_NOT_FOUND);
+    }
+    List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
+    ticketRepository.findByDepartmentAndEmployee(
+        department.get(),
+        employee,
+        PageRequest.of(page, pageSize))
+    .forEach((e) -> {
+      list.add(convertToWOCommentDto(e));
+    });
+    return Optional.ofNullable(list);
+  }
+
+  /**
+   * list All Tickets.
+   *
    * @param email
    * @param page
    * @param status
    * @param myTickets
+   * @param department
    * @return list of tickets.
    */
   @Override
@@ -310,31 +406,46 @@ public class TicketServiceImpl implements TicketService {
       final String email,
       final Integer page,
       final Status status,
-      final Boolean myTickets) {
+      final Boolean myTickets,
+      final Integer department) {
     LOGGER.info("Listing Tickets");
-    Boolean isAdmin = employeeRepository.existsByEmailAndUserType(
-        email, UserType.ADMIN);
+    Employee employee = employeeRepository.findByEmail(email);
+    Boolean isAdmin = employee.getUserType().equals(UserType.ADMIN);
     if (Objects.isNull(myTickets)) {
       if (isAdmin) {
-        if (Objects.isNull(status)) {
-          return listOfAllTickets(page);
+        if (!Objects.isNull(status) && !Objects.isNull(department)) {
+          return findByDepartmentAndStatus(department, status, page);
         } else {
-          return listTicketsByStatus(status, page);
+          if (!Objects.isNull(status)) {
+            return findByStatus(status, page);
+          }
+          if (!Objects.isNull(department)) {
+            return findByDepartment(department, page);
+          }
+          return findAll(page);
         }
       } else {
         if (Objects.isNull(status)) {
-          return listOfAllTicketsByEmployeeDepartment(email, page);
+          return findByDepartment(
+              employee.getDepartment().getDepartmentId(), page);
         } else {
-          return listTicketsByUserDepartmentAndStatus(email, status,
-              page);
+          return findByDepartmentAndStatus(
+              employee.getDepartment().getDepartmentId(), status, page);
         }
       }
     } else {
-      if (Objects.isNull(status)) {
-        return listTicketsRaisedByUser(page, email);
+      if (!Objects.isNull(department) && !Objects.isNull(status)) {
+        return findByDepartmentStatusAndEmployee(
+            email, department, status, page);
       } else {
-        return listTicketByStatusAndEmployee(page, status, email);
+        if (!Objects.isNull(status)) {
+          return findByStatusAndEmployee(page, status, email);
+        }
+        if (!Objects.isNull(department)) {
+          return findByDepartmentAndEmployee(email, department, page);
+        }
       }
+      return findByEmployee(page, email);
     }
   }
 

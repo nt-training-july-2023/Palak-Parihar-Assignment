@@ -69,6 +69,7 @@ export default function NewDepartment(props) {
         GENERATE_NEW_DEPARTMENT(departmentData)
             .then(response => {
                 console.log(response)
+                props.set(!props.flag)
                 setModal(() => <Modal message={response.data.message} onClick={props.closeModal} />)
                 return response.data;
             }).catch(error => {

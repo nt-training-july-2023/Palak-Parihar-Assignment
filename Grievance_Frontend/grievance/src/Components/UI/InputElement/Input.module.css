@@ -30,8 +30,15 @@
     text-align: left;
     align-items: center;
     font-weight: bold;
-    width: 30%;
+    width: 35%;
     font-size: large;
+}
+
+.headLabel{
+    text-align: left;
+    font-size: large;
+    font-weight: bold;
+    padding: 10px 0px 10px 0px;
 }
 
 
@@ -65,5 +72,12 @@
 
     .Label{
         width: 100%;
+    }
+}
+
+@media (min-width : 900px) and (max-width: 1200px)  { 
+
+    .Label{
+        width: 43%;
     }
 }

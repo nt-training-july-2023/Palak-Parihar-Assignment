@@ -91,7 +91,7 @@ public class TicketControllerTest {
     List<TicketOutWOComment> ticketOutDtos = new ArrayList<TicketOutWOComment>();
 
     when(ticketService.listAllTickets(Mockito.anyString(),
-        Mockito.anyInt(), Mockito.any(Status.class), Mockito.anyBoolean()))
+        Mockito.anyInt(), Mockito.any(Status.class), Mockito.anyBoolean(), Mockito.anyInt()))
         .thenReturn(Optional.of(ticketOutDtos));
 
     mockMvc
@@ -101,7 +101,7 @@ public class TicketControllerTest {
             .header("email", "ayushi@nucleusteq.com")
             .header("password", "Ayushi#123")
             .param("myTickets", "true")
-            .param("departmentTickets", "true")
+            .param("department", "1")
             .param("status", "OPEN")
             .param("page", "0"))
         .andExpect(status().isOk())
@@ -137,7 +137,7 @@ public class TicketControllerTest {
 
 @Test
 	public void get_ticket_by_id_success() throws Exception {
-		when(ticketService.findTicketByTicketId(Mockito.anyInt())).thenReturn(Optional.of(ticketOutDto));
+		when(ticketService.findTicketById(Mockito.anyInt())).thenReturn(Optional.of(ticketOutDto));
 		
 		mockMvc.perform(MockMvcRequestBuilders.get(baseURL+ControllerURLS.GET_DATA_BY_ID)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -149,7 +149,7 @@ public class TicketControllerTest {
 
 @Test
 	public void get_ticket_by_id_fails() throws Exception {
-		when(ticketService.findTicketByTicketId(Mockito.anyInt())).thenThrow(ResourceNotFoundException.class);
+		when(ticketService.findTicketById(Mockito.anyInt())).thenThrow(ResourceNotFoundException.class);
 		
 		mockMvc.perform(MockMvcRequestBuilders.get(baseURL+ControllerURLS.GET_DATA_BY_ID)
 				.contentType(MediaType.APPLICATION_JSON)

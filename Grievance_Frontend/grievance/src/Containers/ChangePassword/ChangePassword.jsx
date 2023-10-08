@@ -115,7 +115,7 @@ export default function ChangePassword(props) {
                         error={formElement.config.error}
                         shouldValidate={formElement.config.validation}
                         touched={formElement.config.touched}
-                        label={formElement.config.label}
+                        headLabel={formElement.config.label}
                         changed={(e) => inputChangeHandler(e, formElement.id)}
                     />
                 </div>
@@ -182,7 +182,7 @@ export default function ChangePassword(props) {
         display: 'flex',
         'justify-content': 'center',
         'align-items': 'center',
-        width: '57%'
+        width: '45%'
     }
 
     return (

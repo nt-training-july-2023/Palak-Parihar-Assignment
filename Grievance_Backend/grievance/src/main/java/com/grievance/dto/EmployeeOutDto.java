@@ -12,6 +12,10 @@ import javax.validation.constraints.NotEmpty;
  */
 public class EmployeeOutDto {
   /**
+   * employeeId of EmployeeOut DTO.
+   */
+  private Integer employeeId;
+  /**
    * email String of EmployeeOut DTO.
    */
   private String email;
@@ -34,7 +38,21 @@ public class EmployeeOutDto {
   /**
    * The department of the employee.
    */
-  private String departmentOutDto;
+  private String department;
+
+  /**
+   * @return the employeeId
+   */
+  public Integer getEmployeeId() {
+    return employeeId;
+  }
+
+  /**
+   * @param employeeIdField the employeeId to set
+   */
+  public void setEmployeeId(final Integer employeeIdField) {
+    this.employeeId = employeeIdField;
+  }
 
   /**
    * Get the email of the employee.
@@ -115,7 +133,7 @@ public class EmployeeOutDto {
    */
 
   public String getDepartment() {
-    return departmentOutDto;
+    return department;
   }
 
   /**
@@ -124,13 +142,12 @@ public class EmployeeOutDto {
    * @param departmentField the departmentDto to set
    */
   public void setDepartment(final String departmentField) {
-    this.departmentOutDto = departmentField;
+    this.department = departmentField;
   }
   /**
    * Default constructor for EmployeeOutDto.
    */
   public EmployeeOutDto() {
-    super();
   }
 
   /**
@@ -138,7 +155,7 @@ public class EmployeeOutDto {
    */
   @Override
   public int hashCode() {
-    return Objects.hash(departmentOutDto, email,
+    return Objects.hash(employeeId, department, email,
         firstTimeUser, fullName, userType);
   }
 
@@ -157,7 +174,8 @@ public class EmployeeOutDto {
       return false;
     }
     EmployeeOutDto other = (EmployeeOutDto) obj;
-    return Objects.equals(departmentOutDto, other.departmentOutDto)
+    return Objects.equals(employeeId, other.employeeId)
+        && Objects.equals(department, other.department)
         && Objects.equals(email, other.email)
         && Objects.equals(firstTimeUser, other.firstTimeUser)
         && Objects.equals(fullName, other.fullName)
@@ -166,6 +184,7 @@ public class EmployeeOutDto {
 
   /**
    * parameterised constructor.
+   * @param employeeIdField
    * @param emailField
    * @param fullNameField
    * @param userTypeField
@@ -173,17 +192,18 @@ public class EmployeeOutDto {
    * @param departmentOutDtoField
    */
   public EmployeeOutDto(
+      final Integer employeeIdField,
       final String emailField,
       @NotEmpty final String fullNameField,
       final UserType userTypeField,
       final Boolean firstTimeUserField,
       @NotEmpty final String departmentOutDtoField) {
-    super();
+    this.employeeId = employeeIdField;
     this.email = emailField;
     this.fullName = fullNameField;
     this.userType = userTypeField;
     this.firstTimeUser = firstTimeUserField;
-    this.departmentOutDto = departmentOutDtoField;
+    this.department = departmentOutDtoField;
   }
 
 }

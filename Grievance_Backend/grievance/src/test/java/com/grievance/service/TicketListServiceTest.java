@@ -2,8 +2,10 @@ package com.grievance.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.CALLS_REAL_METHODS;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +31,7 @@ import com.grievance.entity.Status;
 import com.grievance.entity.Ticket;
 import com.grievance.entity.TicketType;
 import com.grievance.entity.UserType;
+import com.grievance.exception.CustomException;
 import com.grievance.exception.ResourceNotFoundException;
 import com.grievance.repository.DepartmentRepository;
 import com.grievance.repository.EmployeeRepository;
@@ -67,161 +70,30 @@ public class TicketListServiceTest {
 
   @BeforeEach
   void setUp() {
-    department = new Department("HR");
-    employee = new Employee("ayushi@nucleusteq.com", "Full Name", "QWertf", UserType.ADMIN, true, department, null);
-    ticket = new Ticket("Reimbursement", TicketType.GRIEVANCE, department, "Description", Status.BEING_ADDRESSED, new Date(),
+    department = new Department();
+    department.setDepartmentId(101);
+    department.setDepartmentName("HR");
+    employee = new Employee(1, "ayushi@nucleusteq.com", "Full Name",
+        "QWertf", UserType.ADMIN, true, department);
+    ticket = new Ticket("Reimbursement", TicketType.GRIEVANCE,
+        department, "Description", Status.BEING_ADDRESSED, new Date(),
         employee);
 
     tickets = new ArrayList<Ticket>();
-
-    lenient().when(modelMapper.map(ticket, TicketOutWOComment.class)).thenReturn(ticketOutWOComment);
-
-  }
-
-  @Test
-  void list_tickets_by_status() {   
-        
-    when(ticketRepository.findByStatus(Mockito.eq(Status.BEING_ADDRESSED), Mockito.any(PageRequest.class))).thenReturn(tickets);
-    
-    Optional<List<TicketOutWOComment>> result = ticketService.listTicketsByStatus(Status.BEING_ADDRESSED, 1);
-    
-    assertThat(result).isNotNull();
-
-    assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
-      assertThat(ticketOutWOComments).hasSize(tickets.size());
-    });
-  }
-
-  @Test
-  void list_tickets_raised_by_user() {
-
     tickets.add(ticket);
 
-    when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
+    lenient().when(modelMapper.map(ticket, TicketOutWOComment.class))
+        .thenReturn(ticketOutWOComment);
 
-    when(ticketRepository.findByEmployee(Mockito.eq(employee), Mockito.any(PageRequest.class))).thenReturn(tickets);
-
-    Optional<List<TicketOutWOComment>> result = ticketService.listTicketsRaisedByUser(1, "ayushi@nucleusteq.com");
-
-    assertThat(result).isNotNull();
-
-    assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
-      assertThat(ticketOutWOComments).hasSize(tickets.size());
-    });
   }
 
-  @Test
-  void list_tickets_raised_by_fails() {
-    assertThrows(ResourceNotFoundException.class, () -> {
-      ticketService.listTicketsRaisedByUser(1, "ayushi@nucleusteq.com");
-    });
-  }
-
-  @Test
-  void list_tickets_by_department_name() {
-
-    tickets.add(ticket);
-
-    when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
-
-    when(ticketRepository.findByDepartment(Mockito.eq(department), Mockito.any(PageRequest.class))).thenReturn(tickets);
-
-    Optional<List<TicketOutWOComment>> result = ticketService
-        .listOfAllTicketsByEmployeeDepartment("ayushi@nucleusteq.com", 1);
-
-    assertThat(result).isNotNull();
-
-    assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
-      assertThat(ticketOutWOComments).hasSize(tickets.size());
-    });
-  }
-
-  @Test
-  void list_tickets_department_name_fails() {
-    assertThrows(ResourceNotFoundException.class, () -> {
-      ticketService.listOfAllTicketsByEmployeeDepartment("ayushi@nucleusteq.com", 1);
-    });
-  }
-
-  @Test
-  void list_tickets_by_department_and_status() {
-
-    tickets.add(ticket);
-
-    when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
-
-    when(ticketRepository.findByDepartmentAndStatus(Mockito.eq(department),
-        Mockito.any(Status.class),
-        Mockito.any(PageRequest.class))).thenReturn(tickets);
-
-    Optional<List<TicketOutWOComment>> result = ticketService
-        .listTicketsByUserDepartmentAndStatus("ayushi@nucleusteq.com", Status.BEING_ADDRESSED, 1);
-
-    assertThat(result).isNotNull();
-
-    assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
-      assertThat(ticketOutWOComments).hasSize(tickets.size());
-    });
-  }
-
-  @Test
-  void list_tickets_by_department_and_status_fails() {
-    assertThrows(ResourceNotFoundException.class, () -> {
-      ticketService.listTicketsByUserDepartmentAndStatus("ayushi@nucleusteq.com", Status.BEING_ADDRESSED, 1);
-    });
-  }
-
-  @Test
-  void list_tickets_by_status_employee() {
-
-    tickets.add(ticket);
-
-    when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
-
-    when(ticketRepository.findByStatusAndEmployee(
-        Mockito.eq(Status.BEING_ADDRESSED),
-        Mockito.eq(employee),
-        Mockito.any(PageRequest.class))).thenReturn(tickets);
-
-    Optional<List<TicketOutWOComment>> result = ticketService
-        .listTicketByStatusAndEmployee(1, Status.BEING_ADDRESSED, "ayushi@nucleusteq.com");
-
-    assertThat(result).isNotNull();
-
-    assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
-      assertThat(ticketOutWOComments).hasSize(tickets.size());
-    });
-  }
-
-  @Test
-  void list_tickets_by_department_and_fails() {
-    assertThrows(ResourceNotFoundException.class, () -> {
-      ticketService
-          .listTicketByStatusAndEmployee(1, Status.BEING_ADDRESSED, "ayushi@nucleusteq.com");
-    });
-  }
-
-  @Test
-  void list_of_all_tickets() {
-    tickets.add(ticket);
-    Page<Ticket> page = new PageImpl<Ticket>(tickets);
-    when(ticketRepository.findAll(Mockito.any(PageRequest.class))).thenReturn(page);
-
-    Optional<List<TicketOutWOComment>> result = ticketService
-        .listOfAllTickets(Mockito.anyInt());
-
-    assertThat(result).isNotNull();
-
-    assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
-      assertThat(ticketOutWOComments).hasSize(tickets.size());
-    });
-  }
 
   @Test
   void list_all_tickets_return_list_ticket_by_status() {
-    when(employeeRepository.existsByEmailAndUserType(Mockito.anyString(), Mockito.any(UserType.class))).thenReturn(true);
-
-    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, Status.OPEN,null);
+    when(departmentRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(new Department()));
+    when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
+    when(ticketRepository.findByDepartmentAndStatus(Mockito.any(Department.class), Mockito.any(Status.class), Mockito.any(PageRequest.class))).thenReturn(tickets);
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, Status.OPEN,null, 1);
     assertThat(result).isNotNull();
     
     assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
@@ -231,12 +103,12 @@ public class TicketListServiceTest {
 
   @Test
   void list_all_tickets_return_list_of_all_tickets() {
-    when(employeeRepository.existsByEmailAndUserType(Mockito.anyString(), Mockito.any(UserType.class))).thenReturn(true);
+    when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
     tickets.add(ticket);
     Page<Ticket> page = new PageImpl<Ticket>(tickets);
     when(ticketRepository.findAll(Mockito.any(PageRequest.class))).thenReturn(page);
 
-    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, null,null);
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, null,null, null);
     assertThat(result).isNotNull();
     
     assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
@@ -246,9 +118,10 @@ public class TicketListServiceTest {
 
   @Test
   void list_all_tickets_if_not_admin_when_status_is_null() {
-    when(employeeRepository.existsByEmailAndUserType(Mockito.anyString(), Mockito.any(UserType.class))).thenReturn(false);
+    when(departmentRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(department));
     when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
-    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, null,null);
+    when(ticketRepository.findByDepartment(Mockito.any(Department.class), Mockito.any(PageRequest.class))).thenReturn(tickets);
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, null,null, 1);
     
     assertThat(result).isNotNull();
     
@@ -256,12 +129,13 @@ public class TicketListServiceTest {
       assertThat(ticketOutWOComments).hasSize(tickets.size());
     });
   }
-  
+
   @Test
   void list_all_tickets_if_not_admin_when_status_is_not_null() {
-    when(employeeRepository.existsByEmailAndUserType(Mockito.anyString(), Mockito.any(UserType.class))).thenReturn(false);
+    when(departmentRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(department));
     when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
-    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, Status.OPEN,null);
+    when(ticketRepository.findByDepartmentAndStatus(Mockito.any(Department.class), Mockito.any(Status.class), Mockito.any(PageRequest.class))).thenReturn(tickets);
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, Status.OPEN,null,1);
     
     assertThat(result).isNotNull();
     
@@ -269,13 +143,83 @@ public class TicketListServiceTest {
       assertThat(ticketOutWOComments).hasSize(tickets.size());
     });
   }
-  
+
   @Test
   void list_all_tickets_return_raised_by_user() {
-    when(employeeRepository.existsByEmailAndUserType(Mockito.anyString(), Mockito.any(UserType.class))).thenReturn(false);
     when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
-    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, null,true);
+    when(ticketRepository.findByEmployee(Mockito.any(Employee.class), Mockito.any(PageRequest.class))).thenReturn(tickets);
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, null,true,null);
     
+    assertThat(result).isNotNull();
+    
+    assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
+      assertThat(ticketOutWOComments).hasSize(tickets.size());
+    });
+  }
+
+  @Test
+  void list_all_tickets_return_raised_by_user_by_status() {
+    when(departmentRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(new Department()));
+    when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
+    when(ticketRepository.findByDepartmentAndStatusAndEmployee(Mockito.any(Department.class), Mockito.any(Status.class), Mockito.any(Employee.class), Mockito.any(PageRequest.class))).thenReturn(tickets);
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, Status.BEING_ADDRESSED,true,1);
+    
+    assertThat(result).isNotNull();
+    
+    assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
+      assertThat(ticketOutWOComments).hasSize(tickets.size());
+    });
+  }
+
+
+  @Test
+  void list_all_tickets_if_admin_by_status() {
+    when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
+    when(ticketRepository.findByStatus(Mockito.any(Status.class), Mockito.any(PageRequest.class))).thenReturn(tickets);
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0,Status.OPEN, null, null);
+    
+    assertThat(result).isNotNull();
+    
+    assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
+      assertThat(ticketOutWOComments).hasSize(tickets.size());
+    });
+  }
+
+  @Test
+  void list_all_tickets_if_admin_by_department() {
+    when(departmentRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(new Department()));
+    when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
+    when(ticketRepository.findByDepartmentAndEmployee(Mockito.any(Department.class),Mockito.any(Employee.class), Mockito.any(PageRequest.class))).thenReturn(tickets);
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0,null, true, 1);
+    
+    assertThat(result).isNotNull();
+    
+    assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
+      assertThat(ticketOutWOComments).hasSize(tickets.size());
+    });
+  }
+
+  @Test
+  void list_tickets_raised_by_user_success() {
+    when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
+    when(ticketRepository.findByEmployee(Mockito.any(Employee.class), Mockito.any(PageRequest.class))).thenReturn(tickets);
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0,null, true, null);
+
+    assertThat(result).isNotNull();
+    
+    assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
+      assertThat(ticketOutWOComments).hasSize(tickets.size());
+    });
+    
+  }
+  
+  @Test
+  void list_tickets_by_department() {
+    when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
+    when(departmentRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(department));
+    when(ticketRepository.findByDepartment(Mockito.eq(department), Mockito.any(PageRequest.class))).thenReturn(tickets);
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0,null, null, 100);
+
     assertThat(result).isNotNull();
     
     assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
@@ -283,16 +227,18 @@ public class TicketListServiceTest {
     });
   }
   
-  @Test
-  void list_all_tickets_return_raised_by_user_status() {
-    when(employeeRepository.existsByEmailAndUserType(Mockito.anyString(), Mockito.any(UserType.class))).thenReturn(false);
+  @Test 
+  void list_tickets_by_status_and_employee(){
     when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
-    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0, Status.BEING_ADDRESSED,true);
-    
+    when(ticketRepository.findByStatusAndEmployee(Mockito.any(Status.class), Mockito.any(Employee.class), Mockito.any(PageRequest.class))).thenReturn(tickets);
+    Optional<List<TicketOutWOComment>> result = ticketService.listAllTickets("ayushi@nucleusteq.com",0,Status.BEING_ADDRESSED, true, null);
+
     assertThat(result).isNotNull();
     
     assertThat(result).hasValueSatisfying(ticketOutWOComments -> {
       assertThat(ticketOutWOComments).hasSize(tickets.size());
     });
   }
+  
+
 }

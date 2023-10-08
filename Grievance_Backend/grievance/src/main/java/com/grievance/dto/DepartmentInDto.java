@@ -110,8 +110,19 @@ public class DepartmentInDto {
   public DepartmentInDto(
       final Integer departmentIdField,
       final String departmentNameField) {
-    super();
     this.departmentId = departmentIdField;
     this.departmentName = departmentNameField;
   }
+
+  /**
+   * paramterised constructor with departmentName.
+   * @param departmentNameField
+   */
+  public DepartmentInDto(
+      @NotEmpty(message = "Field must not be empty.")
+      final String departmentNameField) {
+    super();
+    this.departmentName = departmentNameField;
+  }
+
 }

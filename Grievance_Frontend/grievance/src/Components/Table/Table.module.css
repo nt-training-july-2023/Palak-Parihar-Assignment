@@ -1,13 +1,12 @@
 .table {
-    width: 80%;
+    width: 100%;
     box-shadow: 10px 10px 5px #dddadac2;
-    min-width: 600px;
+    /* min-width: 800px; */
 }
 
 .table td {
-    padding: 9px 8px 4px 4px;
+    padding: 9px 20px 4px 20px;
     text-align: center;
-    min-width: 100px;
     overflow-x: auto;
 }
 
@@ -36,6 +35,12 @@
 
 .table tr:hover {
     background-color: #c5c0c0;
+}
+
+.noDataDiv{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #icon {
@@ -91,7 +96,6 @@
 .noData{
     height: 300px;
     width: 300px;
-    margin-left: 40%;
     border-radius: 50%;
 }
 
@@ -113,10 +117,6 @@
     .table {
         width: 100%;
     }
-
-    .table td{
-        word-break: break-all;
-    }
 }
 
 @media (max-width: 970px) {
@@ -135,14 +135,11 @@
         overflow-x: scroll;
     }
 
-    .table td{
-        word-break: break-all;
-    }
-
     .table td {
         padding: 7px 5px 5px 2px;
         text-align: center;
         min-width: 50px;
         overflow-x: auto;
+        word-break: break-all;
     }
 }

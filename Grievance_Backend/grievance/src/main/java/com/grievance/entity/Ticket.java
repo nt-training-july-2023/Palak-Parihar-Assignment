@@ -48,7 +48,7 @@ public class Ticket {
    * Integer ticketId of Ticket.
    */
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "ticket_seq")
   private Integer ticketId;
 
   /**

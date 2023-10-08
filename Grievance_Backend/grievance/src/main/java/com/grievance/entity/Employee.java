@@ -9,6 +9,8 @@ import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -25,9 +27,15 @@ import javax.validation.constraints.NotEmpty;
 @Entity
 public class Employee {
   /**
-   * The email of the employee (unique identifier).
+   * The employeeId, unique identifier of employee.
    */
   @Id
+  @Column
+  @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "emp_seq")
+  private Integer employeeId;
+  /**
+   * The email of the employee (unique identifier).
+   */
   @Column(unique = true)
   @Email(regexp = "^[A-Za-z0-9._%+-]+@nucleusteq\\.com$")
   private String email;
@@ -68,6 +76,25 @@ public class Employee {
   @JsonManagedReference
   @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
   private List<Ticket> tickets;
+
+
+  /**
+   * get the employeeId of employee.
+   *
+   * @return the employeeId
+   */
+  public Integer getEmployeeId() {
+    return employeeId;
+  }
+
+  /**
+   * set the employeeId of employee.
+   *
+   * @param employeeIdField the employeeId to set
+   */
+  public void setEmployeeId(final Integer employeeIdField) {
+    this.employeeId = employeeIdField;
+  }
 
   /**
    * Get the full name of the employee.
@@ -214,7 +241,7 @@ public class Employee {
    */
   @Override
   public int hashCode() {
-    return Objects.hash(department, email, firstTimeUser,
+    return Objects.hash(employeeId, department, email, firstTimeUser,
         fullName, password, tickets, userType);
   }
 
@@ -233,7 +260,8 @@ public class Employee {
       return false;
     }
     Employee other = (Employee) obj;
-    return Objects.equals(department, other.department)
+    return Objects.equals(employeeId, other.employeeId)
+        && Objects.equals(department, other.department)
         && Objects.equals(email, other.email)
         && Objects.equals(firstTimeUser, other.firstTimeUser)
         && Objects.equals(fullName, other.fullName)
@@ -243,30 +271,30 @@ public class Employee {
 
   /**
    * parameterised contructor.
+   * @param employeeIdField
    * @param emailField
    * @param fullNameField
    * @param passwordField
    * @param userTypeField
    * @param firstTimeUserField
    * @param departmentField
-   * @param ticketsField
    */
   public Employee(
+      final Integer employeeIdField,
       @Email(regexp = "^[A-Za-z0-9._%+-]+@nucleusteq\\.com$")
       @NotBlank final String emailField,
       @NotEmpty final String fullNameField,
       @NotEmpty final String passwordField,
       final UserType userTypeField,
       final Boolean firstTimeUserField,
-      final Department departmentField,
-      final List<Ticket> ticketsField) {
+      final Department departmentField) {
     super();
+    this.employeeId = employeeIdField;
     this.email = emailField;
     this.fullName = fullNameField;
     this.password = passwordField;
     this.userType = userTypeField;
     this.firstTimeUser = firstTimeUserField;
     this.department = departmentField;
-    this.tickets = ticketsField;
   }
 }

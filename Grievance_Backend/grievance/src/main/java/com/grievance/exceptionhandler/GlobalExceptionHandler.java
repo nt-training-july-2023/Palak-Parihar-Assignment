@@ -77,6 +77,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(HttpMessageNotReadableException.class)
   public ResponseEntity<ErrorResponse> handleHttpMessageNotRedableException(
       final HttpMessageNotReadableException ex) {
+    System.out.println(ex.getMessage());
     ErrorResponse errorResponse = new ErrorResponse(
         ErrorConstants.INVALID_FORMAT,
         HttpStatus.BAD_REQUEST.value(), null);
