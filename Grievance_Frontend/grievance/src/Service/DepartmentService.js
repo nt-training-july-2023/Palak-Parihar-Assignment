@@ -67,7 +67,6 @@ export const DELETE_DEPARTMENT = (deptId) => {
                     departmentId: deptId
                 }
             }).then(res => {
-                console.log(res)
                 return resolve({ data: res.data })
             }).catch(err => {
                 if (err.response === undefined) {

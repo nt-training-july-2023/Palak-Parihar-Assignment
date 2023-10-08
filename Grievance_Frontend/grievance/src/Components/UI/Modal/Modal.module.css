@@ -1,8 +1,5 @@
-dialog::backdrop {
-    background-color: black;
-}
-
 .outerDiv {
+    transition: ease-in 2s;
     display: flex;
     position: fixed;
     top: 0;
@@ -25,7 +22,7 @@ dialog::backdrop {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-width : 300px;
+    min-width: 300px;
     opacity: 1;
     background-color: white;
     height: fit-content;
@@ -36,4 +33,9 @@ dialog::backdrop {
 
 .modal-container {
     height: 100%;
+}
+
+.headingMessage {
+    margin: '3px';
+    margin-bottom: 7px;
 }

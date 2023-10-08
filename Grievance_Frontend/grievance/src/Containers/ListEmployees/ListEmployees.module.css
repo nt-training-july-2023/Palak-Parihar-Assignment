@@ -4,3 +4,19 @@
     justify-content: center;
     width: 100%;
 }
+
+.tableContainer{
+    width: 80%;
+}
+
+@media (max-width : 900px) {
+    .tableContainer{
+        width: 85%;
+    }
+}
+
+@media (max-width : 700px){
+    .tableContainer{
+        width: 100%;
+    }
+}

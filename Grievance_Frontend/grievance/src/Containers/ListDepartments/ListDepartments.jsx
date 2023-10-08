@@ -113,11 +113,11 @@ export default function ListDepartments() {
             <div>
                 <div style={addEntryCss}>
                     <p onClick={() => AddDepartment()}>
-                        Add Department  <i id="icon" class='fas fa-plus-circle'></i>
+                        Add Department  <i id="icon" className='fas fa-plus-circle'></i>
                     </p>
                 </div>
                 <div style={containerCss}>
-                    <div style={{width:'60%'}}>
+                    <div style={{width:'50%'}}>
                         <Table
                             headings={headings}
                             values={departments}

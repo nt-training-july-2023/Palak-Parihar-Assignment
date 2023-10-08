@@ -84,7 +84,6 @@ export const SAVE_NEW_EMPLOYEE = (employeeData) => {
             {
                 headers: headersRequired,
             }).then(res => {
-                console.log(res)
                 resolve({ data: res.data })
             }).catch(err => {
                 if (err.response === undefined) {
@@ -109,7 +108,6 @@ export const DELETE_EMPLOYEE = (empId) => {
                 deleteEmployee: empId
             }
         }).then(res => {
-            console.log(res)
             resolve({ data: res.data })
         }).catch(err => {
             if (err.response === undefined) {

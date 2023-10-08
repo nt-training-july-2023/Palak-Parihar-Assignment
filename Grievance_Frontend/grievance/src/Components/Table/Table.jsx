@@ -18,10 +18,13 @@ export default function Table(props) {
             <div className={classes.table_container}>
                 <table className={classes.table}>
                     <thead>
-                        {
-                            props.headings.map((column, index) => {
-                                return <th key={index}>{column}</th>                            })
-                        }
+                        <tr>
+                            {
+                                props.headings.map((column, index) => {
+                                    return <th key={index}>{column}</th>
+                                })
+                            }
+                        </tr>
                     </thead>
                     <tbody>
                         {
@@ -34,10 +37,10 @@ export default function Table(props) {
                                         ))
                                     }
                                     {props.view && <td>
-                                        <i id={classes.icon} class='fas fa-edit' onClick={() => props.view(row[props.id])} />
+                                        <i id={classes.icon} className='fas fa-edit' onClick={() => props.view(row[props.id])} />
                                     </td>}
                                     {props.delete && <td>
-                                        <i id={classes.icon} class='fas fa-trash-alt' onClick={() => props.delete(row)}></i>
+                                        <i id={classes.icon} className='fas fa-trash-alt' onClick={() => props.delete(row)}></i>
                                     </td>}
                                 </tr>
                             ))
@@ -53,11 +56,11 @@ export default function Table(props) {
                 {props.values.length !== 0 ? tableData : noDataFound}
                 <div id={classes.actions_arrow}>
                     {props.disablePrevious ?
-                        <i id={classes.disable_action_icon} class='fas fa-arrow-alt-circle-left'></i>
-                        : <i id={classes.action_icon} class='fas fa-arrow-alt-circle-left' onClick={props.previousPage}></i>}
+                        <i id={classes.disable_action_icon} className='fas fa-arrow-alt-circle-left'></i>
+                        : <i id={classes.action_icon} className='fas fa-arrow-alt-circle-left' onClick={props.previousPage}></i>}
 
-                    {props.disableNext ? <i id={classes.disable_action_icon} class='fas fa-arrow-alt-circle-right'></i> :
-                        <i id={classes.action_icon} class='fas fa-arrow-alt-circle-right' onClick={props.nextPage}></i>}
+                    {props.disableNext ? <i id={classes.disable_action_icon} className='fas fa-arrow-alt-circle-right'></i> :
+                        <i id={classes.action_icon} className='fas fa-arrow-alt-circle-right' onClick={props.nextPage}></i>}
                 </div>
             </div>
         </>

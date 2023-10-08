@@ -41,7 +41,7 @@ export default function ListEmployees() {
                 setEmployees(res.data)
             })
             .catch(err => {
-                console.log(err.data)
+                setModal(<Modal message={err.data.message} onClick={closeModal} />)
             })
     }, [page, navigate, flag])
 
@@ -86,7 +86,7 @@ export default function ListEmployees() {
         <>
             {modal}
             <div className={classes.outerDiv}>
-                <div style={{ width: '70%' }}>
+                <div className={classes.tableContainer}>
                     <Table values={employees}
                         headings={headings}
                         delete={deleteEmployeeHandler}

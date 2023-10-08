@@ -3,7 +3,6 @@ import { getMapping, postMapping, putMapping } from "../API/url-order";
 import { headers } from "../API/Headers";
 
 export const FETCH_ALL_TICKETS = (parameters) => {
-    console.log(parameters)
     let userValues = headers()
     let headersRequired = {
         email: userValues.email,
@@ -31,7 +30,6 @@ export const GENERATE_NEW_TICKET = (ticketData) => {
         email: userValues.email,
         password: userValues.password
     }
-    console.log(headersRequired)
     return new Promise((resolve, reject) => {
         postMapping(GENERATE_NEW_TICKET_URL,
             ticketData,
@@ -79,7 +77,6 @@ export const UPDATE_TICKET_BY_ID = (Id, ticketUpdate) => {
         email: userValues.email,
         password: userValues.password
     }
-    console.log(ticketUpdate)
 
     return new Promise((resolve, reject) => {
         putMapping(UPDATE_TICKET_BY_ID_URL,

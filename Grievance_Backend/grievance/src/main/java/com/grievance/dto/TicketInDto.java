@@ -34,7 +34,7 @@ public class TicketInDto {
   /**
    * The title of the ticket.
    */
-  @NotEmpty(message = "Title must not be empty.")
+  @NotEmpty(message = ValidationConstants.EMPTY_FIELD)
   @Size(min = MINIMUM_LENGTH, max = MAXIMUM_LENGTH_OF_TITLE,
   message = "Title too long (max 50 characters)")
   private String title;

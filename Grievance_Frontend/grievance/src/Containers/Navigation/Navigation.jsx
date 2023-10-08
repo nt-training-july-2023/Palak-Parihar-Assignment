@@ -6,7 +6,7 @@ import { CHANGE_PASSWORD_PATH, LOGIN_PATH, LIST_TICKETS_PATH, NEW_TICKET_PATH, P
 import { Link } from 'react-router-dom';
 import ConfirmationDialog from '../../Components/Confirmation/ConfirmationDialog';
 
-export default function Navigation(props) {
+export default function Navigation() {
 
     const [show, setShow] = useState(false);
     const [showMenu, setshowMenu] = useState(false)
@@ -14,21 +14,17 @@ export default function Navigation(props) {
     const navigate = useNavigate()
     const currentPath = useLocation()
     useEffect(() => {
-        console.log(currentPath)
         if (localStorage.getItem('userDetails') !== null) {
             const userDetails = JSON.parse(localStorage.getItem('userDetails'));
             if (!userDetails.isLoggedIn) {
                 navigate("/logout");
             }
-            console.log(userDetails.userType)
             if (userDetails.userType === 'ADMIN') {
                 setshowMenu(true)
             }
             setShow(true)
         }
     }, [currentPath])
-
-    console.log(currentPath)
 
     if (currentPath.pathname === LOGIN_PATH || currentPath.pathname === CHANGE_PASSWORD_PATH) {
         return <></>
@@ -49,7 +45,7 @@ export default function Navigation(props) {
                 <div
                     className={classes.menuItems + ' '
                         + (currentPath.pathname.startsWith(GMS_LIST_EMPLOYEES_PATH) ? classes.activeMenu : '')}>
-                    Employees <i class="fa fa-caret-down"></i>
+                    Employees <i className="fa fa-caret-down"></i>
                 </div>
             </Link>
             <ul className={classes.dropdownContent}>
@@ -87,7 +83,7 @@ export default function Navigation(props) {
                         <li className={classes.dropdown}>
                             <Link to={LIST_TICKETS_PATH}>
                                 <div className={currentPath.pathname.startsWith(LIST_TICKETS_PATH) ? classes.activeMenu : ''}>
-                                    Tickets <i class="fa fa-caret-down"></i>
+                                    Tickets <i className="fa fa-caret-down"></i>
                                 </div></Link>
                             <ul className={classes.dropdownContent}>
                                 <li><Link to={LIST_TICKETS_PATH}>Tickets</Link></li>
@@ -98,7 +94,7 @@ export default function Navigation(props) {
                         <li className={classes.dropdown}>
                             <Link to={USER_PROFILE_PATH}>
                                 <div className={currentPath.pathname.startsWith(USER_PROFILE_PATH) ? classes.active : ''}>
-                                    Profile <i class='fas fa-user-alt'></i>
+                                    Profile <i className='fas fa-user-alt'></i>
                                 </div>
                             </Link>
                             <ul className={classes.dropdownContent}>

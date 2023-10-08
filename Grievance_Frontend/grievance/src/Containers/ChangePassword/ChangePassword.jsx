@@ -5,8 +5,6 @@ import Modal from "../../Components/UI/Modal/Modal";
 import { useNavigate } from "react-router";
 import Form from "../../Components/Form/Form";
 import { inputValidity } from "../../Validation/Validation";
-import { LIST_TICKETS_PATH } from "../../API/PathConstant";
-
 
 export default function ChangePassword(props) {
 
@@ -102,25 +100,21 @@ export default function ChangePassword(props) {
 
 
     const completeForm = formElementsArray.map(formElement => {
-        return (<>
-            <div className='form-container'>
-                <div className='input-content'>
-                    <InputElement
-                        key={formElement.id}
-                        elementType={formElement.config.elementType}
-                        elementConfig={formElement.config.elementConfig}
-                        options={formElement.config.options}
-                        value={formElement.config.value}
-                        invalid={!formElement.config.valid}
-                        error={formElement.config.error}
-                        shouldValidate={formElement.config.validation}
-                        touched={formElement.config.touched}
-                        headLabel={formElement.config.label}
-                        changed={(e) => inputChangeHandler(e, formElement.id)}
-                    />
-                </div>
-            </div>
-        </>)
+        return (
+            <InputElement
+                key={formElement.id}
+                elementType={formElement.config.elementType}
+                elementConfig={formElement.config.elementConfig}
+                options={formElement.config.options}
+                value={formElement.config.value}
+                invalid={!formElement.config.valid}
+                error={formElement.config.error}
+                shouldValidate={formElement.config.validation}
+                touched={formElement.config.touched}
+                headLabel={formElement.config.label}
+                changed={(e) => inputChangeHandler(e, formElement.id)}
+            />
+        )
     })
 
     const checkValidity = (value, rules) => inputValidity(value, rules)
@@ -154,7 +148,7 @@ export default function ChangePassword(props) {
             oldPassword: btoa(controls.oldPassword.value),
             newPassword: btoa(controls.newPassword.value)
         }
-        const response = CHANGE_USER_PASSWORD(values)
+        CHANGE_USER_PASSWORD(values)
             .then(res => {
                 setModal(() => <Modal message={res.data.message} onClick={closeModal} />)
                 setTimeout(() => {
@@ -180,8 +174,8 @@ export default function ChangePassword(props) {
 
     let containerCss = {
         display: 'flex',
-        'justify-content': 'center',
-        'align-items': 'center',
+        'justifyContent': 'center',
+        'alignItems': 'center',
         width: '45%'
     }
 

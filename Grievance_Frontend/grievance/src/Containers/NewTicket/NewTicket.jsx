@@ -123,28 +123,24 @@ export default function NewTicket(props) {
     }
 
     const completeForm = formElementsArray.map(formElement => {
-        return (<>
-            <div className='form-container'>
-                <div className='input-content'>
-                    <InputElement
-                        key={formElement.id}
-                        elementType={formElement.config.elementType}
-                        elementConfig={formElement.config.elementConfig}
-                        value={formElement.config.value}
-                        invalid={!formElement.config.valid}
-                        shouldValidate={formElement.config.validation}
-                        touched={formElement.config.touched}
-                        changed={(e) => inputChangeHandler(e, formElement.id)}
-                        options={formElement.config.options}
-                        selectOption={formElement.config.selectOption}
-                        selectValue={formElement.config.selectValue}
-                        disabled={formElement.config.disabled}
-                        error={formElement.config.error}
-                        label={formElement.config.label}
-                    />
-                </div>
-            </div>
-        </>)
+        return (
+            <InputElement
+                key={formElement.id}
+                elementType={formElement.config.elementType}
+                elementConfig={formElement.config.elementConfig}
+                value={formElement.config.value}
+                invalid={!formElement.config.valid}
+                shouldValidate={formElement.config.validation}
+                touched={formElement.config.touched}
+                changed={(e) => inputChangeHandler(e, formElement.id)}
+                options={formElement.config.options}
+                selectOption={formElement.config.selectOption}
+                selectValue={formElement.config.selectValue}
+                disabled={formElement.config.disabled}
+                error={formElement.config.error}
+                label={formElement.config.label}
+            />
+        )
     })
 
     const checkValidity = (value, rules) => inputValidity(value, rules)
@@ -171,7 +167,6 @@ export default function NewTicket(props) {
         let count = 0;
         for (let key in controls) {
             if (!controls[key].valid) {
-                console.log(controls[key].valid)
                 count += 1
             }
         }
@@ -198,12 +193,10 @@ export default function NewTicket(props) {
 
         GENERATE_NEW_TICKET(ticketValues).then(res => {
             setModal(() => <Modal message={res.data.message} onClick={closeModal} />)
-            console.log(res.data)
             setTimeout(() => {
                 navigate(LIST_TICKETS_PATH)
             }, 2000)
         }).catch(err => {
-            console.log(err)
             setModal(() => <Modal message={err.data.message} onClick={closeModal} />)
         })
     }
@@ -214,14 +207,12 @@ export default function NewTicket(props) {
     }
 
     useEffect(() => {
-        console.log(userValues)
         if (headers() == null) {
             navigate('/logout')
             return
         } else {
             let values = headers()
             setUserValues(values)
-            console.log(values.firstTimeUser)
             if (values.firstTimeUser) {
                 navigate('/changePassword')
                 return

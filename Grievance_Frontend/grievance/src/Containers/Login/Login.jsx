@@ -7,7 +7,7 @@ import { LOGIN_USER } from "../../Service/EmployeeServices";
 import Spinner from "../../Components/UI/Spinner/Spinner";
 import { inputValidity } from "../../Validation/Validation";
 import Form from "../../Components/Form/Form";
-import {CHANGE_PASSWORD_PATH, LIST_TICKETS_PATH } from "../../API/PathConstant";
+import { CHANGE_PASSWORD_PATH, LIST_TICKETS_PATH } from "../../API/PathConstant";
 
 export default function Login() {
     let cont = {
@@ -63,27 +63,24 @@ export default function Login() {
         })
     }
 
-    const completeForm = formElementsArray.map(formElement => (
-        <>
-            <InputElement
-                key={formElement.id}
-                elementType={formElement.config.elementType}
-                elementConfig={formElement.config.elementConfig}
-                value={formElement.config.value}
-                headLabel={formElement.config.label}
-                invalid={formElement.config.valid}
-                error={formElement.config.error}
-                shouldValidate={formElement.config.validation}
-                touched={formElement.config.touched}
-                changed={(e) => inputChangeHandler(e, formElement.id)}
-            />
-        </>
+    const completeForm = formElementsArray.map((formElement, index) => (
+        <InputElement
+            key={index}
+            elementType={formElement.config.elementType}
+            elementConfig={formElement.config.elementConfig}
+            value={formElement.config.value}
+            headLabel={formElement.config.label}
+            invalid={formElement.config.valid}
+            error={formElement.config.error}
+            shouldValidate={formElement.config.validation}
+            touched={formElement.config.touched}
+            changed={(e) => inputChangeHandler(e, formElement.id)}
+        />
     ))
 
     useEffect(() => {
 
         const userDetails = JSON.parse(localStorage.getItem('userDetails'))
-        console.log(userDetails)
 
         if (userDetails && userDetails.isLoggedIn) {
             setModal(<Modal component={<Spinner />} />)
@@ -94,7 +91,7 @@ export default function Login() {
 
         if (controls.email.valid && controls.password.valid) {
             setEnableButton(true)
-        }else{
+        } else {
             setEnableButton(false)
         }
     }, [controls])
@@ -128,22 +125,20 @@ export default function Login() {
 
         LOGIN_USER(values)
             .then(res => {
-                console.log(res.data)
                 setModal(() => <Modal component={<Spinner />} />)
                 let userValues = {
-                    employeeId : res.data.employeeId,
+                    employeeId: res.data.employeeId,
                     email: values.email,
                     password: values.password,
                     fullName: res.data.fullName,
                     userType: res.data.userType,
                     firstTimeUser: res.data.firstTimeUser,
                     department: res.data.department,
-                    isLoggedIn : !res.data.firstTimeUser,
+                    isLoggedIn: !res.data.firstTimeUser,
                 }
-                
+
                 let userDetails = JSON.stringify(userValues);
                 localStorage.setItem('userDetails', userDetails);
-                console.log(JSON.parse(localStorage.getItem('userDetails')))
                 if (userValues.firstTimeUser) {
                     setTimeout(() => {
                         navigate(CHANGE_PASSWORD_PATH)
@@ -155,7 +150,6 @@ export default function Login() {
                 }, 1000);
                 return res.data;
             }).catch(err => {
-                console.log(err)
                 setModal(() => <Modal message={err?.data?.message} onClick={closeModal} />)
             })
 

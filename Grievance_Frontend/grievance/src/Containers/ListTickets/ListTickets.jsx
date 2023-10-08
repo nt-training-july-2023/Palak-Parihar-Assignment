@@ -235,8 +235,8 @@ export default function ListTickets(props) {
             <div className={classes.menuOuterDiv}>
                 <div className={classes.menu_bar}>
                     <div id={classes.menu}>
-                        <button class={classes.menu_button} id={config.myTickets ? '' : classes.active} onClick={() => AllTickets()}>All Tickets</button>
-                        <button class={classes.menu_button} id={config.myTickets ? classes.active : ''} onClick={() => MyTickets()}>MyTickets</button>
+                        <button className={classes.menu_button} id={config.myTickets ? '' : classes.active} onClick={() => AllTickets()}>All Tickets</button>
+                        <button className={classes.menu_button} id={config.myTickets ? classes.active : ''} onClick={() => MyTickets()}>MyTickets</button>
                     </div>
                     <div className={classes.status_dropdown}>
                         {isAdmin || config.myTickets ?

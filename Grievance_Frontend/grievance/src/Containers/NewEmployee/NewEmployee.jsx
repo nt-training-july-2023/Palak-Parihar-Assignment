@@ -135,7 +135,6 @@ export default function NewEmployee(props) {
             return
         } else {
             let values = JSON.parse(localStorage.getItem('userDetails'))
-            console.log(values.firstTimeUser)
             if (values.firstTimeUser) {
                 navigate('/changePassword')
                 return
@@ -159,34 +158,29 @@ export default function NewEmployee(props) {
     }, [])
 
     const completeForm = formElementsArray.map(formElement => {
-        return (<>
-            <div className='form-container'>
-                <div className='input-content'>
-                    <InputElement
-                        key={formElement.id}
-                        elementType={formElement.config.elementType}
-                        elementConfig={formElement.config.elementConfig}
-                        options={formElement.config.options}
-                        value={formElement.config.value}
-                        invalid={!formElement.config.valid}
-                        shouldValidate={formElement.config.validation}
-                        touched={formElement.config.touched}
-                        error={formElement.config.error}
-                        label={formElement.config.label}
-                        selectOption={formElement.config.selectOption}
-                        selectValue={formElement.config.selectValue}
-                        changed={(e) => inputChangeHandler(e, formElement.id)}
-                    />
-                </div>
-            </div>
-        </>)
+        return (
+            <InputElement
+                key={formElement.id}
+                elementType={formElement.config.elementType}
+                elementConfig={formElement.config.elementConfig}
+                options={formElement.config.options}
+                value={formElement.config.value}
+                invalid={!formElement.config.valid}
+                shouldValidate={formElement.config.validation}
+                touched={formElement.config.touched}
+                error={formElement.config.error}
+                label={formElement.config.label}
+                selectOption={formElement.config.selectOption}
+                selectValue={formElement.config.selectValue}
+                changed={(e) => inputChangeHandler(e, formElement.id)}
+            />
+        )
     })
 
     const checkValidity = (value, rules) => inputValidity(value, rules)
 
     const inputChangeHandler = (e, controlName) => {
         const message = checkValidity(e.target.value, controls[controlName].validation);
-        console.log(message);
         const updatedControls = {
             ...controls,
             [controlName]: {
@@ -210,7 +204,6 @@ export default function NewEmployee(props) {
                 count += 1
             }
         }
-        console.log(count)
         if (count > 0) {
             setModal(() => <Modal message="Mandatory fields are either invalid or empty" onClick={closeModal} />)
             setTimeout(() => {
@@ -229,13 +222,11 @@ export default function NewEmployee(props) {
                 departmentId: controls.department.value
             }
         }
-        console.log(data)
 
         SAVE_NEW_EMPLOYEE(data).then(res => {
             setModal(() => <Modal message={res.data.message} onClick={clearForm} />)
             return res.data;
         }).catch(err => {
-            console.log(err)
             setModal(() => <Modal message={err.data.response.data.message} onClick={closeModal} />)
             return err.data;
         })
@@ -243,7 +234,6 @@ export default function NewEmployee(props) {
 
     const clearForm = () => {
         for (let key in controls) {
-            console.log(key)
             const updatedControls = {
                 ...controls,
                 [key]: {
@@ -264,8 +254,8 @@ export default function NewEmployee(props) {
     }
     let containerCss = {
         display: 'flex',
-        'justify-content': 'center',
-        'align-items': 'center',
+        'justifyContent': 'center',
+        'alignItems': 'center',
         width: '55%'
     }
 

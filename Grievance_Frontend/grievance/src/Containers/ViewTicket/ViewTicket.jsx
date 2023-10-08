@@ -15,7 +15,6 @@ export default function ViewTicket(props) {
             value: 'RESOLVED'
         }
     ]
-    console.log(props)
 
     const scrollToBottom = () => {
         const commentBody = document.getElementById("commentBody")
@@ -49,7 +48,7 @@ export default function ViewTicket(props) {
                     <h3 style={{ marginLeft: '50px' }}>Title : {props.ticket.title}</h3>
 
                     <div >
-                        <i id={classes.icon_close} class="fa fa-window-close" onClick={props.closeModal}></i>
+                        <i id={classes.icon_close} className="fa fa-window-close" onClick={props.closeModal}></i>
                     </div>
                 </div>
                 <div className={classes.mainContainer}>

@@ -31,14 +31,13 @@ export default function NewDepartment(props) {
     const heading = (
         <>Add Department
             <div id={classes.icon_close}>
-                <i class="fa fa-window-close" onClick={props.closeModal}></i>
+                <i className="fa fa-window-close" onClick={props.closeModal}></i>
             </div>
         </>)
     const [modal, setModal] = useState();
 
     const inputChangeHandler = (e) => {
         let message = inputValidity(e.target.value, controls.validation)
-        console.log(message)
         const updatedControls = {
             ...controls,
             value: e.target.value,
@@ -54,7 +53,6 @@ export default function NewDepartment(props) {
         } else {
             setEnableBtn(false)
         }
-        console.log(controls.value)
     }, [controls])
 
     const closeModal = (e) => {
@@ -68,13 +66,11 @@ export default function NewDepartment(props) {
         }
         GENERATE_NEW_DEPARTMENT(departmentData)
             .then(response => {
-                console.log(response)
                 props.set(!props.flag)
                 setModal(() => <Modal message={response.data.message} onClick={props.closeModal} />)
                 return response.data;
             }).catch(error => {
                 setModal(() => <Modal message={error.data.message} onClick={closeModal} />)
-                console.log(error.data)
             })
     }
 
