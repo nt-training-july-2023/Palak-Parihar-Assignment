@@ -3,6 +3,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 75vh;
 }
 
 .loginHeading{
@@ -17,4 +18,16 @@
     justify-content: center;
     align-items: center;
     width: 43%;
+}
+
+@media (max-width: 970px) {
+    .contentContainer{
+        width: 60%;
+    }
+}
+
+@media (max-width: 600px) {
+    .contentContainer{
+        width: 90%;
+    }
 }

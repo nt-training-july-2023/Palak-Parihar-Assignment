@@ -21,7 +21,11 @@ export const FETCH_ALL_DEPARTMENTS = (pageNo) => {
         ).then(res => {
             return resolve({ data: res.data.data })
         }).catch(err => {
-            return reject({ data: err })
+            if (err.response === undefined) {
+                return reject({ data: err })
+            } else {
+                return reject({ data: err?.response?.data })
+            }
         })
     })
 }
@@ -40,8 +44,11 @@ export const GENERATE_NEW_DEPARTMENT = (deptName) => {
             }).then(res => {
                 resolve({ data: res.data })
             }).catch(err => {
-                console.log(err)
-                reject({ data: err.response.data })
+                if (err.response === undefined) {
+                    return reject({ data: err })
+                } else {
+                    return reject({ data: err?.response?.data })
+                }
             })
     });
 }
@@ -63,7 +70,11 @@ export const DELETE_DEPARTMENT = (deptId) => {
                 console.log(res)
                 return resolve({ data: res.data })
             }).catch(err => {
-                return reject({ data: err })
+                if (err.response === undefined) {
+                    return reject({ data: err })
+                } else {
+                    return reject({ data: err?.response?.data })
+                }
             })
     });
 }

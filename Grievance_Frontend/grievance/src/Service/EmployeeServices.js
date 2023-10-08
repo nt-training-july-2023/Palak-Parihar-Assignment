@@ -14,11 +14,11 @@ export const LOGIN_USER = (userData) => {
         ).then(res => {
             resolve({ data: res.data?.data })
         }).catch(err => {
-             if(err.response === undefined){
-                reject({data : err})
-             }else{
+            if (err.response === undefined) {
+                reject({ data: err })
+            } else {
                 reject({ data: err?.response?.data })
-             }
+            }
         })
     });
 }
@@ -36,7 +36,11 @@ export const CHANGE_USER_PASSWORD = (values) => {
             .then(res => {
                 resolve({ data: res.data })
             }).catch(err => {
-                reject({ data: err.response.data })
+                if (err.response === undefined) {
+                    reject({ data: err })
+                } else {
+                    reject({ data: err?.response?.data })
+                }
             })
     })
 }
@@ -58,7 +62,11 @@ export const FETCH_ALL_USERS = (pageNo) => {
             }).then(res => {
                 resolve({ data: res.data.data })
             }).catch(err => {
-                reject({ data: err })
+                if (err.response === undefined) {
+                    reject({ data: err })
+                } else {
+                    reject({ data: err?.response?.data })
+                }
             })
     });
 };
@@ -79,7 +87,11 @@ export const SAVE_NEW_EMPLOYEE = (employeeData) => {
                 console.log(res)
                 resolve({ data: res.data })
             }).catch(err => {
-                reject({ data: err})
+                if (err.response === undefined) {
+                    reject({ data: err })
+                } else {
+                    reject({ data: err?.response?.data })
+                }
             })
     })
 }
@@ -100,7 +112,11 @@ export const DELETE_EMPLOYEE = (empId) => {
             console.log(res)
             resolve({ data: res.data })
         }).catch(err => {
-            reject({ data: err.response.data })
+            if (err.response === undefined) {
+                reject({ data: err })
+            } else {
+                reject({ data: err?.response?.data })
+            }
         })
     })
 }
