@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -111,7 +112,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     List<EmployeeOutDto> employeeOutDtoList = new ArrayList<>();
     if (!Objects.isNull(page)) {
       employeeRepository
-          .findAll(PageRequest.of(page, pageSize))
+          .findAll(PageRequest.of(page, pageSize).withSort(Sort.by("fullName")))
           .forEach(
               e -> {
                 employeeOutDtoList.add(convertToDto(e));

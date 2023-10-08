@@ -79,7 +79,11 @@ export default function ListTickets(props) {
                 } else {
                     setDisableNext(false)
                 }
-                setDepartments(res.data)
+                let updatedDepartments = [{
+                    departmentId: '',
+                    departmentName: 'All Tickets'
+                }, ...res.data]
+                setDepartments(updatedDepartments)
             })
             .catch(err => {
                 setModal(() => <Modal message={err.data.response.data} onClick={closeModal} />)
@@ -235,7 +239,7 @@ export default function ListTickets(props) {
                         <button class={classes.menu_button} id={config.myTickets ? classes.active : ''} onClick={() => MyTickets()}>MyTickets</button>
                     </div>
                     <div className={classes.status_dropdown}>
-                        {isAdmin ?
+                        {isAdmin || config.myTickets ?
                             <>
                                 <p className={classes.Label}>Departments : </p>
                                 <InputElement
@@ -261,7 +265,7 @@ export default function ListTickets(props) {
             </div>
             <div className={classes.mainContainer}>
 
-                <div style={{width : '90%'}}>
+                <div style={{ width: '90%' }}>
                     <Table
                         values={tickets}
                         headings={headings}

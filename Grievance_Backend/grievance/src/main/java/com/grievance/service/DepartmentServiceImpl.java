@@ -77,7 +77,7 @@ public class DepartmentServiceImpl implements DepartmentService {
       final DepartmentInDto departmentInDto) {
     LOGGER.info("Saving department: {}",
         departmentInDto.getDepartmentName());
-    Boolean isTextOnly = Pattern.matches("^[A-Za-z]+$",
+    Boolean isTextOnly = Pattern.matches("^[a-zA-Z\\s]*$",
         departmentInDto.getDepartmentName());
     if (!isTextOnly) {
       LOGGER.info("Department {} is not only text.",

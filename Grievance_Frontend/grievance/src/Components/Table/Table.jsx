@@ -33,7 +33,6 @@ export default function Table(props) {
                                             <td key={colIndex}>{row[column]}</td>
                                         ))
                                     }
-                                    {console.log(row[props.id])}
                                     {props.view && <td>
                                         <i id={classes.icon} class='fas fa-edit' onClick={() => props.view(row[props.id])} />
                                     </td>}
