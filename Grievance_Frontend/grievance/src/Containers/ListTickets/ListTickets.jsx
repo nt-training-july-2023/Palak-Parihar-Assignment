@@ -46,7 +46,7 @@ export default function ListTickets(props) {
 
     const [ticketUpdate, setTicketUpdate] = useState({
         status: null,
-        description: null
+        description: undefined
     })
     const [modal, setModal] = useState();
     const [isAdmin, setIsAdmin] = useState(false)

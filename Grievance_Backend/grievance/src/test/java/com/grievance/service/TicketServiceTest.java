@@ -23,7 +23,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import com.grievance.dto.DepartmentInDto;
-import com.grievance.dto.EmployeeInDto;
 import com.grievance.dto.TicketInDto;
 import com.grievance.dto.TicketOutDto;
 import com.grievance.dto.TicketOutWOComment;
@@ -106,8 +105,6 @@ public class TicketServiceTest {
     ticketInDto = new TicketInDto();
     ticketInDto.setDepartment(new DepartmentInDto());
     ticketInDto.setDescription("Reimbursement");
-    ticketInDto.setEmployee(new EmployeeInDto());
-    ticketInDto.setStatus(Status.BEING_ADDRESSED);
     ticketInDto.setTicketType(TicketType.GRIEVANCE);
     ticketInDto.setTitle("Reimbursement");
 
@@ -138,10 +135,11 @@ public class TicketServiceTest {
   }
 
 @Test
-	void when_save_employee_successfully_return_employee() {
+	void when_save_ticket_success() {
+when(employeeRepository.findByEmail(Mockito.anyString())).thenReturn(employee);
 		when(ticketRepository.save(Mockito.any(Ticket.class))).thenReturn(ticket);
 		
-		Optional<TicketOutDto> dto = ticketService.saveTicket(ticketInDto);
+		Optional<TicketOutDto> dto = ticketService.saveTicket(ticketInDto, "ayushi@nucleusteq.com");
 		
 assertThat(dto.equals(ticket));
 	}

@@ -61,17 +61,16 @@ public class TicketInDto {
   private String description;
 
   /**
-   * The status of the ticket.
+   * Status of ticket.
    */
-  @NotNull(message = ValidationConstants.EMPTY_FIELD)
-  private Status status;
+  private Status status = Status.OPEN;
 
   /**
-   * employee that owns this ticket.
+   * @return the status
    */
-  @JsonProperty("employee")
-  @NotNull(message = ValidationConstants.EMPTY_FIELD)
-  private EmployeeInDto employee;
+  public Status getStatus() {
+    return status;
+  }
 
   /**
    * @return the title
@@ -130,39 +129,12 @@ public class TicketInDto {
   }
 
   /**
-   * @return the status
-   */
-  public Status getStatus() {
-    return status;
-  }
-
-  /**
-   * @param statusField the status to set
-   */
-  public void setStatus(final Status statusField) {
-    this.status = statusField;
-  }
-
-  /**
-   * @return the employeeInDto
-   */
-  public EmployeeInDto getEmployee() {
-    return employee;
-  }
-
-  /**
-   * @param employeeInDtoField the employeeInDto to set
-   */
-  public void setEmployee(final EmployeeInDto employeeInDtoField) {
-    this.employee = employeeInDtoField;
-  }
-  /**
    * hashCode of this object.
    */
   @Override
   public int hashCode() {
     return Objects.hash(department, description,
-        employee, status, ticketType, title);
+        ticketType, title);
   }
 
   /**
@@ -182,10 +154,7 @@ public class TicketInDto {
     TicketInDto other = (TicketInDto) obj;
     return Objects.equals(department, other.department)
         && Objects.equals(description, other.description)
-        && Objects.equals(employee, other.employee)
-        && status == other.status && ticketType == other.ticketType
+        && ticketType == other.ticketType
         && Objects.equals(title, other.title);
   }
-
-
 }

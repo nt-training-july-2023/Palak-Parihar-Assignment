@@ -5,7 +5,11 @@
     <property name="checkstyle.header.file" value="C:\Users\palak\OneDrive\Desktop\Grievance_Backend\.metadata\.plugins\org.eclipse.core.resources\.projects\grievance\com.basistech.m2e.code.quality.checkstyleConfigurator\checkstyle-header-validate.txt"/>
     <property name="checkstyle.cache.file" value="${project_loc}/target/checkstyle-cachefile"/>
   </local-check-config>
-  <fileset name="java-sources-validate" enabled="true" check-config-name="maven-checkstyle-plugin validate" local="true">
+  <local-check-config name="maven-checkstyle-plugin checkstyle" location="jar:file:/C:/Users/palak/.m2/repository/com/puppycrawl/tools/checkstyle/8.29/checkstyle-8.29.jar!/sun_checks.xml" type="remote" description="maven-checkstyle-plugin configuration checkstyle">
+    <property name="checkstyle.header.file" value="C:\Users\palak\OneDrive\Desktop\Grievance_Backend\.metadata\.plugins\org.eclipse.core.resources\.projects\grievance\com.basistech.m2e.code.quality.checkstyleConfigurator\checkstyle-header-checkstyle.txt"/>
+    <property name="checkstyle.cache.file" value="${project_loc}/target/checkstyle-cachefile"/>
+  </local-check-config>
+  <fileset name="java-sources-checkstyle" enabled="true" check-config-name="maven-checkstyle-plugin checkstyle" local="true">
     <file-match-pattern match-pattern="^src/main/java/.*\.java" include-pattern="true"/>
     <file-match-pattern match-pattern="^src/main/resources/.*\.properties" include-pattern="true"/>
     <file-match-pattern match-pattern="^src/main/resources/.*\.properties" include-pattern="true"/>

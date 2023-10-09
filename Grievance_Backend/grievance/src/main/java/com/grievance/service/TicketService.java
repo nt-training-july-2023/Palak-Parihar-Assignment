@@ -15,9 +15,10 @@ import java.util.Optional;
 public interface TicketService {
   /**
    * @param ticketInDto
+   * @param email
    * @return optional of TicketOut DTO.
    */
-  Optional<TicketOutDto> saveTicket(TicketInDto ticketInDto);
+  Optional<TicketOutDto> saveTicket(TicketInDto ticketInDto, String email);
 
   /**
    * method to update ticket.

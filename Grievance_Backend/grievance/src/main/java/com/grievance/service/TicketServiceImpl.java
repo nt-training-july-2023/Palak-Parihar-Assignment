@@ -81,9 +81,15 @@ public class TicketServiceImpl implements TicketService {
    * save a new ticket in ticket table in database.
    */
   @Override
-  public Optional<TicketOutDto> saveTicket(final TicketInDto ticketInDto) {
+  public Optional<TicketOutDto> saveTicket(final TicketInDto ticketInDto,
+      final String email) {
     LOGGER.info("Saving ticket : {}", ticketInDto.getTitle());
+    Employee employee = employeeRepository.findByEmail(email);
+    if (Objects.isNull(employee)) {
+      throw new ResourceNotFoundException(ErrorConstants.EMPLOYEE_NOT_FOUND);
+    }
     Ticket ticket = convertToEntity(ticketInDto);
+    ticket.setEmployee(employee);
     ticket = ticketRepository.save(ticket);
     TicketOutDto ticketOutDto = convertToDto(ticket);
     LOGGER.info("Ticket saved successfully");

@@ -24,7 +24,7 @@ export default function ViewTicket(props) {
     const commentBox = (
         <div className={classes.commentBox}>
             <div className={classes.scrollBtn} onClick={scrollToBottom}>
-                Scroll to bottom <i style={{fontSize:'20px', color:'#266183'}} class='fas fa-arrow-alt-circle-down'></i>
+                Scroll to bottom <i style={{fontSize:'20px', color:'#266183'}} className='fas fa-arrow-alt-circle-down'></i>
             </div>
             <InputElement
                 elementType='textarea'

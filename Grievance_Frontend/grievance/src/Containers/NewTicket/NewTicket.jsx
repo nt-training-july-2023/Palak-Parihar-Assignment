@@ -111,7 +111,6 @@ export default function NewTicket(props) {
 
     const [controls, setControls] = useState(cont.controls);
     const navigate = useNavigate()
-    const [userValues, setUserValues] = useState()
     const [modal, setModal] = useState();
 
     const formElementsArray = [];
@@ -184,11 +183,7 @@ export default function NewTicket(props) {
                 departmentName: ''
             },
             description: controls.description.value,
-            status: controls.status.value.toUpperCase(),
             ticketType: controls.ticketType.value.toUpperCase(),
-            employee: {
-                employeeId: userValues.employeeId
-            }
         }
 
         GENERATE_NEW_TICKET(ticketValues).then(res => {
@@ -212,7 +207,6 @@ export default function NewTicket(props) {
             return
         } else {
             let values = headers()
-            setUserValues(values)
             if (values.firstTimeUser) {
                 navigate('/changePassword')
                 return
@@ -236,8 +230,8 @@ export default function NewTicket(props) {
 
     let containerCss = {
         display: 'flex',
-        'justify-content': 'center',
-        'align-items': 'center',
+        'justifyContent': 'center',
+        'alignItems': 'center',
         width: '60%'
     }
 

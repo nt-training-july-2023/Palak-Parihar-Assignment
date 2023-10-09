@@ -108,8 +108,8 @@
 				</configuration>
 				<executions>
 					<execution>
-						<id>validate</id>
-						<phase>validate</phase>
+						<id>checkstyle</id>
+						<phase>verify</phase>
 						<goals>
 							<goal>check</goal>
 						</goals>
@@ -139,9 +139,10 @@
 				</configuration>
 				<executions>
 					<execution>
+						<id>pmd</id>
 						<phase>verify</phase>
 						<goals>
-							<goal>pmd</goal>
+							<goal>check</goal>
 						</goals>
 					</execution>
 				</executions>

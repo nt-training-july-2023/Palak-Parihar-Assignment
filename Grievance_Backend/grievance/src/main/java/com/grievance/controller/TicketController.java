@@ -51,14 +51,16 @@ public class TicketController {
   /**
    * Controller method to create a new ticket.
    *
+   * @param email
    * @param ticketInDto The TicketInDto object.
    * @return ResponseEntity with optional of TicketOut DTO.
    */
   @PostMapping(path = ControllerURLS.SAVE_DATA)
   public ResponseEntity<Response<Boolean>> saveTicket(
+      @RequestHeader final String email,
       @Valid @RequestBody final TicketInDto ticketInDto) {
     LOGGER.info("Received request to create a new ticket.");
-    ticketService.saveTicket(ticketInDto);
+    ticketService.saveTicket(ticketInDto, email);
     String message = ResponseConstants.TICKET_CREATED;
     Response<Boolean> response =
         new Response<Boolean>(message, HttpStatus.CREATED.value(), true);

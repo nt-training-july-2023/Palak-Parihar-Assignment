@@ -83,7 +83,7 @@ public class Ticket {
   /**
    * The status of the ticket.
    */
-  private Status status;
+  private Status status = Status.OPEN;
 
   /**
    * The date when the ticket was opened.

@@ -12,7 +12,7 @@ export default function Table(props) {
     )
 
     const tableData = (
-        <>
+        <div>
             <p className={classes.heading}><u>{props.heading}</u></p>
 
             <div className={classes.table_container}>
@@ -48,7 +48,7 @@ export default function Table(props) {
                     </tbody>
                 </table>
             </div>
-        </>
+        </div>
     )
     return (
         <>

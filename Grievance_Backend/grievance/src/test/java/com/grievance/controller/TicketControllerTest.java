@@ -59,8 +59,6 @@ public class TicketControllerTest {
     ticketInDto = new TicketInDto();
     ticketInDto.setDepartment(new DepartmentInDto());
     ticketInDto.setDescription("Malfunction");
-    ticketInDto.setEmployee(new EmployeeInDto());
-    ticketInDto.setStatus(Status.BEING_ADDRESSED);
     ticketInDto.setTicketType(TicketType.GRIEVANCE);
     ticketInDto.setTitle("Title");
 
@@ -78,11 +76,12 @@ public class TicketControllerTest {
 
 @Test
 	public void when_save_ticket_return_saved_ticket() throws JsonProcessingException, Exception {
-		when(ticketService.saveTicket(Mockito.any(TicketInDto.class))).thenReturn(Optional.ofNullable(ticketOutDto));
+		when(ticketService.saveTicket(Mockito.any(TicketInDto.class), Mockito.anyString())).thenReturn(Optional.ofNullable(ticketOutDto));
 		
 		mockMvc.perform(MockMvcRequestBuilders.post(baseURL+ControllerURLS.SAVE_DATA)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsBytes(ticketInDto))
+				.header("email", "ayushi@nucleusteq.com")
 				).andExpect(status().isCreated()).andDo(MockMvcResultHandlers.print());
 	}
 
