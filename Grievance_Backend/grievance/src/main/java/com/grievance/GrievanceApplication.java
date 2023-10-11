@@ -16,7 +16,7 @@ import com.grievance.authentication.AuthenticateUser;
 public class GrievanceApplication {
 
   /**
-   *employeeRepository.
+   * Instance of authenticatingUser.
    */
   @Autowired
   private AuthenticateUser authenticateUser;
@@ -40,10 +40,10 @@ public class GrievanceApplication {
   /**
    * Creates and configures a
    * FilterRegistrationBean for a custom
-   * UserFilter to intercept requests for all URL patterns.
+   * SecurityFilter to intercept requests for all URL patterns.
    *
-   * @return A FilterRegistrationBean<UserFilter>
-   * instance configured for the UserFilter.
+   * @return A FilterRegistrationBean<SecurityFilter>
+   * instance configured for the SecurityFilter.
    */
   @Bean
   FilterRegistrationBean<SecurityFilter> securityFilter() {

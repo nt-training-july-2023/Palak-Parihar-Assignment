@@ -57,7 +57,7 @@ public class TicketInDto {
    */
   @NotEmpty(message = ValidationConstants.EMPTY_FIELD)
   @Size(min = MINIMUM_LENGTH, max = MAXIMUMN_LENGTH_OF_DESCRIPTION,
-  message = "Description too long (max 500 characters)")
+  message = "Description too long (max 225 characters)")
   private String description;
 
   /**

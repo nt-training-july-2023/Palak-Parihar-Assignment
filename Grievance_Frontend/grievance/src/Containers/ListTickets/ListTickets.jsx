@@ -8,6 +8,7 @@ import classes from "./ListTickets.module.css"
 import InputElement from "../../Components/UI/InputElement/InputElement";
 import { headers } from "../../API/Headers";
 import { FETCH_ALL_DEPARTMENTS } from "../../Service/DepartmentService";
+import { inputValidity } from "../../Validation/Validation";
 
 
 export default function ListTickets(props) {
@@ -40,9 +41,9 @@ export default function ListTickets(props) {
         department: null
     })
 
-    const headings = ["Title", "Department", "Status", "Raised By", "Last Updated", "Actions"]
+    const headings = ["Ticket Id","Title", "Department", "Status", "Raised By", "Last Updated", "Actions"]
 
-    const columns = ["title", "department", "status", "employee", "lastUpdated"]
+    const columns = ["ticketId","title", "department", "status", "employee", "lastUpdated"]
 
     const [ticketUpdate, setTicketUpdate] = useState({
         status: null,
@@ -86,7 +87,7 @@ export default function ListTickets(props) {
                 setDepartments(updatedDepartments)
             })
             .catch(err => {
-                setModal(() => <Modal message={err.data.response.data} onClick={closeModal} />)
+                setModal(() => <Modal message={err.data.message} onClick={closeModal} />)
             })
     }, [config, navigate, flag, isAdmin])
 
@@ -181,16 +182,26 @@ export default function ListTickets(props) {
         let updateTicketConfig = {
             ...ticketUpdate,
             status: e.target.value
-
         }
+        let updateTicket = {
+            ...ticket,
+            status : e.target.value
+        }
+        setTicket(updateTicket)
         setTicketUpdate(updateTicketConfig)
     }
 
     const updateComment = (e) => {
+        let validations = {
+            maxLength : 225,
+            minLength : 3
+        }
+        const message = inputValidity(e.target.value, validations)
         let updateTicketConfig = {
             ...ticketUpdate,
-            description: e.target.value
-
+            description: e.target.value,
+            error : message,
+            valid : message === ''
         }
         setTicketUpdate(updateTicketConfig)
     }

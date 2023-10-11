@@ -31,13 +31,14 @@ export default function ViewTicket(props) {
                 placeholder='Comment Box'
                 changed={props.updateComment}
                 value={props.ticketUpdate.description}
+                error = {props.ticketUpdate.error}
             />
         </div>
     )
 
     const updateBtn = (
         <div style={{ width: '70%', marginLeft: '50px' }}>
-            <Button content='UPDATE' enable={true} onClick={() => props.updateTicket(props.ticket.ticketId)} />
+            <Button content='UPDATE' enable={props.ticketUpdate.valid} onClick={() => props.updateTicket(props.ticket.ticketId)} />
         </div>
     )
 
@@ -115,6 +116,7 @@ export default function ViewTicket(props) {
                                 </>
                             })
                         }
+                        
                         {props.canUpdateTicket ? commentBox : ''}
                     </div>
                 </div>

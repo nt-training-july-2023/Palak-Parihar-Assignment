@@ -7,7 +7,6 @@ function InputElement(props) {
     if (props.invalid && props.shouldValidate && props.touched) {
         inputClasses.push(classes.Invalid);
     }
-
     switch (props.elementType) {
         case ('input'):
             inputElement = <>
@@ -40,7 +39,7 @@ function InputElement(props) {
 
         case ('select'):
             inputElement = (<>
-                <select className={classes.InputElement} onChange={props.changed} disabled={props.disabled}>
+                <select className={classes.InputElement} onChange={props.changed} disabled={props.disabled} value={props.value}>
                     <option value='' disabled hidden>{props.default === undefined ? 'Choose here' : props.default}</option>
                     {props.options.map(option => (
                         <option key={option[props.selectValue]} value={option[props.selectValue]}>

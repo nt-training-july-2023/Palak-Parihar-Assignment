@@ -46,7 +46,7 @@ export default function ListDepartments() {
                 setDepartments(res.data)
             })
             .catch(err => {
-                setModal(() => <Modal message={err.data.response.data} onClick={closeModal} />)
+                setModal(() => <Modal message={err.data.message} onClick={closeModal} />)
             })
     }, [page, navigate, flag])
 
@@ -89,7 +89,7 @@ export default function ListDepartments() {
                 setFlag(!flag)
                 setModal(<Modal message={response.data.message} onClick={closeModal} />)
             }).catch(err => {
-                setModal(<Modal message={err.data.response.data} onClick={closeModal} />)
+                setModal(<Modal message={err.data.message} onClick={closeModal} />)
             })
     }
 

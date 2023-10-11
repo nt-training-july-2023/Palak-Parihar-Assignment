@@ -20,6 +20,7 @@ export default function NewEmployee(props) {
     ]
 
     const [modal, setModal] = useState();
+    const [flag, setFlag] = useState(false);
     const navigate = useNavigate()
 
     let cont = {
@@ -155,7 +156,7 @@ export default function NewEmployee(props) {
             }).catch(error => {
                 return error.data
             })
-    }, [])
+    }, [flag])
 
     const completeForm = formElementsArray.map(formElement => {
         return (
@@ -227,26 +228,24 @@ export default function NewEmployee(props) {
             setModal(() => <Modal message={res.data.message} onClick={clearForm} />)
             return res.data;
         }).catch(err => {
-            setModal(() => <Modal message={err.data.response.data.message} onClick={closeModal} />)
+            setModal(() => <Modal message={err.data.message} onClick={closeModal} />)
             return err.data;
         })
     }
 
     const clearForm = () => {
-        for (let key in controls) {
-            const updatedControls = {
-                ...controls,
-                [key]: {
-                    ...controls[key],
-                    value: '',
-                    error: '',
-                    valid: false,
-                    touched: false
-                }
-            }
-            setControls(updatedControls)
+        const initialControls = { ...cont.controls };
+    
+        for (let key in initialControls) {
+            initialControls[key].value = '';
+            initialControls[key].error = '';
+            initialControls[key].valid = false;
+            initialControls[key].touched = false;
         }
-        setModal(<></>)
+    
+        setControls(initialControls);
+        setFlag(!flag);
+        setModal(<></>);
     }
 
     const closeModal = () => {
