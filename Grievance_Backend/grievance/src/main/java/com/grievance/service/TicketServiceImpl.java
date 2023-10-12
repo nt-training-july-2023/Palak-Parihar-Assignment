@@ -40,7 +40,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TicketServiceImpl implements TicketService {
   /**
-   * Intance to create loggers.
+   * Instance to create loggers.
    */
   private static final Logger LOGGER = LoggerFactory
       .getLogger(DepartmentServiceImpl.class);
