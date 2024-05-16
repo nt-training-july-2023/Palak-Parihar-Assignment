@@ -6,8 +6,9 @@ import com.grievance.dto.TicketOutWOComment;
 import com.grievance.dto.TicketUpdateDto;
 import com.grievance.entity.Status;
 
-import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.domain.Page;
 
 /**
  *
@@ -45,9 +46,15 @@ public interface TicketService {
   * @param department
   * @return list of tickets.
   */
- Optional<List<TicketOutWOComment>> listAllTickets(
+ Optional<Page<TicketOutWOComment>> listAllTickets(
      String email, Integer page, Status status,
      Boolean myTickets, Integer department);
+
+ /**
+  * @param page
+  * @return list of tickets.
+  */
+ Page<TicketOutWOComment> listTickets(Integer page);
 
 
 }

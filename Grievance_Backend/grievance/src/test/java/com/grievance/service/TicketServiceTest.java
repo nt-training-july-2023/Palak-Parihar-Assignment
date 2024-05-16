@@ -151,7 +151,7 @@ assertThat(dto.equals(ticket));
     Page<Ticket> list = new PageImpl<Ticket>(listOfTickets);
     when(ticketRepository.findAll(Mockito.any(PageRequest.class))).thenReturn(list);
 
-    List<TicketOutWOComment> list2 = ticketService.findAll(0).get();
+    List<TicketOutWOComment> list2 = ticketService.findAll(0).get().getContent();
 
     for (int i = 0; i < list2.size(); i++) {
       assertThat(list2.get(i).equals(listOfTickets.get(i)));

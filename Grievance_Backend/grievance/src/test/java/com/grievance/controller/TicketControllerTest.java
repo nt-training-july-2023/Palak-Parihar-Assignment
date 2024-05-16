@@ -16,6 +16,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -87,7 +89,8 @@ public class TicketControllerTest {
 
   @Test
   public void fetch_all_tickets() throws Exception {
-    List<TicketOutWOComment> ticketOutDtos = new ArrayList<TicketOutWOComment>();
+    List<TicketOutWOComment> ticketOutWOComments = new ArrayList<TicketOutWOComment>();
+    Page<TicketOutWOComment> ticketOutDtos = new PageImpl<>(ticketOutWOComments);
 
     when(ticketService.listAllTickets(Mockito.anyString(),
         Mockito.anyInt(), Mockito.any(Status.class), Mockito.anyBoolean(), Mockito.anyInt()))

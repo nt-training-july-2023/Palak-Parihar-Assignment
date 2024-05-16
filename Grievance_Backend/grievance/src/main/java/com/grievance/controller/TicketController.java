@@ -13,6 +13,7 @@ import com.grievance.service.TicketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -80,21 +80,36 @@ public class TicketController {
    * @return ResponseEntity with optional of list of all tickets.
    */
   @GetMapping(path = ControllerURLS.GET_ALL_DATA)
-  public ResponseEntity<Response<List<TicketOutWOComment>>> listAllTickets(
+  public ResponseEntity<Response<Page<TicketOutWOComment>>> listAllTickets(
       @RequestHeader final String email,
       @RequestParam final Integer page,
       @RequestParam(required = false) final Status status,
       @RequestParam(required = false) final Boolean myTickets,
       @RequestParam (required = false) final Integer department) {
     LOGGER.info("Received request to list all tickets.");
-    Optional<List<TicketOutWOComment>> optionalTickets = ticketService
+    Optional<Page<TicketOutWOComment>> optionalTickets = ticketService
         .listAllTickets(email, page, status, myTickets, department);
     String message = ResponseConstants.TICKET_RETRIEVED;
-    Response<List<TicketOutWOComment>> response =
-        new Response<List<TicketOutWOComment>>(message,
+    Response<Page<TicketOutWOComment>> response =
+        new Response<Page<TicketOutWOComment>>(message,
             HttpStatus.OK.value(), optionalTickets.get());
     LOGGER.info("Listed all tickets successfully.");
-    return new ResponseEntity<Response<List<TicketOutWOComment>>>(
+    return new ResponseEntity<Response<Page<TicketOutWOComment>>>(
+        response, HttpStatus.OK);
+  }
+
+  /**
+   * @param page
+   * @return ResponseEntity with optional of list of all tickets.
+   */
+  @GetMapping("/pageGet")
+  public ResponseEntity<Response<Page<TicketOutWOComment>>> list(
+      @RequestParam final Integer page) {
+    String message = ResponseConstants.TICKET_RETRIEVED;
+    Response<Page<TicketOutWOComment>> response =
+        new Response<Page<TicketOutWOComment>>(message, HttpStatus.OK.value(),
+            ticketService.listTickets(page));
+    return new ResponseEntity<Response<Page<TicketOutWOComment>>>(
         response, HttpStatus.OK);
   }
 

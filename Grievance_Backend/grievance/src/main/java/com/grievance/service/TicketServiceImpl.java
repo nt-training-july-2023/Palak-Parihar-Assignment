@@ -3,6 +3,7 @@
  */
 package com.grievance.service;
 
+import com.google.common.base.Converter;
 import com.grievance.constants.ErrorConstants;
 import com.grievance.dto.TicketInDto;
 import com.grievance.dto.TicketOutDto;
@@ -21,15 +22,14 @@ import com.grievance.repository.DepartmentRepository;
 import com.grievance.repository.EmployeeRepository;
 import com.grievance.repository.TicketRepository;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -102,18 +102,14 @@ public class TicketServiceImpl implements TicketService {
    * @param page
    * @return optional of list of ticketOut DTO.
    */
-  public Optional<List<TicketOutWOComment>> findAll(
+  public Optional<Page<TicketOutWOComment>> findAll(
       final Integer page) {
     LOGGER.info("Listing all tickets");
-    List<TicketOutWOComment> tickets = new ArrayList<TicketOutWOComment>();
-    ticketRepository
+    Page<Ticket> tickets = ticketRepository
         .findAll(
-            PageRequest.of(page, pageSize).withSort(Sort.by("status")))
-        .forEach(
-            e -> {
-              tickets.add(convertToWOCommentDto(e));
-            });
-    return Optional.ofNullable(tickets);
+            PageRequest.of(page, pageSize).withSort(Sort.by("status")));
+    Page<TicketOutWOComment> list = convertToPageTicketOutWOComment(tickets);
+    return Optional.ofNullable(list);
   }
 
   /**
@@ -124,27 +120,22 @@ public class TicketServiceImpl implements TicketService {
    * @param departmentId
    * @return list of ticket out DTO
    */
-  public Optional<List<TicketOutWOComment>>
+  public Optional<Page<TicketOutWOComment>>
   findByDepartment(
       final Integer departmentId,
       final Integer page) {
     LOGGER.info("Listing all tickets by user {}'s department",
         departmentId);
-    List<TicketOutWOComment> ticketOutDtos =
-        new ArrayList<TicketOutWOComment>();
     Optional<Department> department =
         departmentRepository.findById(departmentId);
     if (!department.isPresent()) {
       throw new ResourceNotFoundException(ErrorConstants.DEPARTMENT_NOT_FOUND);
     }
-    ticketRepository
+    Page<Ticket> tickets = ticketRepository
         .findByDepartment(department.get(),
-            PageRequest.of(page, pageSize).withSort(Sort.by("status")))
-        .forEach(
-            e -> {
-              ticketOutDtos.add(convertToWOCommentDto(e));
-            });
-    return Optional.ofNullable(ticketOutDtos);
+            PageRequest.of(page, pageSize).withSort(Sort.by("status")));
+    Page<TicketOutWOComment> list = convertToPageTicketOutWOComment(tickets);
+    return Optional.ofNullable(list);
   }
 
   /**
@@ -204,7 +195,7 @@ public class TicketServiceImpl implements TicketService {
    * @param email
    * @return list of tickets raised by user.
    */
-  public Optional<List<TicketOutWOComment>> findByEmployee(
+  public Optional<Page<TicketOutWOComment>> findByEmployee(
       final Integer page,
       final String email) {
     LOGGER.info("Listing all tickets raised by user {}", email);
@@ -213,14 +204,10 @@ public class TicketServiceImpl implements TicketService {
       LOGGER.info("Employee with email {} not found", email);
       throw new ResourceNotFoundException(email);
     } else {
-      List<TicketOutWOComment> ticketOutDtos =
-          new ArrayList<TicketOutWOComment>();
-      ticketRepository.findByEmployee(employee,
-          PageRequest.of(page, pageSize).withSort(Sort.by("status")))
-          .forEach(e -> {
-            ticketOutDtos.add(convertToWOCommentDto(e));
-          });
-      return Optional.ofNullable(ticketOutDtos);
+      Page<Ticket> tickets = ticketRepository.findByEmployee(employee,
+          PageRequest.of(page, pageSize).withSort(Sort.by("status")));
+      Page<TicketOutWOComment> list = convertToPageTicketOutWOComment(tickets);
+      return Optional.ofNullable(list);
     }
   }
 
@@ -252,7 +239,7 @@ public class TicketServiceImpl implements TicketService {
    * @param email
    * @return list of tickets.
    */
-  public Optional<List<TicketOutWOComment>> findByStatusAndEmployee(
+  public Optional<Page<TicketOutWOComment>> findByStatusAndEmployee(
       final Integer page,
       final Status status,
       final String email) {
@@ -262,16 +249,11 @@ public class TicketServiceImpl implements TicketService {
     if (Objects.isNull(employee)) {
       throw new ResourceNotFoundException(email);
     }
-    List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
-    if (!Objects.isNull(employee)) {
-      ticketRepository
+      Page<Ticket> tickets = ticketRepository
           .findByStatusAndEmployee(status, employee,
-              PageRequest.of(page, pageSize))
-          .forEach(e -> {
-            list.add(convertToWOCommentDto(e));
-          });
-    }
-    return Optional.of(list);
+              PageRequest.of(page, pageSize));
+      Page<TicketOutWOComment> list = convertToPageTicketOutWOComment(tickets);
+      return Optional.ofNullable(list);
   }
 
   /**
@@ -281,16 +263,13 @@ public class TicketServiceImpl implements TicketService {
    * @param page
    * @return list of tickets.
    */
-  public Optional<List<TicketOutWOComment>> findByStatus(
+  public Optional<Page<TicketOutWOComment>> findByStatus(
       final Status status,
       final Integer page) {
     LOGGER.info("Liting tickets filtered by status {} ", status);
-    List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
-    ticketRepository.findByStatus(status,
-        PageRequest.of(page, pageSize).withSort(Sort.by("status")))
-        .forEach(e -> {
-          list.add(convertToWOCommentDto(e));
-        });
+    Page<Ticket> tickets = ticketRepository.findByStatus(status,
+        PageRequest.of(page, pageSize).withSort(Sort.by("status")));
+    Page<TicketOutWOComment> list = convertToPageTicketOutWOComment(tickets);
     return Optional.ofNullable(list);
   }
 
@@ -302,7 +281,7 @@ public class TicketServiceImpl implements TicketService {
   * @param page
   * @return list of tickets by department and status
   */
-  public Optional<List<TicketOutWOComment>> findByDepartmentAndStatus(
+  public Optional<Page<TicketOutWOComment>> findByDepartmentAndStatus(
       final Integer departmentId,
       final Status status,
       final Integer page) {
@@ -313,15 +292,13 @@ public class TicketServiceImpl implements TicketService {
     if (!department.isPresent()) {
       throw new CustomException(ErrorConstants.DEPARTMENT_NOT_FOUND);
     }
-    List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
-    ticketRepository.findByDepartmentAndStatus(
+    Page<Ticket> tickets = ticketRepository.findByDepartmentAndStatus(
         department.get(),
         status,
-        PageRequest.of(page, pageSize))
-        .forEach(e -> {
-          list.add(convertToWOCommentDto(e));
-        });
-    return Optional.ofNullable(list);
+        PageRequest.of(page, pageSize));
+    Page<TicketOutWOComment> ticketOutWOComments =
+        convertToPageTicketOutWOComment(tickets);
+    return Optional.ofNullable(ticketOutWOComments);
   }
 
 
@@ -334,7 +311,7 @@ public class TicketServiceImpl implements TicketService {
   * @param email
   * @return list of tickets by department
   */
-  public Optional<List<TicketOutWOComment>>
+  public Optional<Page<TicketOutWOComment>>
   findByDepartmentStatusAndEmployee(
       final String email,
       final Integer departmentId,
@@ -351,15 +328,13 @@ public class TicketServiceImpl implements TicketService {
     if (!department.isPresent()) {
       throw new CustomException(ErrorConstants.DEPARTMENT_NOT_FOUND);
     }
-    List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
-    ticketRepository.findByDepartmentAndStatusAndEmployee(
+    Page<Ticket> tickets = ticketRepository
+        .findByDepartmentAndStatusAndEmployee(
         department.get(),
         status,
         employee,
-        PageRequest.of(page, pageSize))
-    .forEach((e) -> {
-      list.add(convertToWOCommentDto(e));
-    });
+        PageRequest.of(page, pageSize));
+    Page<TicketOutWOComment> list = convertToPageTicketOutWOComment(tickets);
     return Optional.ofNullable(list);
   }
 
@@ -371,7 +346,7 @@ public class TicketServiceImpl implements TicketService {
    * @param page
    * @return list of tickets by department
    */
-  public Optional<List<TicketOutWOComment>> findByDepartmentAndEmployee(
+  public Optional<Page<TicketOutWOComment>> findByDepartmentAndEmployee(
       final String email,
       final Integer departmentId,
       final Integer page) {
@@ -386,14 +361,11 @@ public class TicketServiceImpl implements TicketService {
     if (!department.isPresent()) {
       throw new CustomException(ErrorConstants.DEPARTMENT_NOT_FOUND);
     }
-    List<TicketOutWOComment> list = new ArrayList<TicketOutWOComment>();
-    ticketRepository.findByDepartmentAndEmployee(
+    Page<Ticket> tickets = ticketRepository.findByDepartmentAndEmployee(
         department.get(),
         employee,
-        PageRequest.of(page, pageSize))
-    .forEach((e) -> {
-      list.add(convertToWOCommentDto(e));
-    });
+        PageRequest.of(page, pageSize));
+    Page<TicketOutWOComment> list = convertToPageTicketOutWOComment(tickets);
     return Optional.ofNullable(list);
   }
 
@@ -408,7 +380,7 @@ public class TicketServiceImpl implements TicketService {
    * @return list of tickets.
    */
   @Override
-  public Optional<List<TicketOutWOComment>> listAllTickets(
+  public Optional<Page<TicketOutWOComment>> listAllTickets(
       final String email,
       final Integer page,
       final Status status,
@@ -469,10 +441,57 @@ public class TicketServiceImpl implements TicketService {
   }
 
   /**
-   * Converts an TicketInDto dto object into an Ticket entity.
+   *
+   */
+  @Override
+  public Page<TicketOutWOComment> listTickets(final Integer page) {
+    Page<Ticket> tickets = ticketRepository
+        .findAll(PageRequest.of(page, pageSize).withSort(Sort.by("status")));
+
+    Page<TicketOutWOComment> response = tickets.map(
+        new Converter<Ticket, TicketOutWOComment>() {
+
+      @Override
+      protected TicketOutWOComment doForward(final Ticket a) {
+        return convertToWOCommentDto(a);
+      }
+
+      @Override
+          protected Ticket doBackward(final TicketOutWOComment b) {
+            return null;
+          }
+    });
+    return response;
+  }
+
+  /**
+   * convert page tickets to page ticketWOCommentsDTO.
+   * @param tickets
+   * @return Page
+   */
+  public Page<TicketOutWOComment> convertToPageTicketOutWOComment(
+      final Page<Ticket> tickets) {
+    Page<TicketOutWOComment> response = tickets.map(
+        new Converter<Ticket, TicketOutWOComment>() {
+
+      @Override
+      protected TicketOutWOComment doForward(final Ticket a) {
+        return convertToWOCommentDto(a);
+      }
+
+      @Override
+          protected Ticket doBackward(final TicketOutWOComment b) {
+            return null;
+          }
+    });
+    return response;
+  }
+
+  /**
+   * Converts a TicketInDto dto object into a Ticket entity.
    *
    * @param ticketInDto The Ticket entity to be converted.
-   * @return An Employee representing the employee's data.
+   * @return a Ticket entity.
    */
   public Ticket convertToEntity(final TicketInDto ticketInDto) {
     Ticket ticket = modelMapper.map(ticketInDto, Ticket.class);
@@ -484,7 +503,7 @@ public class TicketServiceImpl implements TicketService {
    * (DTO).
    *
    * @param ticket The Ticket entity to be converted.
-   * @return An TicketOutWOComment representing the employee's data.
+   * @return An TicketOutWOComment Object.
    */
   public TicketOutWOComment convertToWOCommentDto(final Ticket ticket) {
     TicketOutWOComment ticketOutWOComment = modelMapper.map(ticket,
